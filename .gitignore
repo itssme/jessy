@@ -1,0 +1,6 @@
+# Ignore jessy.iml which is an intellij Project file
+jessy.iml
+
+# Ignore Idea specific folder
+.idea/
+

@@ -15,7 +15,7 @@ public abstract class ChessFigure {
 
     protected Position pos;
     protected File img;
-    protected boolean canJump = true;
+    protected boolean canJump = false;
 
     public ChessFigure(Position pos, File img) {
         this.pos = pos;

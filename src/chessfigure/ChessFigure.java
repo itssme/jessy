@@ -1,7 +1,6 @@
 package chessfigure;
 
 import board.Position;
-
 import java.io.File;
 
 /**
@@ -16,9 +15,12 @@ public abstract class ChessFigure {
     protected Position pos;
     protected File img;
     protected boolean canJump = false;
+    protected boolean isWhite = false;
 
-    public ChessFigure(Position pos, File img) {
-        this.pos = pos;
-        this.img = img;
+    public ChessFigure(Position pos, File img, boolean isWhite, boolean canJump) {
+        this.pos     = pos;
+        this.img     = img;
+        this.isWhite = isWhite;
+        this.canJump = canJump;
     }
 }

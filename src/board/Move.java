@@ -11,11 +11,11 @@ import chessfigure.ChessFigure;
  */
 public class Move {
 
-    public ChessFigure chessFigure;
-    public Position to;
+    private ChessFigure chessFigure;
+    private Position to;
 
     public Move(ChessFigure chessFigure, Position to) {
         this.chessFigure = chessFigure;
-        this.to   = to;
+        this.to = to;
     }
 }

@@ -1,3 +1,5 @@
+import gui.ChessGame;
+
 /**
  * Name:    Königsreiter Simon
  * Class:   3CHIF
@@ -6,4 +8,8 @@
  * Desc.:
  */
 public class Main {
+
+    public static void main(String[] args) {
+        ChessGame.play();
+    }
 }

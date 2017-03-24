@@ -3,3 +3,4 @@ jessy.iml
 
 # Ignore Idea specific folder
 .idea/
+/out/

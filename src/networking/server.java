@@ -26,8 +26,8 @@ import java.net.Socket;
 
 public class server implements Runnable {
 
-    protected static ServerSocket self;
-    protected static int player_connected = 0;
+    private static ServerSocket self;
+    private static int player_connected = 0;
     private player player1;
     private player player2;
 
@@ -56,7 +56,7 @@ public class server implements Runnable {
         }
     }
 
-    public void starter() { // TODO: rewrite this
+    public void starter() {
         player1.send_str("start");
         player2.send_str("dont start");
     }
@@ -65,85 +65,84 @@ public class server implements Runnable {
         return (player_connected == 2);
     }
 
-}
+    private class player {
 
-class player {
+        private Socket player;
+        private PrintWriter pw_player;
+        private BufferedReader br_player;
+        private int number;
 
-    private Socket player;
-    private PrintWriter pw_player;
-    private BufferedReader br_player;
-    public  int number;
+        private player(int number) {
+            this.number = number;
 
-    public player(int number) {
-        this.number = number;
+            System.out.println("Thread " + this.number + " started");
 
-        System.out.println("Thread " + this.number + " started");
+            try {
+                player = server.self.accept();
+                pw_player = new PrintWriter(player.getOutputStream(), true);
+                br_player = new BufferedReader(new InputStreamReader(player.getInputStream()));
+                System.out.println("[!] player connected: " + number);
+                server.player_connected++;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        try {
-            player = server.self.accept();
-            pw_player = new PrintWriter(player.getOutputStream(), true);
-            br_player = new BufferedReader(new InputStreamReader(player.getInputStream()));
-            System.out.println("[!] player connected: " + number);
-            server.player_connected++;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-    }
+        private JSONObject get_object() {
+            try {
+                String got_str = br_player.readLine();
 
-    public JSONObject get_object() {
-        try {
-            String got_str = br_player.readLine();
+                switch (got_str) {
+                    case "sending object":
+                        pw_player.println("OK");
+                        try {
+                            JSONObject got_obj = new JSONObject(br_player.readLine());
+                            return got_obj;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-            switch (got_str) {
-                case "sending object":
-                    pw_player.println("OK");
-                    try {
-                        JSONObject got_obj = new JSONObject(br_player.readLine());
-                        return got_obj;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        break;
+                    case "start":
+                        System.err.println("[!] PLAYER LISTEN: unexpected 'start'"); // TODO: implement resending
+                        break;
+                    case "OK":
+                        System.err.println("[!] PLAYER LISTEN: unexpected 'OK'");    // TODO: implement resending
+                        break;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private void send(JSONObject send_obj) {
+            pw_player.println("sending object");
+
+            try {
+                String got_str = br_player.readLine();
+                if (got_str.equals("OK")) {
+                    pw_player.println(send_obj);
+                    got_str = br_player.readLine();
+
+                    if (got_str.equals("GET OK")) {
+                        System.out.println("[!] SUCCESS SENDING OBJ");
+                    } else {
+                        System.err.println("[!] SERVER: client didn't got object + " + got_str); // TODO: try again
                     }
 
-                    break;
-                case "start":
-                    System.err.println("[!] PLAYER LISTEN: unexpected 'start'"); // TODO: implement resending
-                    break;
-                case "OK":
-                    System.err.println("[!] PLAYER LISTEN: unexpected 'OK'");    // TODO: implement resending
-                    break;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void send(JSONObject send_obj) {
-        pw_player.println("sending object");
-
-        try {
-            String got_str = br_player.readLine();
-            if (got_str.equals("OK")) {
-                pw_player.println(send_obj);
-                got_str = br_player.readLine();
-
-                if (got_str.equals("GET OK")) {
-                    System.out.println("[!] SUCCESS SENDING OBJ");
                 } else {
-                    System.err.println("[!] SERVER: client didn't got object + " + got_str); // TODO: try again
+                    System.err.println("[!] SERVER: could not send object");
+
                 }
-
-            } else {
-                System.err.println("[!] SERVER: could not send object");
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
 
-    public void send_str(String str) {
-        pw_player.println(str);
+        private void send_str(String str) {
+            pw_player.println(str);
+        }
     }
 }

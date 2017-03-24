@@ -1,6 +1,7 @@
 package board;
 
 import chessfigure.ChessFigure;
+import org.json.JSONObject;
 
 /**
  * Name:    Joel Klimont
@@ -17,5 +18,17 @@ public class Move {
     public Move(ChessFigure chessFigure, Position to) {
         this.chessFigure = chessFigure;
         this.to = to;
+    }
+
+    public ChessFigure getChessFigure() {
+        return chessFigure;
+    }
+
+    public Position getTo() {
+        return to;
+    }
+
+    public JSONObject toJsonObject() {
+        return to.toJsonObject();
     }
 }

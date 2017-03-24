@@ -1,4 +1,8 @@
-import gui.ChessGame;
+import logging.Logging;
+import view.ChessGame;
+
+import java.io.IOException;
+import java.util.logging.FileHandler;
 
 /**
  * Name:    Königsreiter Simon
@@ -10,6 +14,16 @@ import gui.ChessGame;
 public class Main {
 
     public static void main(String[] args) {
-        ChessGame.play();
+        FileHandler fh = null;
+        try {
+            fh = new FileHandler("jessy.log");
+            Logging.initLogging(fh);
+            ChessGame.play();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Couldn't create the log-File!");
+        } finally {
+            fh.close();
+        }
     }
 }

@@ -1,5 +1,5 @@
 import logging.Logging;
-import view.ChessGame;
+import view.Chessgame;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -18,7 +18,7 @@ public class Main {
         try {
             fh = new FileHandler("jessy.log");
             Logging.initLogging(fh);
-            ChessGame.play();
+            Chessgame.main(args);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Couldn't create the log-File!");

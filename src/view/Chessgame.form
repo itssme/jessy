@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="view.Chessgame">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="1280" height="720"/>
+    </constraints>
+    <properties>
+      <minimumSize width="1280" height="720"/>
+      <preferredSize width="1280" height="720"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <splitpane id="5fccb">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="200"/>
+          </grid>
+        </constraints>
+        <properties>
+          <opaque value="false"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="8c934" class="model.ScoreList" binding="scoreList">
+            <constraints>
+              <splitpane position="right"/>
+            </constraints>
+            <properties>
+              <minimumSize width="280" height="720"/>
+              <preferredSize width="280" height="720"/>
+            </properties>
+          </component>
+          <splitpane id="6fbc5">
+            <constraints>
+              <splitpane position="left"/>
+            </constraints>
+            <properties>
+              <minimumSize width="1000" height="720"/>
+              <orientation value="0"/>
+              <preferredSize width="1000" height="720"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <splitpane id="8b8f3">
+                <constraints>
+                  <splitpane position="right"/>
+                </constraints>
+                <properties>
+                  <opaque value="true"/>
+                  <orientation value="0"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <scrollpane id="1f3b4">
+                    <constraints>
+                      <splitpane position="left"/>
+                    </constraints>
+                    <properties>
+                      <minimumSize width="1000" height="150"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <component id="eaf74" class="javax.swing.JLabel" binding="chat">
+                        <constraints/>
+                        <properties>
+                          <autoscrolls value="true"/>
+                          <font size="16"/>
+                          <minimumSize width="1000" height="145"/>
+                          <preferredSize width="950" height="145"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <splitpane id="50c2b">
+                    <constraints>
+                      <splitpane position="right"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="e27e" class="javax.swing.JTextField" binding="chatTextInput">
+                        <constraints>
+                          <splitpane position="left"/>
+                        </constraints>
+                        <properties>
+                          <font size="18"/>
+                          <minimumSize width="900" height="120"/>
+                          <preferredSize width="900" height="120"/>
+                        </properties>
+                      </component>
+                      <component id="845" class="javax.swing.JButton" binding="sendBTN">
+                        <constraints>
+                          <splitpane position="right"/>
+                        </constraints>
+                        <properties>
+                          <label value="Send"/>
+                          <minimumSize width="100" height="120"/>
+                          <name value=""/>
+                          <preferredSize width="100" height="120"/>
+                          <text value="Send"/>
+                          <toolTipText value="Clicking this Button sends the Text in the Textfiel to the other player"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </splitpane>
+                </children>
+              </splitpane>
+              <grid id="8ee03" binding="boardContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <splitpane position="left"/>
+                </constraints>
+                <properties>
+                  <minimumSize width="1000" height="490"/>
+                  <preferredSize width="1000" height="490"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="39350" class="model.BoardModel" binding="board" custom-create="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <autoResizeMode value="0"/>
+                      <autoscrolls value="false"/>
+                      <intercellSpacing width="0" height="0"/>
+                      <minimumSize width="480" height="480"/>
+                      <preferredScrollableViewportSize width="480" height="480"/>
+                      <preferredSize width="480" height="480"/>
+                      <rowHeight value="60"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </splitpane>
+        </children>
+      </splitpane>
+    </children>
+  </grid>
+</form>

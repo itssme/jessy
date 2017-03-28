@@ -16,4 +16,21 @@ public class Position {
         this.x = x;
         this.y = y;
     }
+
+    public boolean equals(int x, int y) {
+        return this.x == x && this.y == y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + x + "|" + y + "}";
+    }
 }

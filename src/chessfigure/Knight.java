@@ -1,7 +1,6 @@
 package chessfigure;
 
 import board.Position;
-import java.io.File;
 
 /**
  * Name:    Joel Klimont
@@ -12,7 +11,7 @@ import java.io.File;
  */
 public class Knight extends ChessFigure {
 
-    public Knight(Position pos, File img, boolean white) {
+    public Knight(Position pos, String img, boolean white) {
         super(pos, img, white, true);
     }
 

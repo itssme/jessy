@@ -1,7 +1,6 @@
 package chessfigure;
 
 import board.Position;
-import java.io.File;
 
 /**
  * Name:    Joel Klimont
@@ -12,7 +11,7 @@ import java.io.File;
  */
 public class Queen extends  ChessFigure {
 
-    public Queen(Position pos, File img, boolean isWhite) {
+    public Queen(Position pos, String img, boolean isWhite) {
         super(pos, img, isWhite, false);
     }
 

@@ -13,6 +13,7 @@ public class Scorer extends Thread implements Runnable {
 
     private ScoreList targetList;
     private final String dbFile = "scores.db";
+    public final static String USERNAME = "";
 
     public Scorer(ScoreList target) {
         this.targetList = target;

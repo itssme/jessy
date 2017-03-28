@@ -51,4 +51,10 @@ public class Chessgame {
         frame.pack();
         frame.setVisible(true);
     }
+
+    public void printToChat(String player, String msg) {
+        String txt = chat.getText();
+        txt = String.format("%s %n" + "%s: %s", txt, player, msg);
+        chat.setText(txt);
+    }
 }

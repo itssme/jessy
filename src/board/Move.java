@@ -1,6 +1,5 @@
 package board;
 
-import chessfigure.ChessFigure;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,21 +12,17 @@ import org.json.JSONObject;
  */
 public class Move {
 
-    private ChessFigure chessFigure;
     private Position from;
     private Position to;
 
-    public Move(ChessFigure chessFigure, Position from,Position to) {
-        this.chessFigure = chessFigure;
+    public Move(Position from,Position to) {
         this.from = from;
         this.to = to;
     }
 
-    public ChessFigure getChessFigure() {
-        return chessFigure;
+    public Position getFrom() {
+        return from;
     }
-
-    public Position getFrom() { return from; }
 
     public Position getTo() {
         return to;

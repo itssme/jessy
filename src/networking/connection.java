@@ -1,14 +1,18 @@
 package networking;
 
+import board.Move;
+import board.Position;
 import org.json.JSONException;
 import org.json.JSONObject;
+import view.Chessgame;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
+
+import static database.Scorer.USERNAME;
 
 /**
  * Name:    Joel Klimont
@@ -17,40 +21,95 @@ import java.net.Socket;
  * Project: jessy
  * Desc.:   One connection which is sending and receiving json objects (and strings)
  */
-public class connection {
+public class connection implements Runnable { // TODO: remove all prints and replace with logging
 
-    private Socket         self;
+    private Socket       self;
     private BufferedReader br;
     private PrintWriter    pw;
+    private Chessgame    game;
+    private Move     last_obj;
+    private boolean   sending = false;
 
-    public connection(String connect_to_ip, int port) throws IOException {
-        self = new Socket(InetAddress.getLocalHost(), port); // TODO: connect to other ip rather than local
+    public int number;
+
+    public connection(String connect_to_ip, int port, Chessgame game, int test_number) throws IOException {
+        self = new Socket(connect_to_ip, port);
         br = new BufferedReader(new InputStreamReader(self.getInputStream()));
         pw = new PrintWriter(self.getOutputStream(), true);
+        this.game = game;
+        number = test_number;
     }
 
-    public void send(JSONObject send_object) throws IOException {
-        pw.println("sending object");
+    @Override
+    public void run() {
+        while (true) {
+            try {
 
-        if (br.readLine().equals("OK")) {
-            // TODO: check for errors and implement resending
+                JSONObject obj = get_object();
 
-            String json_object = send_object.toString();
-            pw.println(json_object);
+                if (obj != null) {
+                    if (obj.has("chat")) {
+                        String msg = obj.getString("chat");
+                        String player = obj.getString("player");
+                        game.printToChat(player, msg);
 
-        } else {
-            throw new IOException();
+                        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + player + " " + msg);
+
+                    } else if (obj.has("resend")) {
+                        send_move(last_obj);
+
+                    } else {
+                        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "got position object");
+
+                        Position from = new Position(obj.getInt("from x"), obj.getInt("from y"));
+                        Position to = new Position(obj.getInt("to x"), obj.getInt("to y"));
+
+                        Move move = new Move(from, to);
+
+                        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + move.toJsonObject().toString());
+                        // TODO: validate (move)
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public JSONObject get_object() throws IOException, JSONException {
-        if (br.readLine().equals("sending object")) {
-            pw.println("OK");
-            JSONObject got_object = new JSONObject(br.readLine());
-            pw.println("GET OK");
-            return got_object;
+    public void send_move(Move move) throws IOException {
+        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "in move sending: " + sending);
+        JSONObject send_object = move.toJsonObject();
+
+        last_obj = move;
+
+        String json_object = send_object.toString();
+        pw.println(json_object);
+    }
+
+    public void send_chat_msg(String msg) throws IOException {
+        JSONObject send_object = new JSONObject();
+
+        try {
+            send_object.put("chat", msg);
+            send_object.put("player", USERNAME);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return null;
+
+        String json_object = send_object.toString();
+        pw.println(json_object);
+    }
+
+    private JSONObject get_object() throws IOException, JSONException {
+        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "get_obj");
+
+        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "listening for object");
+        String wasd = br.readLine();
+        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "should be json " + wasd);
+
+        return new JSONObject(wasd);
     }
 
     public boolean start() throws IOException {

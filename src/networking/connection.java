@@ -106,10 +106,10 @@ public class connection implements Runnable { // TODO: remove all prints and rep
         System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "get_obj");
 
         System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "listening for object");
-        String wasd = br.readLine();
-        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "should be json " + wasd);
+        String got_obj = br.readLine();
+        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "should be json " + got_obj);
 
-        return new JSONObject(wasd);
+        return new JSONObject(got_obj);
     }
 
     public boolean start() throws IOException {

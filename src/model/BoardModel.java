@@ -2,6 +2,7 @@ package model;
 
 import board.Position;
 import chessfigure.*;
+import sun.swing.ImageIconUIResource;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

@@ -25,10 +25,10 @@ public class connection implements Runnable { // TODO: remove all prints and rep
 
     private Socket       self;
     private BufferedReader br;
-    private PrintWriter    pw;
     private Chessgame    game;
     private Move     last_obj;
     private boolean   sending = false;
+    private static PrintWriter     pw;
 
     public int number;
 
@@ -88,7 +88,7 @@ public class connection implements Runnable { // TODO: remove all prints and rep
         pw.println(json_object);
     }
 
-    public void send_chat_msg(String msg) throws IOException {
+    public static void send_chat_msg(String msg) throws IOException {
         JSONObject send_object = new JSONObject();
 
         try {

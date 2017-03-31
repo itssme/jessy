@@ -30,7 +30,7 @@ public class Chessgame {
     public Chessgame() {
         sendBTN.addActionListener(e -> {
             try {
-                connection.send_chat_msg(chatTextInput.getText()); // TODO: make 'con' (connection) static
+                connection.send_chat_msg(chatTextInput.getText());
             } catch (IOException e1) {
                 Logging.logToFile(Level.WARNING, "Could not send message");
             } catch (NullPointerException e2) {

@@ -6,8 +6,6 @@ import model.ScoreList;
 import networking.connection;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 
@@ -30,7 +28,11 @@ public class Chessgame {
     public Chessgame() {
         sendBTN.addActionListener(e -> {
             try {
-                connection.send_chat_msg(chatTextInput.getText());
+                String msg = chatTextInput.getText();
+                chatTextInput.setText("");
+                printToChat("You", msg);
+                connection.send_chat_msg(msg);
+                Logging.logToFile(Level.INFO, "Send message: " + msg);
             } catch (IOException e1) {
                 Logging.logToFile(Level.WARNING, "Could not send message");
             } catch (NullPointerException e2) {

@@ -2,7 +2,6 @@ package model;
 
 import board.Position;
 import chessfigure.*;
-import sun.swing.ImageIconUIResource;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -41,9 +40,6 @@ public class BoardModel extends JTable {
         }
         this.setRowSelectionAllowed(false);
         this.doLayout();
-
-        this.genWhite();
-        this.genBlack();
 
 
     }

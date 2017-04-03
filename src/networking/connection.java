@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 
+import static controllers.SendBTNController.printToChat;
 import static database.Scorer.USERNAME;
 
 /**
@@ -53,7 +54,7 @@ public class connection implements Runnable {
                     if (obj.has("chat")) {
                         String msg = obj.getString("chat");
                         String player = obj.getString("player");
-                        game.printToChat(player, msg);
+                        printToChat(player, msg);
 
                         Logging.logToFile(Level.INFO, "GOT CHAT: " + player + " " + msg);
 

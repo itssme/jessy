@@ -1,12 +1,11 @@
 package view;
 
+import controllers.SendBTNController;
 import logging.Logging;
 import model.BoardModel;
 import model.ScoreList;
-import networking.connection;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.util.logging.Level;
 
 /**
@@ -22,24 +21,13 @@ public class Chessgame {
     private ScoreList scoreList;
     private JTextField chatTextInput;
     private JButton sendBTN;
-    private JLabel chat;
+    private model.ChatModel chat;
     private JPanel boardContainer;
+    private JToolBar menuBar;
+    private JPanel chatContainer;
+    private JPanel chatBox;
 
     public Chessgame() {
-        sendBTN.addActionListener(e -> {
-            try {
-                String msg = chatTextInput.getText();
-                chatTextInput.setText("");
-                printToChat("You", msg);
-                connection.send_chat_msg(msg);
-                Logging.logToFile(Level.INFO, "Send message: " + msg);
-            } catch (IOException e1) {
-                Logging.logToFile(Level.WARNING, "Could not send message");
-            } catch (NullPointerException e2) {
-                Logging.logToFile(Level.WARNING, "Connection is not set up, could not send message");
-                JOptionPane.showMessageDialog(null, "You are not connected to another player");
-            }
-        });
 
         board.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -52,10 +40,14 @@ public class Chessgame {
 
             }
         });
+        sendBTN.addActionListener(new SendBTNController(chat, chatTextInput));
     }
 
     private void createUIComponents() {
         this.board = new BoardModel(8, 8);
+
+        this.menuBar = new JToolBar();
+
     }
 
     public static void main(String[] args) {
@@ -81,11 +73,5 @@ public class Chessgame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-    }
-
-    public void printToChat(String player, String msg) {
-        String txt = chat.getText();
-        txt = String.format("%s %n" + "%s: %s", txt, player, msg);
-        chat.setText(txt);
     }
 }

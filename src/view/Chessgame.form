@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="view.Chessgame">
-  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="dfe5b" binding="mainPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1280" height="720"/>
+      <xy x="20" y="20" width="1303" height="774"/>
     </constraints>
     <properties>
-      <minimumSize width="1280" height="720"/>
-      <preferredSize width="1280" height="720"/>
+      <minimumSize width="1303" height="770"/>
+      <preferredSize width="1284" height="770"/>
     </properties>
     <border type="none"/>
     <children>
       <splitpane id="5fccb">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="200" height="200"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="713"/>
           </grid>
         </constraints>
         <properties>
@@ -22,15 +22,6 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="8c934" class="model.ScoreList" binding="scoreList">
-            <constraints>
-              <splitpane position="right"/>
-            </constraints>
-            <properties>
-              <minimumSize width="280" height="720"/>
-              <preferredSize width="280" height="720"/>
-            </properties>
-          </component>
           <splitpane id="6fbc5">
             <constraints>
               <splitpane position="left"/>
@@ -42,72 +33,6 @@
             </properties>
             <border type="none"/>
             <children>
-              <splitpane id="8b8f3">
-                <constraints>
-                  <splitpane position="right"/>
-                </constraints>
-                <properties>
-                  <opaque value="true"/>
-                  <orientation value="0"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <scrollpane id="1f3b4">
-                    <constraints>
-                      <splitpane position="left"/>
-                    </constraints>
-                    <properties>
-                      <minimumSize width="1000" height="150"/>
-                    </properties>
-                    <border type="none"/>
-                    <children>
-                      <component id="eaf74" class="javax.swing.JLabel" binding="chat">
-                        <constraints/>
-                        <properties>
-                          <autoscrolls value="true"/>
-                          <font size="16"/>
-                          <minimumSize width="1000" height="145"/>
-                          <preferredSize width="950" height="145"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
-                    </children>
-                  </scrollpane>
-                  <splitpane id="50c2b">
-                    <constraints>
-                      <splitpane position="right"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="e27e" class="javax.swing.JTextField" binding="chatTextInput">
-                        <constraints>
-                          <splitpane position="left"/>
-                        </constraints>
-                        <properties>
-                          <font size="18"/>
-                          <minimumSize width="900" height="120"/>
-                          <preferredSize width="900" height="120"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
-                      <component id="845" class="javax.swing.JButton" binding="sendBTN">
-                        <constraints>
-                          <splitpane position="right"/>
-                        </constraints>
-                        <properties>
-                          <label value="Send"/>
-                          <minimumSize width="100" height="120"/>
-                          <name value=""/>
-                          <preferredSize width="100" height="120"/>
-                          <text value="Send"/>
-                          <toolTipText value="Clicking this Button sends the Text in the Textfiel to the other player"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </splitpane>
-                </children>
-              </splitpane>
               <grid id="8ee03" binding="boardContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
@@ -135,10 +60,99 @@
                   </component>
                 </children>
               </grid>
+              <grid id="8e263" binding="chatContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <splitpane position="right"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <splitpane id="8b8f3">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <opaque value="true"/>
+                      <orientation value="0"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <scrollpane id="1f3b4">
+                        <constraints>
+                          <splitpane position="left"/>
+                        </constraints>
+                        <properties>
+                          <minimumSize width="900" height="150"/>
+                        </properties>
+                        <border type="none"/>
+                        <children>
+                          <component id="b7582" class="model.ChatModel" binding="chat">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </scrollpane>
+                      <splitpane id="50c2b">
+                        <constraints>
+                          <splitpane position="right"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="e27e" class="javax.swing.JTextField" binding="chatTextInput">
+                            <constraints>
+                              <splitpane position="left"/>
+                            </constraints>
+                            <properties>
+                              <font size="18"/>
+                              <minimumSize width="900" height="60"/>
+                              <preferredSize width="900" height="60"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="845" class="javax.swing.JButton" binding="sendBTN">
+                            <constraints>
+                              <splitpane position="right"/>
+                            </constraints>
+                            <properties>
+                              <label value="Send"/>
+                              <minimumSize width="90" height="40"/>
+                              <name value=""/>
+                              <preferredSize width="90" height="40"/>
+                              <text value="Send"/>
+                              <toolTipText value="Clicking this Button sends the Text in the Textfiel to the other player"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </splitpane>
+                    </children>
+                  </splitpane>
+                </children>
+              </grid>
             </children>
           </splitpane>
+          <component id="8c934" class="model.ScoreList" binding="scoreList">
+            <constraints>
+              <splitpane position="right"/>
+            </constraints>
+            <properties>
+              <minimumSize width="280" height="680"/>
+              <preferredSize width="280" height="680"/>
+            </properties>
+          </component>
         </children>
       </splitpane>
+      <toolbar id="82563" binding="menuBar" custom-create="true">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="-1" height="20"/>
+          </grid>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children/>
+      </toolbar>
     </children>
   </grid>
 </form>

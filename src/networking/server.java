@@ -1,5 +1,6 @@
 package networking;
 
+import logging.Logging;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
 
 /**
  * Name:    Joel Klimont
@@ -29,11 +31,10 @@ public class server {
 
     public server(int port) throws IOException {
         self = new ServerSocket(port);
-        System.err.println("[!] SERVER CONNECTION: Waiting for a connection on " + port);
+        Logging.logToFile(Level.INFO, "SERVER CONNECTION: Waiting for a connection on " + port);
 
         player1 = new player(1);
         player2 = new player(2);
-        System.out.println("init players");
 
         while (! this.all_connected()) {
             try {
@@ -46,12 +47,10 @@ public class server {
         Thread player1_thread = new Thread(player1);
         Thread player2_thread = new Thread(player2);
 
-        System.out.println("server created threads");
-
         player1_thread.start();
         player2_thread.start();
 
-        System.out.println("server finished");
+        Logging.logToFile(Level.INFO, "SERVER STARTED");
     }
 
     public void starter() {
@@ -74,13 +73,13 @@ public class server {
         private player(int number) {
             this.number = number;
 
-            System.out.println(System.currentTimeMillis() + " -> " + "Thread " + this.number + " started");
+            Logging.logToFile(Level.INFO, "IN SERVER " + "Thread " + this.number + " started");
 
             try {
                 player = server.self.accept();
                 pw_player = new PrintWriter(player.getOutputStream(), true);
                 br_player = new BufferedReader(new InputStreamReader(player.getInputStream()));
-                System.out.println(System.currentTimeMillis() + " -> " + "[!] player connected: " + number);
+                Logging.logToFile(Level.INFO, "IN SERVER " + " player connected: " + number);
                 server.player_connected++;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -89,7 +88,7 @@ public class server {
         }
 
         public void start () {
-            System.out.println(System.currentTimeMillis() + " -> " + "Starting " +  number );
+            Logging.logToFile(Level.INFO, "IN SERVER " + "Starting " +  number );
             if (thread == null) {
                 thread = new Thread (this, Integer.toString(number));
                 thread.start ();
@@ -113,7 +112,7 @@ public class server {
 
             try {
                 JSONObject got_obj = new JSONObject(br_player.readLine());
-                System.out.println(System.currentTimeMillis() + " -> " + number + " got in server" + got_obj.toString());
+                Logging.logToFile(Level.INFO, "IN SERVER " + number + " got in server" + got_obj.toString());
                 return got_obj;
 
             } catch (JSONException e) {
@@ -128,7 +127,7 @@ public class server {
 
         private void send(JSONObject send_obj) {
             pw_player.println(send_obj);
-            System.out.println(System.currentTimeMillis() + " -> " + number + " sent " + send_obj.toString());
+            Logging.logToFile(Level.INFO, "IN SERVER " + number + " sent " + send_obj.toString());
         }
 
         private void send_str(String str) {

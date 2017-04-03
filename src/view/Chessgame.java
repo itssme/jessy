@@ -40,6 +40,18 @@ public class Chessgame {
                 JOptionPane.showMessageDialog(null, "You are not connected to another player");
             }
         });
+
+        board.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JTable target = (JTable)evt.getSource();
+                int row = target.getSelectedRow();
+                int col = target.getSelectedColumn();
+
+                System.out.println(row + ":" + col);
+
+            }
+        });
     }
 
     private void createUIComponents() {

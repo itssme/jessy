@@ -2,6 +2,7 @@ package networking;
 
 import board.Move;
 import board.Position;
+import logging.Logging;
 import org.json.JSONException;
 import org.json.JSONObject;
 import view.Chessgame;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
 
 import static database.Scorer.USERNAME;
 
@@ -21,13 +23,13 @@ import static database.Scorer.USERNAME;
  * Project: jessy
  * Desc.:   One connection which is sending and receiving json objects (and strings)
  */
-public class connection implements Runnable { // TODO: remove all prints and replace with logging
+public class connection implements Runnable {
 
     private Socket       self;
     private BufferedReader br;
     private Chessgame    game;
-    private Move     last_obj;
     private boolean   sending = false;
+    private static Move      last_obj;
     private static PrintWriter     pw;
 
     public int number;
@@ -53,20 +55,20 @@ public class connection implements Runnable { // TODO: remove all prints and rep
                         String player = obj.getString("player");
                         game.printToChat(player, msg);
 
-                        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + player + " " + msg);
+                        Logging.logToFile(Level.INFO, "GOT CHAT: " + player + " " + msg);
 
                     } else if (obj.has("resend")) {
                         send_move(last_obj);
 
                     } else {
-                        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "got position object");
+                        Logging.logToFile(Level.INFO, "GOT " + "got position object");
 
                         Position from = new Position(obj.getInt("from x"), obj.getInt("from y"));
                         Position to = new Position(obj.getInt("to x"), obj.getInt("to y"));
 
                         Move move = new Move(from, to);
 
-                        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + move.toJsonObject().toString());
+                        Logging.logToFile(Level.INFO, "GOT: " + move.toJsonObject().toString());
                         // TODO: validate (move)
                     }
                 }
@@ -78,14 +80,10 @@ public class connection implements Runnable { // TODO: remove all prints and rep
         }
     }
 
-    public void send_move(Move move) throws IOException {
-        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "in move sending: " + sending);
+    public static void send_move(Move move) throws IOException {
         JSONObject send_object = move.toJsonObject();
-
         last_obj = move;
-
-        String json_object = send_object.toString();
-        pw.println(json_object);
+        send_object(send_object);
     }
 
     public static void send_chat_msg(String msg) throws IOException {
@@ -98,17 +96,16 @@ public class connection implements Runnable { // TODO: remove all prints and rep
             e.printStackTrace();
         }
 
-        String json_object = send_object.toString();
-        pw.println(json_object);
+        send_object(send_object);
+    }
+
+    public static void send_object(JSONObject obj) {
+        Logging.logToFile(Level.INFO, "Sent object: " + obj.toString());
+        pw.println(obj);
     }
 
     private JSONObject get_object() throws IOException, JSONException {
-        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "get_obj");
-
-        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "listening for object");
         String got_obj = br.readLine();
-        System.out.println(System.currentTimeMillis() + " -> " + "FROM " + number + " -> " + "should be json " + got_obj);
-
         return new JSONObject(got_obj);
     }
 

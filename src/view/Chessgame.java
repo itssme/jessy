@@ -9,6 +9,8 @@ import model.ScoreList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 
 /**
@@ -18,7 +20,7 @@ import java.util.logging.Level;
  * Project: jessy
  * Desc.:
  */
-public class Chessgame {
+public class Chessgame extends WindowAdapter {
     private JPanel mainPanel;
     private BoardModel board;
     private ScoreList scoreList;
@@ -32,17 +34,7 @@ public class Chessgame {
 
     public Chessgame() {
 
-        board.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                JTable target = (JTable)evt.getSource();
-                int row = target.getSelectedRow();
-                int col = target.getSelectedColumn();
-
-                System.out.println(row + ":" + col);
-
-            }
-        });
+        board.addMouseListener(board);
         sendBTN.addActionListener(new SendBTNController(chat, chatTextInput));
     }
 
@@ -50,6 +42,7 @@ public class Chessgame {
         this.board = new BoardModel(8, 8);
 
         this.menuBar = new JMenuBar();
+        this.menuBar.add(this.genPlayMenu());
 
     }
 
@@ -66,6 +59,14 @@ public class Chessgame {
         c.add(host);
 
         return c;
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        super.windowClosing(e);
+        Logging.logToFile(Level.INFO, "Starting the logging Cleanup.");
+        Logging.cleanUp();
+        System.exit(0);
     }
 
     public static void main(String[] args) {
@@ -89,7 +90,8 @@ public class Chessgame {
         game.createUIComponents();
         frame.setMinimumSize(new Dimension(1290, 740));
         frame.setContentPane(game.mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(game);
         frame.pack();
         frame.setVisible(true);
     }

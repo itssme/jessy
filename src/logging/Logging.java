@@ -19,16 +19,11 @@ public class Logging {
         logObj.addHandler(fh);
         logObj.setUseParentHandlers(false);
         logObj.log(Level.INFO, "Successfully created the Logging Object!");
+        logObj.setLevel(MINLEVEL);
     }
 
     public static void logToFile(Level lvl, String msg) {
-        filterLog(lvl, msg);
-    }
-
-    private static void filterLog(Level lvl, String msg) {
-        if (MINLEVEL.intValue() <= lvl.intValue()) {
-            logObj.log(lvl, msg);
-        }
+        logObj.log(lvl, msg);
     }
 
     public static void addFileHandle(FileHandler fh) {
@@ -40,4 +35,12 @@ public class Logging {
         return logObj.getHandlers();
     }
 
+    public static void cleanUp() {
+        Handler[] handlers = getFileHandlers();
+        for (Handler h :
+                handlers) {
+            h.flush();
+            h.close();
+        }
+    }
 }

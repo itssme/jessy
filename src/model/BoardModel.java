@@ -2,13 +2,17 @@ package model;
 
 import board.Position;
 import chessfigure.*;
+import logging.Logging;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 /**
  * Name:    Königsreiter Simon
@@ -17,7 +21,7 @@ import java.util.function.Consumer;
  * Project: jessy
  * Desc.:
  */
-public class BoardModel extends JTable {
+public class BoardModel extends JTable implements MouseListener {
 
     private ArrayList<ChessFigure> whiteFigures;
     private ArrayList<ChessFigure> blackFigures;
@@ -134,5 +138,35 @@ public class BoardModel extends JTable {
     @Override
     public Class<?> getColumnClass(int column) {
         return ImageIcon.class;
+    }
+
+    @Override
+    public void mouseClicked(java.awt.event.MouseEvent evt) {
+        JTable target = (JTable) evt.getSource();
+        int row = target.getSelectedRow();
+        int col = target.getSelectedColumn();
+
+        Logging.logToFile(Level.ALL, row + ":" + col);
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

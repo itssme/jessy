@@ -22,8 +22,6 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Couldn't create the log-File!");
-        } finally {
-            fh.close();
         }
     }
 }

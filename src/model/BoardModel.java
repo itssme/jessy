@@ -71,7 +71,6 @@ public class BoardModel extends JTable {
         whiteFigures.forEach(new Consumer<ChessFigure>() {
             @Override
             public void accept(ChessFigure chessFigure) {
-                System.out.println(chessFigure.toString());
                 BoardModel.this.setValueAt(new ImageIcon(chessFigure.getImg()),
                         chessFigure.getPos().getX(),
                         chessFigure.getPos().getY());
@@ -106,7 +105,6 @@ public class BoardModel extends JTable {
         blackFigures.forEach(new Consumer<ChessFigure>() {
             @Override
             public void accept(ChessFigure chessFigure) {
-                System.out.println(chessFigure.toString());
                 BoardModel.this.setValueAt(new ImageIcon(chessFigure.getImg()),
                         chessFigure.getPos().getX(),
                         chessFigure.getPos().getY());

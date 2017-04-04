@@ -1,9 +1,6 @@
 package logging;
 
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.*;
 
 /**
  * Name:    Königsreiter Simon
@@ -15,7 +12,7 @@ import java.util.logging.SimpleFormatter;
 public class Logging {
 
     private static Logger logObj = Logger.getLogger("FileLogger");
-    private static final Level minLogLevel = Level.ALL;
+    private static final Level MINLEVEL = Level.ALL;
 
     public static void initLogging(FileHandler fh) {
         fh.setFormatter(new SimpleFormatter());
@@ -29,9 +26,18 @@ public class Logging {
     }
 
     private static void filterLog(Level lvl, String msg) {
-        if (lvl.intValue() >= minLogLevel.intValue()) {
+        if (MINLEVEL.intValue() <= lvl.intValue()) {
             logObj.log(lvl, msg);
         }
+    }
+
+    public static void addFileHandle(FileHandler fh) {
+        fh.setFormatter(new SimpleFormatter());
+        logObj.addHandler(fh);
+    }
+
+    public static Handler[] getFileHandlers() {
+        return logObj.getHandlers();
     }
 
 }

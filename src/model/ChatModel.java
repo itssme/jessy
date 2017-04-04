@@ -9,7 +9,10 @@ import javax.swing.*;
  * Project: jessy
  * Desc.:
  */
-public class ChatModel extends JLabel {
+public class ChatModel extends JTextArea {
 
+    public ChatModel() {
+        this.setEditable(false);
+    }
 
 }

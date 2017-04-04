@@ -1,5 +1,7 @@
 package model;
 
+import database.Scorer;
+
 import javax.swing.*;
 
 /**
@@ -13,6 +15,7 @@ public class ScoreList<T> extends JList<T> {
 
     public ScoreList() {
         super();
+        new Scorer(this).start();
     }
 
 }

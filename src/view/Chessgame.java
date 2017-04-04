@@ -1,11 +1,14 @@
 package view;
 
+import controllers.ConnectController;
+import controllers.HostController;
 import controllers.SendBTNController;
 import logging.Logging;
 import model.BoardModel;
 import model.ScoreList;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.logging.Level;
 
 /**
@@ -23,7 +26,7 @@ public class Chessgame {
     private JButton sendBTN;
     private model.ChatModel chat;
     private JPanel boardContainer;
-    private JToolBar menuBar;
+    private JMenuBar menuBar;
     private JPanel chatContainer;
     private JPanel chatBox;
 
@@ -46,8 +49,23 @@ public class Chessgame {
     private void createUIComponents() {
         this.board = new BoardModel(8, 8);
 
-        this.menuBar = new JToolBar();
+        this.menuBar = new JMenuBar();
 
+    }
+
+    private JMenu genPlayMenu() {
+        JMenu c = new JMenu("Play");
+
+        JMenuItem connect = new JMenuItem("Connect to Game");
+        connect.addActionListener(new ConnectController());
+
+        JMenuItem host = new JMenuItem("Host a Game");
+        host.addActionListener(new HostController());
+
+        c.add(connect);
+        c.add(host);
+
+        return c;
     }
 
     public static void main(String[] args) {
@@ -69,6 +87,7 @@ public class Chessgame {
         JFrame frame = new JFrame("Jessy");
         Chessgame game = new Chessgame();
         game.createUIComponents();
+        frame.setMinimumSize(new Dimension(1290, 740));
         frame.setContentPane(game.mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

@@ -2,7 +2,7 @@ package controllers;
 
 import logging.Logging;
 import model.ChatModel;
-import networking.connection;
+import networking.Connection;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -33,7 +33,7 @@ public class SendBTNController implements ActionListener {
             String msg = textField.getText();
             textField.setText("");
             printToChat("You", msg);
-            connection.send_chat_msg(msg);
+            Connection.send_chat_msg(msg);
             Logging.logToFile(Level.INFO, "Send message: " + msg);
         } catch (IOException e1) {
             Logging.logToFile(Level.WARNING, "Could not send message");

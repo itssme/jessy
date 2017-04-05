@@ -5,7 +5,6 @@ import board.Position;
 import logging.Logging;
 import org.json.JSONException;
 import org.json.JSONObject;
-import view.Chessgame;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,23 +23,18 @@ import static database.Scorer.USERNAME;
  * Project: jessy
  * Desc.:   One connection which is sending and receiving json objects (and strings)
  */
-public class connection implements Runnable {
+public class Connection implements Runnable {
 
     private Socket       self;
     private BufferedReader br;
-    private Chessgame    game;
     private boolean   sending = false;
     private static Move      last_obj;
     private static PrintWriter     pw;
 
-    public int number;
-
-    public connection(String connect_to_ip, int port, Chessgame game, int test_number) throws IOException {
+    public Connection(String connect_to_ip, int port) throws IOException {
         self = new Socket(connect_to_ip, port);
         br = new BufferedReader(new InputStreamReader(self.getInputStream()));
         pw = new PrintWriter(self.getOutputStream(), true);
-        this.game = game;
-        number = test_number;
     }
 
     @Override
@@ -61,7 +55,7 @@ public class connection implements Runnable {
                     } else if (obj.has("resend")) {
                         send_move(last_obj);
 
-                    } else {
+                    } else if (obj.has("from x")){
                         Logging.logToFile(Level.INFO, "GOT " + "got position object");
 
                         Position from = new Position(obj.getInt("from x"), obj.getInt("from y"));
@@ -71,6 +65,8 @@ public class connection implements Runnable {
 
                         Logging.logToFile(Level.INFO, "GOT: " + move.toJsonObject().toString());
                         // TODO: validate (move)
+                    } else {
+                        Logging.logToFile(Level.WARNING, "GOT: not a valid object " + obj.toString());
                     }
                 }
             } catch (IOException e) {
@@ -115,8 +111,8 @@ public class connection implements Runnable {
             This function determines which of the
             two clients starts first.
             (This will be the client which connected
-             first to the server. In most cases this will
-             be the client starting the server)
+             first to the Server. In most cases this will
+             be the client starting the Server)
          */
         return br.readLine().equals("start");
     }

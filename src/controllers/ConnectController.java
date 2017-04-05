@@ -2,6 +2,15 @@ package controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javafx.beans.property.adapter.JavaBeanObjectProperty;
+import networking.Connection;
+import sun.net.util.IPAddressUtil;
+
+import javax.swing.*;
 
 /**
  * Name:    Königsreiter Simon
@@ -12,8 +21,30 @@ import java.awt.event.ActionListener;
  */
 public class ConnectController implements ActionListener {
 
+    public static Connection connection = null;
+
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (connection == null) {
+            String ipAddress = JOptionPane.showInputDialog(null, "Type in the ip:", "192.168.1.100");
+            connect(ipAddress, 5060);
+        } else {
+            JOptionPane.showMessageDialog(null, "Your are already connected to a game");
+        }
+    }
 
+    public static boolean connect(String ipAddress, int port) {
+        if (! IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
+            JOptionPane.showMessageDialog(null, ipAddress + " is not a valid ip");
+        } else {
+            try {
+                connection = new Connection(ipAddress, port);
+            } catch (IOException e1) {
+                JOptionPane.showMessageDialog(null, "Could not connect");
+                return false;
+            }
+        }
+
+        return true;
     }
 }

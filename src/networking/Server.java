@@ -17,21 +17,34 @@ import java.util.logging.Level;
  * Class:   3CHIF
  * Date:    2017-03-21
  * Project: jessy
- * Desc.:   The server which handels the connections of the players.
- *          One player will start the server and automatically connect
+ * Desc.:   The Server which handles the connections of the players.
+ *          One player will start the Server and automatically connect
  *          to it. The other player will be able to connect over the ip
- *          of the player which started the server.
+ *          of the player which started the Server.
  */
-public class server {
+public class Server implements Runnable {
 
     private static ServerSocket self;
     private static int player_connected = 0;
     private player player1;
     private player player2;
+    private Thread  thread;
 
-    public server(int port) throws IOException {
+    public Server(int port) throws IOException {
         self = new ServerSocket(port);
-        Logging.logToFile(Level.INFO, "SERVER CONNECTION: Waiting for a connection on " + port);
+        Logging.logToFile(Level.INFO, "SERVER: init " + port);
+    }
+
+    public void start() {
+        if (thread == null) {
+            thread = new Thread(this);
+            thread.start();
+        }
+    }
+
+    @Override
+    public void run() {
+        Logging.logToFile(Level.INFO, "SERVER: waiting for connection");
 
         player1 = new player(1);
         player2 = new player(2);
@@ -76,11 +89,11 @@ public class server {
             Logging.logToFile(Level.INFO, "IN SERVER " + "Thread " + this.number + " started");
 
             try {
-                player = server.self.accept();
+                player = self.accept();
                 pw_player = new PrintWriter(player.getOutputStream(), true);
                 br_player = new BufferedReader(new InputStreamReader(player.getInputStream()));
                 Logging.logToFile(Level.INFO, "IN SERVER " + " player connected: " + number);
-                server.player_connected++;
+                Server.player_connected++;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -112,7 +125,7 @@ public class server {
 
             try {
                 JSONObject got_obj = new JSONObject(br_player.readLine());
-                Logging.logToFile(Level.INFO, "IN SERVER " + number + " got in server" + got_obj.toString());
+                Logging.logToFile(Level.INFO, "IN SERVER " + number + " got in Server" + got_obj.toString());
                 return got_obj;
 
             } catch (JSONException e) {

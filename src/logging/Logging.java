@@ -16,10 +16,10 @@ public class Logging {
 
     public static void initLogging(FileHandler fh) {
         fh.setFormatter(new SimpleFormatter());
+        logObj.setLevel(MINLEVEL);
         logObj.addHandler(fh);
         logObj.setUseParentHandlers(false);
         logObj.log(Level.INFO, "Successfully created the Logging Object!");
-        logObj.setLevel(MINLEVEL);
     }
 
     public static void logToFile(Level lvl, String msg) {

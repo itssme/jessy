@@ -1,10 +1,13 @@
 package chessfigure;
 
+import board.MoveList;
 import board.Position;
+import model.BoardModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Name:    Königsreiter Simon
@@ -16,15 +19,18 @@ import java.net.URL;
 public abstract class ChessFigure {
 
     protected Position pos;
-    protected String img;
-    protected boolean canJump = false;
-    protected boolean isWhite = false;
+    private String img;
+    private boolean canJump = false;
+    private boolean isWhite = false;
+    private MoveList<Position> possibleMoves;
 
     public ChessFigure(Position pos, String img, boolean isWhite, boolean canJump) {
         this.pos     = pos;
         this.img     = img;
         this.isWhite = isWhite;
         this.canJump = canJump;
+        this.possibleMoves = new MoveList<>();
+        //this.display();
     }
 
     public Position getPos() {
@@ -53,6 +59,33 @@ public abstract class ChessFigure {
 
     @Override
     public String toString() {
-        return "Position: " + pos.toString() + " | " + "Image: " + img + "";
+        return "Position: " + pos.toString() + " | " + "Image: " + img + "\n" + "Faction: " +
+                ((this.isWhite()) ? "White": "Black");
+    }
+
+    abstract public void calculateMove();
+
+    private void display() {
+        System.out.println(this.toString());
+        System.out.println("" + this.getClass() + " standing at: " + this.pos.toString());
+        possibleMoves.forEach(action -> System.out.println(action.toString()));
+        System.out.println();
+    }
+
+    protected boolean isOfSameFaction(ChessFigure otherFigure) {
+        return this.isWhite() == this.isWhite();
+    }
+
+    protected boolean positionIsMovable(Position p) {
+        if (BoardModel.figureAt(p) != null) {
+            return false;
+        } else {
+            this.possibleMoves.add(p.isValid());
+            return true;
+        }
+    }
+
+    public MoveList<Position> getPossibleMoves() {
+        return possibleMoves;
     }
 }

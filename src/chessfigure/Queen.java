@@ -15,4 +15,47 @@ public class Queen extends  ChessFigure {
         super(pos, img, isWhite, false);
     }
 
+    @Override
+    public void calculateMove() {
+        for (int i = 1; i < 8; i++) {
+            if (!this.positionIsMovable(new Position(this.pos.getRow() + i, this.pos.getCol()))) {
+                break;
+            }
+        }
+        for (int i = 1; i < 8; i++) {
+            if (!this.positionIsMovable(new Position(this.pos.getRow() + i, this.pos.getCol() + i))) {
+                break;
+            }
+        }
+        for (int i = 1; i < 8; i++) {
+            if (!this.positionIsMovable(new Position(this.pos.getRow() + i, this.pos.getCol() - i))) {
+                break;
+            }
+        }
+        for (int i = 1; i < 8; i++) {
+            if (!this.positionIsMovable(new Position(this.pos.getRow(), this.pos.getCol() - i))) {
+                break;
+            }
+        }
+        for (int i = 1; i < 8; i++) {
+            if (!this.positionIsMovable(new Position(this.pos.getRow(), this.pos.getCol() + i))) {
+                break;
+            }
+        }
+        for (int i = 1; i < 8; i++) {
+            if (!this.positionIsMovable(new Position(this.pos.getRow() - i, this.pos.getCol() + i))) {
+                break;
+            }
+        }
+        for (int i = 1; i < 8; i++) {
+            if (!this.positionIsMovable(new Position(this.pos.getRow() - i, this.pos.getCol() - i))) {
+                break;
+            }
+        }
+        for (int i = 1; i < 8; i++) {
+            if (!this.positionIsMovable(new Position(this.pos.getRow() - i, this.pos.getCol()))) {
+                break;
+            }
+        }
+    }
 }

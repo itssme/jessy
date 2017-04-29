@@ -1,6 +1,9 @@
+import database.Scorer;
 import logging.Logging;
 import view.Chessgame;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 
@@ -14,10 +17,13 @@ import java.util.logging.FileHandler;
 public class Main {
 
     public static void main(String[] args) {
-        FileHandler fh = null;
+        FileHandler fh;
         try {
             fh = new FileHandler("jessy.log");
             Logging.initLogging(fh);
+            String username = JOptionPane.showInputDialog("Please type in your Player-Name");
+            if (username == null) System.exit(0);
+            Scorer.USERNAME = username;
             Chessgame.main(args);
         } catch (IOException e) {
             e.printStackTrace();

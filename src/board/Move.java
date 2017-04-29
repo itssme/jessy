@@ -32,11 +32,11 @@ public class Move {
         JSONObject obj = new JSONObject();
 
         try {
-            obj.put("from x", from.getX());
-            obj.put("from y", from.getY());
+            obj.put("from x", from.getRow());
+            obj.put("from y", from.getCol());
 
-            obj.put("to x", to.getX());
-            obj.put("to y", to.getY());
+            obj.put("to x", to.getRow());
+            obj.put("to y", to.getCol());
 
         } catch (JSONException e) {
             e.printStackTrace();

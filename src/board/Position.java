@@ -1,5 +1,7 @@
 package board;
 
+import com.sun.istack.internal.Nullable;
+import model.BoardModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,41 +14,62 @@ import org.json.JSONObject;
  */
 public class Position {
 
-    private int x;
-    private int y;
+    private int row;
+    private int col;
 
-    public Position(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Position(int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 
     public boolean equals(int x, int y) {
-        return this.x == x && this.y == y;
+        return this.row == x && this.col == y;
     }
 
-    public int getX() {
-        return x;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Position) {
+            Position other = (Position) obj;
+            return other.getRow() == this.getRow() && other.getCol() == this.getCol();
+        } else {
+            return false;
+        }
     }
 
-    public int getY() {
-        return y;
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 
     @Override
     public String toString() {
-        return "{" + x + "|" + y + "}";
+        return "{" + row + "|" + col + "}";
     }
 
     public JSONObject toJsonObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("x", x);
-            obj.put("y", y);
+            obj.put("row", row);
+            obj.put("col", col);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return obj;
+    }
+
+    @Nullable
+    public Position isValid() {
+        BoardModel.figureAt(this);
+        if ((this.row >= 0) && (this.row <= 7) && (this.col >= 0) && (this.col <= 7)) {
+            return this;
+        } else {
+            return null;
+        }
+
     }
 }

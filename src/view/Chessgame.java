@@ -21,6 +21,7 @@ import java.util.logging.Level;
  * Desc.:
  */
 public class Chessgame extends WindowAdapter {
+
     private JPanel mainPanel;
     private BoardModel board;
     private ScoreList scoreList;
@@ -88,6 +89,7 @@ public class Chessgame extends WindowAdapter {
         JFrame frame = new JFrame("Jessy");
         Chessgame game = new Chessgame();
         game.createUIComponents();
+        game.board.refresh();
         frame.setMinimumSize(new Dimension(1290, 740));
         frame.setContentPane(game.mainPanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

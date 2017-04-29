@@ -3,8 +3,13 @@ package model;
 import board.Position;
 import chessfigure.*;
 import logging.Logging;
+import org.intellij.lang.annotations.JdkConstants;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -23,6 +28,8 @@ import java.util.logging.Level;
  */
 public class BoardModel extends JTable implements MouseListener {
 
+    @NotNull
+    static BoardModel boardReference;
     private ArrayList<ChessFigure> whiteFigures;
     private ArrayList<ChessFigure> blackFigures;
 
@@ -34,6 +41,13 @@ public class BoardModel extends JTable implements MouseListener {
                 return false;
             }
         });
+        this.getColumnModel().setColumnSelectionAllowed(true);
+        this.setColumnSelectionAllowed(true);
+        this.setRowSelectionAllowed(true);
+        this.setCellSelectionEnabled(true);
+        this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        this.setSelectionBackground(Color.CYAN);
+        this.setSelectionForeground(Color.CYAN);
         this.genWhite();
         this.genBlack();
         this.setMaximumSize(new Dimension((int) (1280 * 0.75),
@@ -44,8 +58,16 @@ public class BoardModel extends JTable implements MouseListener {
         }
         this.setRowSelectionAllowed(false);
         this.doLayout();
+        boardReference = this;
 
+    }
 
+    public ArrayList<ChessFigure> getWhiteFigures() {
+        return whiteFigures;
+    }
+
+    public ArrayList<ChessFigure> getBlackFigures() {
+        return blackFigures;
     }
 
     private void genWhite() {
@@ -76,8 +98,8 @@ public class BoardModel extends JTable implements MouseListener {
             @Override
             public void accept(ChessFigure chessFigure) {
                 BoardModel.this.setValueAt(new ImageIcon(chessFigure.getImg()),
-                        chessFigure.getPos().getX(),
-                        chessFigure.getPos().getY());
+                        chessFigure.getPos().getRow(),
+                        chessFigure.getPos().getCol());
             }
         });
     }
@@ -110,8 +132,8 @@ public class BoardModel extends JTable implements MouseListener {
             @Override
             public void accept(ChessFigure chessFigure) {
                 BoardModel.this.setValueAt(new ImageIcon(chessFigure.getImg()),
-                        chessFigure.getPos().getX(),
-                        chessFigure.getPos().getY());
+                        chessFigure.getPos().getRow(),
+                        chessFigure.getPos().getCol());
             }
         });
     }
@@ -145,8 +167,17 @@ public class BoardModel extends JTable implements MouseListener {
         JTable target = (JTable) evt.getSource();
         int row = target.getSelectedRow();
         int col = target.getSelectedColumn();
-
-        Logging.logToFile(Level.ALL, row + ":" + col);
+        ChessFigure ch = figureAt(new Position(row, col));
+        if (ch != null) {
+            Logging.logToFile(Level.INFO, ch.toString());
+            ch.getPossibleMoves().forEach(new Consumer<Position>() {
+                @Override
+                public void accept(Position position) {
+                    ((DefaultTableCellRenderer)BoardModel.this.getCellRenderer(position.getRow(), position.getCol())).setBackground(Color.CYAN);
+                    BoardModel.this.refresh();
+                }
+            });
+        }
 
     }
 
@@ -154,7 +185,6 @@ public class BoardModel extends JTable implements MouseListener {
     public void mousePressed(MouseEvent e) {
 
     }
-
     @Override
     public void mouseReleased(MouseEvent e) {
 
@@ -169,4 +199,35 @@ public class BoardModel extends JTable implements MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
+
+    public ArrayList<ChessFigure> getWholeList() {
+        ArrayList<ChessFigure> wholeList = new ArrayList<>();
+        wholeList.addAll(getWhiteFigures());
+        wholeList.addAll(getBlackFigures());
+        return wholeList;
+    }
+
+    @Nullable
+    public static ChessFigure figureAt(Position p) {
+        ChessFigure[] wholeList = (ChessFigure[]) boardReference.getWholeList().toArray(new ChessFigure[0]);
+        for (ChessFigure chessFig:
+             wholeList) {
+            if (chessFig.getPos().equals(p)) {
+                return chessFig;
+            }
+        }
+        return null;
+    }
+
+    public void refresh() {
+        this.getWholeList().forEach(new Consumer<ChessFigure>() {
+            @Override
+            public void accept(ChessFigure chessFigure) {
+                chessFigure.calculateMove();
+            }
+        });
+        this.repaint();
+    }
+
+
 }

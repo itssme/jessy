@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" default="build">
+<project name="jessy" default="build">
+
+    <property name="srcDir" location="src"></property>
+    <property name="binDir" location="out"></property>
+    <property name="docDir" location="doc/javadoc"></property>
 
     <target name="build">
+        <echo>Beginning the Cleaning and build-Process</echo>
+
+    </target>
+
+    <target name="clean">
+
+    </target>
+
+    <target name="build-docs">
 
     </target>
 

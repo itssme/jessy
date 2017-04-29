@@ -15,4 +15,15 @@ public class Knight extends ChessFigure {
         super(pos, img, white, true);
     }
 
+    @Override
+    public void calculateMove() {
+        this.positionIsMovable(new Position(this.pos.getRow() + 2, this.pos.getCol() + 1));
+        this.positionIsMovable(new Position(this.pos.getRow() + 2, this.pos.getCol() - 1));
+        this.positionIsMovable(new Position(this.pos.getRow() - 2, this.pos.getCol() + 1));
+        this.positionIsMovable(new Position(this.pos.getRow() - 2, this.pos.getCol() - 1));
+        this.positionIsMovable(new Position(this.pos.getRow() + 1, this.pos.getCol() + 2));
+        this.positionIsMovable(new Position(this.pos.getRow() - 1, this.pos.getCol() + 2));
+        this.positionIsMovable(new Position(this.pos.getRow() + 1, this.pos.getCol() - 2));
+        this.positionIsMovable(new Position(this.pos.getRow() - 1, this.pos.getCol() - 2));
+    }
 }

@@ -9,6 +9,8 @@ import sun.net.util.IPAddressUtil;
 
 import javax.swing.*;
 
+import static database.Scorer.USERNAME;
+
 /**
  * Name:    Königsreiter Simon
  * Class:   3CHIF
@@ -19,12 +21,30 @@ import javax.swing.*;
 public class ConnectController implements ActionListener {
 
     public static Connection connection = null;
+    public static boolean startFirst;
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (connection == null) {
             String ipAddress = JOptionPane.showInputDialog(null, "Type in the ip:", "192.168.1.100");
             connect(ipAddress, 5060);
+
+            try {
+                startFirst = connection.start();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+            connection.start_thread();
+
+            if (startFirst) {
+                JOptionPane.showMessageDialog(null, "Connected: you start");
+            } else {
+                JOptionPane.showMessageDialog(null, "Connected: opponent starts");
+            }
+
+
         } else {
             JOptionPane.showMessageDialog(null, "Your are already connected to a game");
         }

@@ -30,6 +30,7 @@ public class Connection implements Runnable {
     private boolean   sending = false;
     private static Move      last_obj;
     private static PrintWriter     pw;
+    private Thread this_thread;
 
     public Connection(String connect_to_ip, int port) throws IOException {
         self = new Socket(connect_to_ip, port);
@@ -37,15 +38,26 @@ public class Connection implements Runnable {
         pw = new PrintWriter(self.getOutputStream(), true);
     }
 
+    public void start_thread() {
+        if (this_thread == null) {
+            this_thread = new Thread(this);
+            this_thread.start();
+        }
+    }
+
+
     @Override
     public void run() {
         while (true) {
             try {
 
+                Logging.logToFile(Level.INFO, "Connection thread is running");
+
                 JSONObject obj = get_object();
 
                 if (obj != null) {
                     if (obj.has("chat")) {
+
                         String msg = obj.getString("chat");
                         String player = obj.getString("player");
                         printToChat(player, msg);
@@ -114,6 +126,7 @@ public class Connection implements Runnable {
              first to the Server. In most cases this will
              be the client starting the Server)
          */
+
         return br.readLine().equals("start");
     }
 }

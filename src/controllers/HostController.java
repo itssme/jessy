@@ -1,12 +1,13 @@
 package controllers;
 
-import networking.Connection;
 import networking.Server;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+
+import static controllers.ConnectController.connection;
 
 
 /**
@@ -37,10 +38,33 @@ public class HostController implements ActionListener {
 
             JOptionPane.showMessageDialog(null, "Started the game");
 
-            // TODO: check who is starting
+
+            while (! server.all_connected()) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            server.starter();
+
+            try {
+                ConnectController.startFirst = connection.start();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+            connection.start_thread();
+
+            if (ConnectController.startFirst) {
+                JOptionPane.showMessageDialog(null, "Connected: you start");
+            } else {
+                JOptionPane.showMessageDialog(null, "Connected: opponent starts");
+            }
+
         } else {
             JOptionPane.showMessageDialog(null, "Server is already started");
         }
-
     }
 }

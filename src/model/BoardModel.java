@@ -28,7 +28,6 @@ import java.util.logging.Level;
  */
 public class BoardModel extends JTable implements MouseListener {
 
-    @NotNull
     static BoardModel boardReference;
     private ArrayList<ChessFigure> whiteFigures;
     private ArrayList<ChessFigure> blackFigures;
@@ -214,7 +213,6 @@ public class BoardModel extends JTable implements MouseListener {
         return wholeList;
     }
 
-    @Nullable
     public static ChessFigure figureAt(Position p) {
         ChessFigure[] wholeList = (ChessFigure[]) boardReference.getWholeList().
                 toArray(new ChessFigure[0]);

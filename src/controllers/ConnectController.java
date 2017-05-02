@@ -3,10 +3,7 @@ package controllers;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javafx.beans.property.adapter.JavaBeanObjectProperty;
 import networking.Connection;
 import sun.net.util.IPAddressUtil;
 

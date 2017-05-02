@@ -121,7 +121,8 @@
                               <name value=""/>
                               <preferredSize width="90" height="40"/>
                               <text value="Send"/>
-                              <toolTipText value="Clicking this Button sends the Text in the Textfiel to the other player"/>
+                              <toolTipText value="Clicking this Button sends the Text in the Textfield to the other player"/>
+                              <verifyInputWhenFocusTarget value="true"/>
                             </properties>
                           </component>
                         </children>

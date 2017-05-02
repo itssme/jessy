@@ -3,6 +3,7 @@ package view;
 import controllers.ConnectController;
 import controllers.HostController;
 import controllers.SendBTNController;
+import database.Scorer;
 import logging.Logging;
 import model.BoardModel;
 import model.ScoreList;
@@ -86,6 +87,9 @@ public class Chessgame extends WindowAdapter {
             Logging.logToFile(Level.WARNING,
                     "An unsupported Look and Feel exception occurred!");
         }
+        String username = JOptionPane.showInputDialog("Please type in your Player-Name");
+        if (username == null) System.exit(0);
+        Scorer.USERNAME = username;
         JFrame frame = new JFrame("Jessy");
         Chessgame game = new Chessgame();
         game.createUIComponents();

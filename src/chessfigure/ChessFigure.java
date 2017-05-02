@@ -88,4 +88,5 @@ public abstract class ChessFigure {
     public MoveList<Position> getPossibleMoves() {
         return possibleMoves;
     }
+
 }

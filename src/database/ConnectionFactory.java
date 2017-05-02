@@ -35,7 +35,7 @@ public class ConnectionFactory {
             Logging.logToFile(Level.SEVERE, e.getLocalizedMessage());
             int res = JOptionPane.showConfirmDialog(null,
                     "We couldn't initialize the Database-Driver, " +
-                            "closing the application now...",
+                            "closing the application now",
                     "An error Occured",
                     JOptionPane.OK_OPTION,
                     JOptionPane.ERROR_MESSAGE);

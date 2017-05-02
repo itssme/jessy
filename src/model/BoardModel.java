@@ -1,7 +1,10 @@
 package model;
 
+import board.MoveList;
 import board.Position;
 import chessfigure.*;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import logging.Logging;
 
 import javax.swing.*;
@@ -28,15 +31,10 @@ public class BoardModel extends JTable implements MouseListener {
     static BoardModel boardReference;
     private ArrayList<ChessFigure> whiteFigures;
     private ArrayList<ChessFigure> blackFigures;
+    private ChessFigure selected = null;
 
     public BoardModel(int rows, int cols) {
-        super(new DefaultTableModel(rows,
-                cols) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        });
+        super(new ChessBoardModel(rows, cols));
         this.getColumnModel().setColumnSelectionAllowed(true);
         this.setColumnSelectionAllowed(true);
         this.setRowSelectionAllowed(true);
@@ -150,6 +148,13 @@ public class BoardModel extends JTable implements MouseListener {
                 comp.setBackground(Color.BLACK);
             }
         }
+        if (selected != null) {
+            selected.getPossibleMoves().forEach(consumer -> {
+              if (row == consumer.getRow() && column == consumer.getCol()) {
+                  comp.setBackground(new Color(88, 115, 232, 100));
+              }
+            });
+        }
         return comp;
     }
 
@@ -179,7 +184,12 @@ public class BoardModel extends JTable implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        BoardModel src = (BoardModel) e.getSource();
+        int row = src.getSelectedRow();
+        int col = src.getSelectedColumn();
+        this.selected = BoardModel.figureAt(new Position(row, col));
+        this.revalidate();
+        this.repaint();
     }
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -204,7 +214,8 @@ public class BoardModel extends JTable implements MouseListener {
     }
 
     public static ChessFigure figureAt(Position p) {
-        ChessFigure[] wholeList = (ChessFigure[]) boardReference.getWholeList().toArray(new ChessFigure[0]);
+        ChessFigure[] wholeList = (ChessFigure[]) boardReference.getWholeList().
+                toArray(new ChessFigure[0]);
         for (ChessFigure chessFig:
              wholeList) {
             if (chessFig.getPos().equals(p)) {
@@ -221,7 +232,14 @@ public class BoardModel extends JTable implements MouseListener {
                 chessFigure.calculateMove();
             }
         });
+        this.revalidate();
         this.repaint();
+    }
+
+    public static void colorPossibleMoves(MoveList<Position> moves) {
+        moves.forEach(consumer -> {
+
+        });
     }
 
 

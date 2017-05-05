@@ -1,7 +1,7 @@
 package database;
 
 import com.sun.istack.internal.Nullable;
-import logging.Logging;
+import logging.LoggingSingleton;
 import model.ScoreList;
 
 import java.sql.*;
@@ -51,7 +51,7 @@ public class Scorer extends Thread implements Runnable {
             }
             targetList.fill(this.readUserDB(conn));
         } else {
-            Logging.logToFile(Level.WARNING, "Couldn't initialize Connection");
+            LoggingSingleton.getInstance().logToFile(Level.WARNING, "Couldn't initialize Connection");
         }
     }
 
@@ -67,7 +67,7 @@ public class Scorer extends Thread implements Runnable {
             }
             return true;
         } catch (SQLException e) {
-            Logging.logToFile(Level.INFO, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(Level.INFO, e.getLocalizedMessage());
         }
         return false;
     }
@@ -85,7 +85,7 @@ public class Scorer extends Thread implements Runnable {
             stmt.execute("insert into player(name) values('" + USERNAME + "');");
             stmt.close();
         } catch (SQLException e) {
-            Logging.logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
             return false;
         }
         return true;
@@ -98,7 +98,7 @@ public class Scorer extends Thread implements Runnable {
             stmt = conn.prepareStatement("select * from player;");
             return stmt.executeQuery();
         } catch (SQLException e) {
-            Logging.logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
         }
         return null;
     }

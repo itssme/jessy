@@ -4,7 +4,7 @@ import controllers.ConnectController;
 import controllers.HostController;
 import controllers.SendBTNController;
 import database.Scorer;
-import logging.Logging;
+import logging.LoggingSingleton;
 import model.BoardModel;
 import model.ScoreList;
 
@@ -66,8 +66,8 @@ public class Chessgame extends WindowAdapter {
     @Override
     public void windowClosing(WindowEvent e) {
         super.windowClosing(e);
-        Logging.logToFile(Level.INFO, "Starting the logging Cleanup.");
-        Logging.cleanUp();
+        LoggingSingleton.getInstance().logToFile(Level.INFO, "Starting the logging Cleanup.");
+        LoggingSingleton.getInstance().cleanUp();
         System.exit(0);
     }
 
@@ -75,16 +75,16 @@ public class Chessgame extends WindowAdapter {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
-            Logging.logToFile(Level.WARNING,
+            LoggingSingleton.getInstance().logToFile(Level.WARNING,
                     "A Class Not Fount exception occurred!");
         } catch (InstantiationException e) {
-            Logging.logToFile(Level.WARNING,
+            LoggingSingleton.getInstance().logToFile(Level.WARNING,
                     "An Error occurred while instantiating the Class!");
         } catch (IllegalAccessException e) {
-            Logging.logToFile(Level.WARNING,
+            LoggingSingleton.getInstance().logToFile(Level.WARNING,
                     "An IllegalAccessException occurred!");
         } catch (UnsupportedLookAndFeelException e) {
-            Logging.logToFile(Level.WARNING,
+            LoggingSingleton.getInstance().logToFile(Level.WARNING,
                     "An unsupported Look and Feel exception occurred!");
         }
         String username = JOptionPane.showInputDialog("Please type in your Player-Name");

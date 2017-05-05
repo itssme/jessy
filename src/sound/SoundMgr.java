@@ -1,6 +1,6 @@
 package sound;
 
-import logging.Logging;
+import logging.LoggingSingleton;
 
 import javax.sound.sampled.*;
 import java.io.File;
@@ -22,17 +22,17 @@ public class SoundMgr extends Thread{
         try {
             audioInputStream = AudioSystem.getAudioInputStream(new File(url));
         } catch (UnsupportedAudioFileException e) {
-            Logging.logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
         } catch (IOException e) {
-            Logging.logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
         }
         try (Clip clip = AudioSystem.getClip()) {
             clip.open(audioInputStream);
             clip.start();
         } catch (LineUnavailableException e) {
-            Logging.logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
         } catch (IOException e) {
-            Logging.logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
         }
     }
 

@@ -1,10 +1,9 @@
 package model;
 
 import database.Scorer;
-import logging.Logging;
+import logging.LoggingSingleton;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class ScoreList<T> extends JList<T> {
             this.setListData((T[]) userList.toArray());
 
         } catch (SQLException e) {
-            Logging.logToFile(Level.INFO, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(Level.INFO, e.getLocalizedMessage());
         }
     }
 }

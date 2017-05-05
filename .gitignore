@@ -6,4 +6,4 @@ jessy.iml
 /out/
 
 # We don't need the log file in the git-Repository
-jessy.log
+jessy.log.xml

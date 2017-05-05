@@ -1,7 +1,7 @@
 package database;
 
 
-import logging.Logging;
+import logging.LoggingSingleton;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -32,7 +32,7 @@ public class ConnectionFactory {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            Logging.logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
             int res = JOptionPane.showConfirmDialog(null,
                     "We couldn't initialize the Database-Driver, " +
                             "closing the application now",
@@ -48,8 +48,8 @@ public class ConnectionFactory {
             try {
                 conn = DriverManager.getConnection("jdbc:sqlite:" + connectionString);
             } catch (SQLException e) {
-                Logging.logToFile(Level.SEVERE, "An SQLException occured");
-                Logging.logToFile(Level.SEVERE, e.getLocalizedMessage());
+                LoggingSingleton.getInstance().logToFile(Level.SEVERE, "An SQLException occured");
+                LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
             }
         }
         return conn;

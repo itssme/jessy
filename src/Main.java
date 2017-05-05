@@ -1,11 +1,4 @@
-import database.Scorer;
-import logging.Logging;
 import view.Chessgame;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
-import java.util.logging.FileHandler;
 
 /**
  * Name:    Königsreiter Simon
@@ -17,14 +10,11 @@ import java.util.logging.FileHandler;
 public class Main {
 
     public static void main(String[] args) {
-        FileHandler fh;
         try {
-            fh = new FileHandler("jessy.log");
-            Logging.initLogging(fh);
-            Chessgame.main(args);
-        } catch (IOException e) {
+            Class.forName("logging.LoggingSingleton");
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            System.err.println("Couldn't create the log-File!");
         }
+        Chessgame.main(args);
     }
 }

@@ -11,31 +11,37 @@ import java.util.logging.*;
  */
 public class Logging {
 
-    private static Logger logObj = Logger.getLogger("FileLogger");
+    private Logger logObj = Logger.getLogger("FileLogger");
     private static final Level MINLEVEL = Level.ALL;
 
-    public static void initLogging(FileHandler fh) {
-        fh.setFormatter(new SimpleFormatter());
-        logObj.setLevel(MINLEVEL);
-        logObj.addHandler(fh);
-        logObj.setUseParentHandlers(false);
-        logObj.log(Level.INFO, "Successfully created the Logging Object!");
+    public Logger getLogObj() {
+        return logObj;
     }
 
-    public static void logToFile(Level lvl, String msg) {
+    protected static Logging initLogging(FileHandler fh, Formatter formatter) {
+        Logging log = new Logging();
+        fh.setFormatter(formatter);
+        log.getLogObj().setLevel(MINLEVEL);
+        log.getLogObj().addHandler(fh);
+        log.getLogObj().setUseParentHandlers(false);
+        log.getLogObj().log(Level.INFO, "Successfully created the Logging Object!");
+        return log;
+    }
+
+    public void logToFile(Level lvl, String msg) {
         logObj.log(lvl, msg);
     }
 
-    public static void addFileHandle(FileHandler fh) {
+    public void addFileHandle(FileHandler fh) {
         fh.setFormatter(new SimpleFormatter());
         logObj.addHandler(fh);
     }
 
-    public static Handler[] getFileHandlers() {
+    public Handler[] getFileHandlers() {
         return logObj.getHandlers();
     }
 
-    public static void cleanUp() {
+    public void cleanUp() {
         Handler[] handlers = getFileHandlers();
         for (Handler h :
                 handlers) {

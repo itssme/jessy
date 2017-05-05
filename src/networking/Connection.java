@@ -2,7 +2,7 @@ package networking;
 
 import board.Move;
 import board.Position;
-import logging.Logging;
+import logging.LoggingSingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,7 +51,7 @@ public class Connection implements Runnable {
         while (true) {
             try {
 
-                Logging.logToFile(Level.INFO, "Connection thread is running");
+                LoggingSingleton.getInstance().logToFile(Level.INFO, "Connection thread is running");
 
                 JSONObject obj = get_object();
 
@@ -62,23 +62,23 @@ public class Connection implements Runnable {
                         String player = obj.getString("player");
                         printToChat(player, msg);
 
-                        Logging.logToFile(Level.INFO, "GOT CHAT: " + player + " " + msg);
+                        LoggingSingleton.getInstance().logToFile(Level.INFO, "GOT CHAT: " + player + " " + msg);
 
                     } else if (obj.has("resend")) {
                         send_move(last_obj);
 
                     } else if (obj.has("from x")){
-                        Logging.logToFile(Level.INFO, "GOT " + "got position object");
+                        LoggingSingleton.getInstance().logToFile(Level.INFO, "GOT " + "got position object");
 
                         Position from = new Position(obj.getInt("from x"), obj.getInt("from y"));
                         Position to = new Position(obj.getInt("to x"), obj.getInt("to y"));
 
                         Move move = new Move(from, to);
 
-                        Logging.logToFile(Level.INFO, "GOT: " + move.toJsonObject().toString());
+                        LoggingSingleton.getInstance().logToFile(Level.INFO, "GOT: " + move.toJsonObject().toString());
                         // TODO: validate (move)
                     } else {
-                        Logging.logToFile(Level.WARNING, "GOT: not a valid object " + obj.toString());
+                        LoggingSingleton.getInstance().logToFile(Level.WARNING, "GOT: not a valid object " + obj.toString());
                     }
                 }
             } catch (IOException e) {
@@ -109,7 +109,7 @@ public class Connection implements Runnable {
     }
 
     public static void send_object(JSONObject obj) {
-        Logging.logToFile(Level.INFO, "Sent object: " + obj.toString());
+        LoggingSingleton.getInstance().logToFile(Level.INFO, "Sent object: " + obj.toString());
         pw.println(obj);
     }
 

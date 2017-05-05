@@ -3,14 +3,10 @@ package model;
 import board.MoveList;
 import board.Position;
 import chessfigure.*;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
-import logging.Logging;
+import logging.LoggingSingleton;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -170,7 +166,7 @@ public class BoardModel extends JTable implements MouseListener {
         int col = target.getSelectedColumn();
         ChessFigure ch = figureAt(new Position(row, col));
         if (ch != null) {
-            Logging.logToFile(Level.INFO, ch.toString());
+            LoggingSingleton.getInstance().logToFile(Level.INFO, ch.toString());
             ch.getPossibleMoves().forEach(new Consumer<Position>() {
                 @Override
                 public void accept(Position position) {

@@ -1,6 +1,6 @@
 package networking;
 
-import logging.Logging;
+import logging.LoggingSingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +32,7 @@ public class Server implements Runnable {
 
     public Server(int port) throws IOException {
         self = new ServerSocket(port);
-        Logging.logToFile(Level.INFO, "SERVER: init " + port);
+        LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER: init " + port);
     }
 
     public void start() {
@@ -44,7 +44,7 @@ public class Server implements Runnable {
 
     @Override
     public void run() {
-        Logging.logToFile(Level.INFO, "SERVER: waiting for connection");
+        LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER: waiting for connection");
 
         player1 = new player(1);
         player2 = new player(2);
@@ -63,7 +63,7 @@ public class Server implements Runnable {
         player1_thread.start();
         player2_thread.start();
 
-        Logging.logToFile(Level.INFO, "SERVER STARTED");
+        LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER STARTED");
     }
 
     public void starter() {
@@ -86,13 +86,13 @@ public class Server implements Runnable {
         private player(int number) {
             this.number = number;
 
-            Logging.logToFile(Level.INFO, "IN SERVER " + "Thread " + this.number + " started");
+            LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + "Thread " + this.number + " started");
 
             try {
                 player = self.accept();
                 pw_player = new PrintWriter(player.getOutputStream(), true);
                 br_player = new BufferedReader(new InputStreamReader(player.getInputStream()));
-                Logging.logToFile(Level.INFO, "IN SERVER " + " player connected: " + number);
+                LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + " player connected: " + number);
                 Server.player_connected++;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -101,7 +101,7 @@ public class Server implements Runnable {
         }
 
         public void start () {
-            Logging.logToFile(Level.INFO, "IN SERVER " + "Starting " +  number );
+            LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + "Starting " + number);
             if (thread == null) {
                 thread = new Thread (this, Integer.toString(number));
                 thread.start ();
@@ -125,7 +125,7 @@ public class Server implements Runnable {
 
             try {
                 JSONObject got_obj = new JSONObject(br_player.readLine());
-                Logging.logToFile(Level.INFO, "IN SERVER " + number + " got in Server" + got_obj.toString());
+                LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + number + " got in Server" + got_obj.toString());
                 return got_obj;
 
             } catch (JSONException e) {
@@ -140,7 +140,7 @@ public class Server implements Runnable {
 
         private void send(JSONObject send_obj) {
             pw_player.println(send_obj);
-            Logging.logToFile(Level.INFO, "IN SERVER " + number + " sent " + send_obj.toString());
+            LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + number + " sent " + send_obj.toString());
         }
 
         private void send_str(String str) {

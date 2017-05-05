@@ -28,12 +28,15 @@ public class ScoreList<T> extends JList<T> {
         ArrayList<String> userList = new ArrayList<>();
         try {
             for (int i = 0; resultSet.next(); i++) {
-                userList.add("" + resultSet.getInt("UID") + " - " + resultSet.getString("name"));
+                userList.add("" + resultSet.getInt("UID") + " - " +
+                        resultSet.getString("name"));
             }
             this.setListData((T[]) userList.toArray());
 
         } catch (SQLException e) {
-            LoggingSingleton.getInstance().logToFile(Level.INFO, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(
+                    Level.INFO,
+                    e.getLocalizedMessage());
         }
     }
 }

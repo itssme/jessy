@@ -24,7 +24,8 @@ public class Logging {
         log.getLogObj().setLevel(MINLEVEL);
         log.getLogObj().addHandler(fh);
         log.getLogObj().setUseParentHandlers(false);
-        log.getLogObj().log(Level.INFO, "Successfully created the Logging Object!");
+        log.getLogObj().log(Level.INFO,
+                "Successfully created the Logging Object!");
         return log;
     }
 

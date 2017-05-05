@@ -34,12 +34,20 @@ public class SendBTNController implements ActionListener {
             textField.setText("");
             printToChat("You", msg);
             Connection.send_chat_msg(msg);
-            LoggingSingleton.getInstance().logToFile(Level.INFO, "Send message: " + msg);
+            LoggingSingleton.getInstance().logToFile(
+                    Level.INFO,
+                    "Send message: " + msg);
         } catch (IOException e1) {
-            LoggingSingleton.getInstance().logToFile(Level.WARNING, "Could not send message");
+            LoggingSingleton.getInstance().logToFile(
+                    Level.WARNING,
+                    "Could not send message");
         } catch (NullPointerException e2) {
-            LoggingSingleton.getInstance().logToFile(Level.WARNING, "Connection is not set up, could not send message");
-            JOptionPane.showMessageDialog(null, "You are not connected to another player");
+            LoggingSingleton.getInstance().logToFile(
+                    Level.WARNING,
+                    "Connection is not set up, could not send message");
+            JOptionPane.showMessageDialog(
+                    null,
+                    "You are not connected to another player");
         }
     }
 

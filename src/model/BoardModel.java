@@ -146,9 +146,9 @@ public class BoardModel extends JTable implements MouseListener {
         }
         if (selected != null) {
             selected.getPossibleMoves().forEach(consumer -> {
-              if (row == consumer.getRow() && column == consumer.getCol()) {
-                  comp.setBackground(new Color(88, 115, 232, 100));
-              }
+                if (row == consumer.getRow() && column == consumer.getCol()) {
+                    comp.setBackground(new Color(88, 115, 232, 100));
+                }
             });
         }
         return comp;
@@ -170,7 +170,11 @@ public class BoardModel extends JTable implements MouseListener {
             ch.getPossibleMoves().forEach(new Consumer<Position>() {
                 @Override
                 public void accept(Position position) {
-                    ((DefaultTableCellRenderer)BoardModel.this.getCellRenderer(position.getRow(), position.getCol())).setBackground(Color.CYAN);
+                    ((DefaultTableCellRenderer) BoardModel.this.
+                            getCellRenderer(
+                                    position.getRow(),
+                                    position.getCol())).
+                            setBackground(Color.CYAN);
                     BoardModel.this.refresh();
                 }
             });
@@ -187,6 +191,7 @@ public class BoardModel extends JTable implements MouseListener {
         this.revalidate();
         this.repaint();
     }
+
     @Override
     public void mouseReleased(MouseEvent e) {
 
@@ -212,8 +217,8 @@ public class BoardModel extends JTable implements MouseListener {
     public static ChessFigure figureAt(Position p) {
         ChessFigure[] wholeList = (ChessFigure[]) boardReference.getWholeList().
                 toArray(new ChessFigure[0]);
-        for (ChessFigure chessFig:
-             wholeList) {
+        for (ChessFigure chessFig :
+                wholeList) {
             if (chessFig.getPos().equals(p)) {
                 return chessFig;
             }

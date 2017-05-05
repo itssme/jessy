@@ -1,15 +1,12 @@
 package controllers;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-
 import networking.Connection;
 import sun.net.util.IPAddressUtil;
 
 import javax.swing.*;
-
-import static database.Scorer.USERNAME;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Name:    Königsreiter Simon
@@ -27,7 +24,10 @@ public class ConnectController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (connection == null) {
-            String ipAddress = JOptionPane.showInputDialog(null, "Type in the ip:", "192.168.1.100");
+            String ipAddress = JOptionPane.showInputDialog(
+                    null,
+                    "Type in the ip:",
+                    "192.168.1.100");
             connect(ipAddress, 5060);
 
             try {
@@ -39,25 +39,35 @@ public class ConnectController implements ActionListener {
             connection.start_thread();
 
             if (startFirst) {
-                JOptionPane.showMessageDialog(null, "Connected: you start");
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Connected: you start");
             } else {
-                JOptionPane.showMessageDialog(null, "Connected: opponent starts");
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Connected: opponent starts");
             }
 
 
         } else {
-            JOptionPane.showMessageDialog(null, "Your are already connected to a game");
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Your are already connected to a game");
         }
     }
 
     public static boolean connect(String ipAddress, int port) {
         if (! IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
-            JOptionPane.showMessageDialog(null, ipAddress + " is not a valid ip");
+            JOptionPane.showMessageDialog(
+                    null,
+                    ipAddress + " is not a valid ip");
         } else {
             try {
                 connection = new Connection(ipAddress, port);
             } catch (IOException e1) {
-                JOptionPane.showMessageDialog(null, "Could not connect");
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Could not connect");
                 return false;
             }
         }

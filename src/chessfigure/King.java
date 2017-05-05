@@ -17,13 +17,29 @@ public class King extends ChessFigure {
 
     @Override
     public void calculateMove() {
-        this.positionIsMovable(new Position(this.pos.getRow() + 1, this.pos.getCol()));
-        this.positionIsMovable(new Position(this.pos.getRow() + 1, this.pos.getCol() + 1));
-        this.positionIsMovable(new Position(this.pos.getRow(), this.pos.getCol() + 1));
-        this.positionIsMovable(new Position(this.pos.getRow() - 1, this.pos.getCol() + 1));
-        this.positionIsMovable(new Position(this.pos.getRow() - 1, this.pos.getCol()));
-        this.positionIsMovable(new Position(this.pos.getRow() - 1, this.pos.getCol() - 1));
-        this.positionIsMovable(new Position(this.pos.getRow(), this.pos.getCol() - 1));
-        this.positionIsMovable(new Position(this.pos.getRow() + 1, this.pos.getCol() - 1));
+        this.positionIsMovable(
+                new Position(this.pos.getRow() + 1,
+                        this.pos.getCol()));
+        this.positionIsMovable(
+                new Position(this.pos.getRow() + 1,
+                        this.pos.getCol() + 1));
+        this.positionIsMovable(
+                new Position(this.pos.getRow(),
+                        this.pos.getCol() + 1));
+        this.positionIsMovable(
+                new Position(this.pos.getRow() - 1,
+                        this.pos.getCol() + 1));
+        this.positionIsMovable(
+                new Position(this.pos.getRow() - 1,
+                        this.pos.getCol()));
+        this.positionIsMovable(
+                new Position(this.pos.getRow() - 1,
+                        this.pos.getCol() - 1));
+        this.positionIsMovable(
+                new Position(this.pos.getRow(),
+                        this.pos.getCol() - 1));
+        this.positionIsMovable(
+                new Position(this.pos.getRow() + 1,
+                        this.pos.getCol() - 1));
     }
 }

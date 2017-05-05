@@ -66,7 +66,9 @@ public class Chessgame extends WindowAdapter {
     @Override
     public void windowClosing(WindowEvent e) {
         super.windowClosing(e);
-        LoggingSingleton.getInstance().logToFile(Level.INFO, "Starting the logging Cleanup.");
+        LoggingSingleton.getInstance().logToFile(
+                Level.INFO,
+                "Starting the logging Cleanup.");
         LoggingSingleton.getInstance().cleanUp();
         System.exit(0);
     }
@@ -87,7 +89,8 @@ public class Chessgame extends WindowAdapter {
             LoggingSingleton.getInstance().logToFile(Level.WARNING,
                     "An unsupported Look and Feel exception occurred!");
         }
-        String username = JOptionPane.showInputDialog("Please type in your Player-Name");
+        String username = JOptionPane.
+                showInputDialog("Please type in your Player-Name");
         if (username == null) System.exit(0);
         Scorer.USERNAME = username;
         JFrame frame = new JFrame("Jessy");

@@ -32,11 +32,15 @@ public class HostController implements ActionListener {
                 System.out.println("server starting done");
                 ConnectController.connect("127.0.0.1", 5060);
             } catch (IOException e1) {
-                JOptionPane.showMessageDialog(null, "Could not start server");
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Could not start server");
                 return;
             }
 
-            JOptionPane.showMessageDialog(null, "Started the game");
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Started the game");
 
 
             while (! server.all_connected()) {
@@ -58,13 +62,19 @@ public class HostController implements ActionListener {
             connection.start_thread();
 
             if (ConnectController.startFirst) {
-                JOptionPane.showMessageDialog(null, "Connected: you start");
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Connected: you start");
             } else {
-                JOptionPane.showMessageDialog(null, "Connected: opponent starts");
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Connected: opponent starts");
             }
 
         } else {
-            JOptionPane.showMessageDialog(null, "Server is already started");
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Server is already started");
         }
     }
 }

@@ -22,17 +22,25 @@ public class SoundMgr extends Thread{
         try {
             audioInputStream = AudioSystem.getAudioInputStream(new File(url));
         } catch (UnsupportedAudioFileException e) {
-            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(
+                    Level.SEVERE,
+                    e.getLocalizedMessage());
         } catch (IOException e) {
-            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(
+                    Level.SEVERE,
+                    e.getLocalizedMessage());
         }
         try (Clip clip = AudioSystem.getClip()) {
             clip.open(audioInputStream);
             clip.start();
         } catch (LineUnavailableException e) {
-            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(
+                    Level.SEVERE,
+                    e.getLocalizedMessage());
         } catch (IOException e) {
-            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(
+                    Level.SEVERE,
+                    e.getLocalizedMessage());
         }
     }
 

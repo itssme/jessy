@@ -19,15 +19,21 @@ public class Pawn extends ChessFigure {
 
     @Override
     public void calculateMove() {
-        if  (this.isAtStartPosition) {
-            this.positionIsMovable(new Position((isWhite()) ? this.pos.getRow() - 1 : this.pos.getCol() + 1,
-                    this.pos.getCol()));
-            this.positionIsMovable(new Position((isWhite()) ? this.pos.getRow() - 2 : this.pos.getCol() + 2,
-                    this.pos.getCol()));
+        if (this.isAtStartPosition) {
+            this.positionIsMovable(
+                    new Position((isWhite()) ? this.pos.getRow() - 1 :
+                            this.pos.getCol() + 1,
+                            this.pos.getCol()));
+            this.positionIsMovable(
+                    new Position((isWhite()) ? this.pos.getRow() - 2 :
+                            this.pos.getCol() + 2,
+                            this.pos.getCol()));
             this.isAtStartPosition = false;
         } else {
-            this.positionIsMovable(new Position((isWhite()) ? this.pos.getRow() - 1: this.pos.getRow() + 1,
-                    this.pos.getCol()));
+            this.positionIsMovable(
+                    new Position((isWhite()) ? this.pos.getRow() - 1 :
+                            this.pos.getRow() + 1,
+                            this.pos.getCol()));
         }
     }
 }

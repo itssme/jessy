@@ -30,7 +30,8 @@ public class Position {
     public boolean equals(Object obj) {
         if (obj instanceof Position) {
             Position other = (Position) obj;
-            return other.getRow() == this.getRow() && other.getCol() == this.getCol();
+            return other.getRow() == this.getRow() &&
+                    other.getCol() == this.getCol();
         } else {
             return false;
         }
@@ -65,7 +66,8 @@ public class Position {
     @Nullable
     public Position isValid() {
         BoardModel.figureAt(this);
-        if ((this.row >= 0) && (this.row <= 7) && (this.col >= 0) && (this.col <= 7)) {
+        if ((this.row >= 0) && (this.row <= 7) &&
+                (this.col >= 0) && (this.col <= 7)) {
             return this;
         } else {
             return null;

@@ -32,7 +32,9 @@ public class ConnectionFactory {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
+            LoggingSingleton.getInstance().logToFile(
+                    Level.SEVERE,
+                    e.getLocalizedMessage());
             int res = JOptionPane.showConfirmDialog(null,
                     "We couldn't initialize the Database-Driver, " +
                             "closing the application now",
@@ -46,10 +48,15 @@ public class ConnectionFactory {
         Connection conn = null;
         if (this.DATABASE_SYSTEM == SQLITE) {
             try {
-                conn = DriverManager.getConnection("jdbc:sqlite:" + connectionString);
+                conn = DriverManager.
+                        getConnection("jdbc:sqlite:" + connectionString);
             } catch (SQLException e) {
-                LoggingSingleton.getInstance().logToFile(Level.SEVERE, "An SQLException occured");
-                LoggingSingleton.getInstance().logToFile(Level.SEVERE, e.getLocalizedMessage());
+                LoggingSingleton.getInstance().logToFile(
+                        Level.SEVERE,
+                        "An SQLException occured");
+                LoggingSingleton.getInstance().logToFile(
+                        Level.SEVERE,
+                        e.getLocalizedMessage());
             }
         }
         return conn;

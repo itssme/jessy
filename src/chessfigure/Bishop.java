@@ -1,7 +1,6 @@
 package chessfigure;
 
 import board.Position;
-import model.BoardModel;
 
 /**
  * Name:    Joel Klimont
@@ -19,25 +18,29 @@ public class Bishop extends ChessFigure {
     @Override
     public void calculateMove() {
         for (int i = 1; i < 8; i++) {
-            Position p = new Position(this.pos.getRow() + i, this.pos.getCol() + i);
+            Position p = new Position(this.pos.getRow() + i,
+                    this.pos.getCol() + i);
             if (!this.positionIsMovable(p)) {
                 break;
             }
         }
         for (int i = 1; i < 8; i++) {
-            Position p = new Position(this.pos.getRow() - i, this.pos.getCol() + i);
+            Position p = new Position(this.pos.getRow() - i,
+                    this.pos.getCol() + i);
             if (!this.positionIsMovable(p)) {
                 break;
             }
         }
         for (int i = 1; i < 8; i++) {
-            Position p = new Position(this.pos.getRow() + i, this.pos.getCol() - i);
+            Position p = new Position(this.pos.getRow() + i,
+                    this.pos.getCol() - i);
             if (!this.positionIsMovable(p)) {
                 break;
             }
         }
         for (int i = 1; i < 8; i++) {
-            Position p = new Position(this.pos.getRow() + i, this.pos.getCol() + i);
+            Position p = new Position(this.pos.getRow() + i,
+                    this.pos.getCol() + i);
             if (!this.positionIsMovable(p)) {
                 break;
             }

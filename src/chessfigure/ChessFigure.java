@@ -7,7 +7,6 @@ import model.BoardModel;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Name:    Königsreiter Simon
@@ -59,15 +58,16 @@ public abstract class ChessFigure {
 
     @Override
     public String toString() {
-        return "Position: " + pos.toString() + " | " + "Image: " + img + "\n" + "Faction: " +
-                ((this.isWhite()) ? "White": "Black");
+        return "Position: " + pos.toString() + " | " + "Image: " + img + "\n" +
+                "Faction: " + ((this.isWhite()) ? "White" : "Black");
     }
 
     abstract public void calculateMove();
 
     private void display() {
         System.out.println(this.toString());
-        System.out.println("" + this.getClass() + " standing at: " + this.pos.toString());
+        System.out.println("" + this.getClass() +
+                " standing at: " + this.pos.toString());
         possibleMoves.forEach(action -> System.out.println(action.toString()));
         System.out.println();
     }

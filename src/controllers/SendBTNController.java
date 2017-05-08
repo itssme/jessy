@@ -37,10 +37,6 @@ public class SendBTNController implements ActionListener {
             LoggingSingleton.getInstance().logToFile(
                     Level.INFO,
                     "Send message: " + msg);
-        } catch (IOException e1) {
-            LoggingSingleton.getInstance().logToFile(
-                    Level.WARNING,
-                    "Could not send message");
         } catch (NullPointerException e2) {
             LoggingSingleton.getInstance().logToFile(
                     Level.WARNING,

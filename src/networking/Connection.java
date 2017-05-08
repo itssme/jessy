@@ -89,13 +89,13 @@ public class Connection implements Runnable {
         }
     }
 
-    public static void send_move(Move move) throws IOException {
+    public static void send_move(Move move) {
         JSONObject send_object = move.toJsonObject();
         last_obj = move;
         send_object(send_object);
     }
 
-    public static void send_chat_msg(String msg) throws IOException {
+    public static void send_chat_msg(String msg) {
         JSONObject send_object = new JSONObject();
 
         try {

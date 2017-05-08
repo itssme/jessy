@@ -14,7 +14,6 @@ import static controllers.ConnectController.connection;
  * Name:    Königsreiter Simon
  * Class:   3CHIF
  * Date:    2017-04-04
- * Project: jessy
  * Desc.:
  */
 public class HostController implements ActionListener {

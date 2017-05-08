@@ -9,7 +9,7 @@ import java.util.logging.*;
  * Project: jessy
  * Desc.:
  */
-public class Logging {
+public class Logging implements jdk.internal.instrumentation.Logger {
 
     private Logger logObj = Logger.getLogger("FileLogger");
     private static final Level MINLEVEL = Level.ALL;
@@ -49,5 +49,35 @@ public class Logging {
             h.flush();
             h.close();
         }
+    }
+
+    @Override
+    public void error(String s) {
+        logToFile(Level.SEVERE, s);
+    }
+
+    @Override
+    public void warn(String s) {
+        logToFile(Level.WARNING, s);
+    }
+
+    @Override
+    public void info(String s) {
+        logToFile(Level.INFO, s);
+    }
+
+    @Override
+    public void debug(String s) {
+        logToFile(Level.ALL, s);
+    }
+
+    @Override
+    public void trace(String s) {
+        logToFile(Level.ALL, s);
+    }
+
+    @Override
+    public void error(String s, Throwable throwable) {
+        logToFile(Level.SEVERE, s + ": " + throwable.getLocalizedMessage());
     }
 }

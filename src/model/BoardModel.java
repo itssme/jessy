@@ -1,9 +1,11 @@
 package model;
 
+import board.Move;
 import board.MoveList;
 import board.Position;
 import chessfigure.*;
 import logging.LoggingSingleton;
+import networking.Connection;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -164,20 +166,21 @@ public class BoardModel extends JTable implements MouseListener {
         JTable target = (JTable) evt.getSource();
         int row = target.getSelectedRow();
         int col = target.getSelectedColumn();
-        ChessFigure ch = figureAt(new Position(row, col));
-        if (ch != null) {
-            LoggingSingleton.getInstance().logToFile(Level.INFO, ch.toString());
-            ch.getPossibleMoves().forEach(new Consumer<Position>() {
-                @Override
-                public void accept(Position position) {
-                    ((DefaultTableCellRenderer) BoardModel.this.
-                            getCellRenderer(
-                                    position.getRow(),
-                                    position.getCol())).
-                            setBackground(Color.CYAN);
-                    BoardModel.this.refresh();
-                }
+        Position click = new Position(row, col);
+        if (BoardModel.this.selected != null) {
+            LoggingSingleton.getInstance().logToFile(Level.INFO,
+                    BoardModel.this.selected.toString());
+            BoardModel.this.selected.getPossibleMoves().forEach(position -> {
+                ((DefaultTableCellRenderer) BoardModel.this.
+                        getCellRenderer(
+                                position.getRow(),
+                                position.getCol())).
+                        setBackground(Color.CYAN);
+                BoardModel.this.refresh();
             });
+        } else if (this.selected != null && !this.selected.getPos().equals(click)) {
+            Connection.send_move(new Move(this.selected.getPos(), click));
+            this.selected.setPos(click);
         }
 
     }
@@ -187,9 +190,11 @@ public class BoardModel extends JTable implements MouseListener {
         BoardModel src = (BoardModel) e.getSource();
         int row = src.getSelectedRow();
         int col = src.getSelectedColumn();
-        this.selected = BoardModel.figureAt(new Position(row, col));
-        this.revalidate();
-        this.repaint();
+        if (this.selected == null) {
+            this.selected = BoardModel.figureAt(new Position(row, col));
+            this.revalidate();
+            this.repaint();
+        }
     }
 
     @Override

@@ -85,6 +85,10 @@ public abstract class ChessFigure {
         }
     }
 
+    public void setPos(Position pos) {
+        this.pos = pos;
+    }
+
     public MoveList<Position> getPossibleMoves() {
         return possibleMoves;
     }

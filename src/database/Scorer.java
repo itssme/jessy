@@ -16,6 +16,16 @@ import java.util.logging.Level;
  */
 public class Scorer extends Thread implements Runnable {
 
+    public static int MOVES = 0;
+
+    public static void incrementMoves() {
+        MOVES += 1;
+    }
+
+    public static int getMOVES() {
+        return MOVES;
+    }
+
     private final int ENV_DEV = 0;
     private final int ENV_REL = 1;
 
@@ -88,6 +98,12 @@ public class Scorer extends Thread implements Runnable {
                     "create table if not exists player(" +
                     "UID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "name text not null unique" +
+                    ");" +
+                    "" +
+                    "create table if not exists game(" +
+                    "GID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "UID references player" +
+                    "score integer not null default 30" +
                     ");";
             stmt.execute(TABLE_STRING);
             stmt.execute(

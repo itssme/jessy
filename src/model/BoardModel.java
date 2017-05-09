@@ -1,19 +1,16 @@
 package model;
 
-import board.Move;
-import board.MoveList;
 import board.Position;
 import chessfigure.*;
 import logging.LoggingSingleton;
-import networking.Connection;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -33,11 +30,10 @@ public class BoardModel extends JTable implements MouseListener {
 
     public BoardModel(int rows, int cols) {
         super(new ChessBoardModel(rows, cols));
-        this.getColumnModel().setColumnSelectionAllowed(true);
-        this.setColumnSelectionAllowed(true);
-        this.setRowSelectionAllowed(true);
+        this.getColumnModel().setColumnSelectionAllowed(false);
+        this.setColumnSelectionAllowed(false);
+        this.setRowSelectionAllowed(false);
         this.setCellSelectionEnabled(true);
-        this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         this.setSelectionBackground(Color.CYAN);
         this.setSelectionForeground(Color.CYAN);
         this.genWhite();
@@ -48,10 +44,9 @@ public class BoardModel extends JTable implements MouseListener {
         for (int i = 0; i < this.getColumnModel().getColumnCount(); i++) {
             this.getColumnModel().getColumn(i).setPreferredWidth(60);
         }
-        this.setRowSelectionAllowed(false);
         this.doLayout();
         boardReference = this;
-
+        this.drawFigures();
     }
 
     public ArrayList<ChessFigure> getWhiteFigures() {
@@ -85,15 +80,6 @@ public class BoardModel extends JTable implements MouseListener {
             whiteFigures.add(new Pawn(new Position(6, i),
                     "graphics/pawn_white.png", true));
         }
-
-        whiteFigures.forEach(new Consumer<ChessFigure>() {
-            @Override
-            public void accept(ChessFigure chessFigure) {
-                BoardModel.this.setValueAt(new ImageIcon(chessFigure.getImg()),
-                        chessFigure.getPos().getRow(),
-                        chessFigure.getPos().getCol());
-            }
-        });
     }
 
     private void genBlack() {
@@ -119,15 +105,36 @@ public class BoardModel extends JTable implements MouseListener {
             blackFigures.add(new Pawn(new Position(1, i),
                     "graphics/pawn_black.png", false));
         }
+    }
 
+    public void drawFigures() {
         blackFigures.forEach(new Consumer<ChessFigure>() {
             @Override
             public void accept(ChessFigure chessFigure) {
-                BoardModel.this.setValueAt(new ImageIcon(chessFigure.getImg()),
+                //System.out.println(chessFigure.toString());
+                ((ChessBoardModel) BoardModel.this.getModel()).setValueAt(
+                        new ImageIcon(chessFigure.getImg()),
                         chessFigure.getPos().getRow(),
                         chessFigure.getPos().getCol());
             }
         });
+
+
+        whiteFigures.forEach(new Consumer<ChessFigure>() {
+            @Override
+            public void accept(ChessFigure chessFigure) {
+                //System.out.println(chessFigure);
+                ((ChessBoardModel) BoardModel.this.getModel()).setValueAt(
+                        new ImageIcon(chessFigure.getImg()),
+                        chessFigure.getPos().getRow(),
+                        chessFigure.getPos().getCol());
+
+            }
+        });
+
+        this.refresh();
+        this.revalidate();
+        this.repaint();
     }
 
     public Component prepareRenderer(TableCellRenderer renderer,
@@ -167,20 +174,32 @@ public class BoardModel extends JTable implements MouseListener {
         int row = target.getSelectedRow();
         int col = target.getSelectedColumn();
         Position click = new Position(row, col);
-        if (BoardModel.this.selected != null) {
+        if (this.selected != null) {
             LoggingSingleton.getInstance().logToFile(Level.INFO,
                     BoardModel.this.selected.toString());
-            BoardModel.this.selected.getPossibleMoves().forEach(position -> {
-                ((DefaultTableCellRenderer) BoardModel.this.
-                        getCellRenderer(
-                                position.getRow(),
-                                position.getCol())).
-                        setBackground(Color.CYAN);
-                BoardModel.this.refresh();
-            });
-        } else if (this.selected != null && !this.selected.getPos().equals(click)) {
-            Connection.send_move(new Move(this.selected.getPos(), click));
-            this.selected.setPos(click);
+            for (Iterator<ChessFigure> i = this.getWholeList().iterator();
+                 i.hasNext(); ) {
+                ChessFigure fig = i.next();
+                ((ChessBoardModel) this.getModel()).setValueAt(
+                        new ImageIcon(fig.getImg()),
+                        fig.getPos().getRow(),
+                        fig.getPos().getCol()
+                );
+            }
+        }
+        if (this.selected != null
+                && !this.selected.getPos().equals(click)
+                && this.selected.getPossibleMoves().contains(click)) {
+            System.out.println("Selecting a new Position");
+            System.out.println("Before:\n" + this.selected.toString());
+            Position after = click;
+            this.selected.setPos(after);
+            System.out.println("After:\n" + this.selected.toString());
+            this.drawFigures();
+            //Connection.send_move(new Move(before, after));
+        }
+        if (this.selected != null && !this.selected.getPossibleMoves().contains(click)) {
+            this.selected = figureAt(click);
         }
 
     }
@@ -241,12 +260,5 @@ public class BoardModel extends JTable implements MouseListener {
         this.revalidate();
         this.repaint();
     }
-
-    public static void colorPossibleMoves(MoveList<Position> moves) {
-        moves.forEach(consumer -> {
-
-        });
-    }
-
 
 }

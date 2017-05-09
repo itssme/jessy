@@ -95,7 +95,6 @@ public class Chessgame extends WindowAdapter {
         Scorer.USERNAME = username;
         JFrame frame = new JFrame("Jessy");
         Chessgame game = new Chessgame();
-        game.createUIComponents();
         game.board.refresh();
         frame.setMinimumSize(new Dimension(1290, 740));
         frame.setContentPane(game.mainPanel);

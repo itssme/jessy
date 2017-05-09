@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 
 import static controllers.ConnectController.connection;
 
@@ -22,14 +23,31 @@ public class HostController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if (server == null) {
             try {
+                String password = JOptionPane.showInputDialog(
+                        null,
+                        "Do you want to encrypt your game with a password?",
+                        "password");
+
+                if (password.length() <= 4) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Weak or no password.\nInsecure connectoin!");
+                }
+
                 System.out.println("server starting");
                 server = new Server(5060);
                 server.start();
                 System.out.println("server starting done");
-                ConnectController.connect("127.0.0.1", 5060);
+                try {
+                    ConnectController.connect("127.0.0.1", 5060, password); // get password
+                } catch (InvalidKeyException e1) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Invalid password");
+                    return;
+                }
             } catch (IOException e1) {
                 JOptionPane.showMessageDialog(
                         null,

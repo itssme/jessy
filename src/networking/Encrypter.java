@@ -5,6 +5,13 @@ import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Name:    Joel Klimont
+ * Class:   3CHIF
+ * Date:    2017-03-21
+ * Project: jessy
+ * Desc.:   Encrypt Strings
+ */
 public class Encrypter  {
 
     private String key;
@@ -13,6 +20,9 @@ public class Encrypter  {
 
     public Encrypter(String key_in) throws InvalidKeyException {
         if (key_in.length() <= 16) {
+            // the password must have a lenght of 16
+            // if no password is set the password will be 16*z
+
             while (key_in.length() < 16) {
                 key_in = key_in + "z";
             }

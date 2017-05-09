@@ -2,6 +2,7 @@ package networking;
 
 import board.Move;
 import board.Position;
+import controllers.ConnectController;
 import logging.LoggingSingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.InvalidKeyException;
 import java.util.logging.Level;
 
 import static controllers.SendBTNController.printToChat;
@@ -21,7 +23,7 @@ import static database.Scorer.USERNAME;
  * Class:   3CHIF
  * Date:    2017-03-21
  * Project: jessy
- * Desc.:   One connection which is sending and receiving json objects (and strings)
+ * Desc.:   One connection which is sending and receiving json objects
  */
 public class Connection implements Runnable {
 
@@ -31,11 +33,13 @@ public class Connection implements Runnable {
     private static Move      last_obj;
     private static PrintWriter     pw;
     private Thread this_thread;
+    public static Encrypter encrypter;
 
-    public Connection(String connect_to_ip, int port) throws IOException {
+    public Connection(String connect_to_ip, int port, String password) throws IOException, InvalidKeyException {
         self = new Socket(connect_to_ip, port);
         br = new BufferedReader(new InputStreamReader(self.getInputStream()));
         pw = new PrintWriter(self.getOutputStream(), true);
+        encrypter = new Encrypter(password);
     }
 
     public void start_thread() {
@@ -110,12 +114,14 @@ public class Connection implements Runnable {
 
     public static void send_object(JSONObject obj) {
         LoggingSingleton.getInstance().logToFile(Level.INFO, "Sent object: " + obj.toString());
-        pw.println(obj);
+        pw.println(encrypter.encrypt(obj.toString()));
+        System.out.println("sent: " + encrypter.encrypt(obj.toString()));
     }
 
     private JSONObject get_object() throws IOException, JSONException {
         String got_obj = br.readLine();
-        return new JSONObject(got_obj);
+        System.out.println("got: " + encrypter.decrypt(got_obj));
+        return new JSONObject(encrypter.decrypt(got_obj));
     }
 
     public boolean start() throws IOException {

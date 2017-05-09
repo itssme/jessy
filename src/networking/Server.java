@@ -124,7 +124,7 @@ public class Server implements Runnable {
         private JSONObject get_object() {
 
             try {
-                JSONObject got_obj = new JSONObject(br_player.readLine());
+                JSONObject got_obj = new JSONObject(Connection.encrypter.decrypt(br_player.readLine()));
                 LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + number + " got in Server" + got_obj.toString());
                 return got_obj;
 
@@ -139,7 +139,7 @@ public class Server implements Runnable {
 
 
         private void send(JSONObject send_obj) {
-            pw_player.println(send_obj);
+            pw_player.println(Connection.encrypter.encrypt(send_obj.toString()));
             LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + number + " sent " + send_obj.toString());
         }
 

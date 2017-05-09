@@ -6,6 +6,7 @@ import networking.Connection;
 import networking.Server;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
 
 /**
  * THIS IS A TEST
@@ -79,7 +80,12 @@ class Open_connection1 implements Runnable {
         }*/
 
         try {
-            Connection con = new Connection("127.0.0.1", 5060);
+            Connection con = null;
+            try {
+                con = new Connection("127.0.0.1", 5060, "hallo");
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            }
 
             boolean start = con.start();
 
@@ -129,7 +135,12 @@ class Open_connection2 implements Runnable{
         }
 
         try {
-            Connection con = new Connection("127.0.0.1", 5060);
+            Connection con = null;
+            try {
+                con = new Connection("127.0.0.1", 5060, "hallo");
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            }
 
             boolean start = con.start();
 

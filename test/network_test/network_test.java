@@ -73,16 +73,11 @@ class Open_connection1 implements Runnable {
 
     @Override
     public void run() {
-        /*try {
-            Thread.sleep(2500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
 
         try {
             Connection con = null;
             try {
-                con = new Connection("127.0.0.1", 5060, "hallo");
+                con = new Connection("127.0.0.1", 5060, "password");
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
             }
@@ -137,7 +132,7 @@ class Open_connection2 implements Runnable{
         try {
             Connection con = null;
             try {
-                con = new Connection("127.0.0.1", 5060, "hallo");
+                con = new Connection("127.0.0.1", 5060, "password");
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
             }

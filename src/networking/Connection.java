@@ -115,12 +115,10 @@ public class Connection implements Runnable {
     public static void send_object(JSONObject obj) {
         LoggingSingleton.getInstance().logToFile(Level.INFO, "Sent object: " + obj.toString());
         pw.println(encrypter.encrypt(obj.toString()));
-        System.out.println("sent: " + encrypter.encrypt(obj.toString()));
     }
 
     private JSONObject get_object() throws IOException, JSONException {
         String got_obj = br.readLine();
-        System.out.println("got: " + encrypter.decrypt(got_obj));
         return new JSONObject(encrypter.decrypt(got_obj));
     }
 
@@ -133,6 +131,7 @@ public class Connection implements Runnable {
              be the client starting the Server)
          */
 
+        printToChat("Server", "Game has started");
         return br.readLine().equals("start");
     }
 }

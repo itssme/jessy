@@ -26,6 +26,12 @@ public class ConnectController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (connection == null) {
+
+            String ipAddress = JOptionPane.showInputDialog(
+                    null,
+                    "Type in the ip:",
+                    "192.168.1.100");
+
             String password = JOptionPane.showInputDialog(
                     null,
                     "Do you want to encrypt your game with a password?",
@@ -37,10 +43,6 @@ public class ConnectController implements ActionListener {
                         "Weak or no password.\nInsecure connectoin!");
             }
 
-            String ipAddress = JOptionPane.showInputDialog(
-                    null,
-                    "Type in the ip:",
-                    "192.168.1.100");
             try {
                 connect(ipAddress, 5060, password);
             } catch (InvalidKeyException e1) {

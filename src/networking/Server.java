@@ -67,8 +67,8 @@ public class Server implements Runnable {
     }
 
     public void starter() {
-        player1.send_str("start");
-        player2.send_str("dont start");
+        player1.send("start");
+        player2.send("dont start");
     }
 
     public boolean all_connected() {
@@ -108,43 +108,30 @@ public class Server implements Runnable {
             }
         }
 
-
         @Override
         public void run() {
             System.out.println("started " + number);
             while (true) { // TODO: stop by a static variable if the game is over
                 if (number == 1) {
-                    player2.send(this.get_object());
+                    player2.send(this.get());
                 } else {
-                    player1.send(this.get_object());
+                    player1.send(this.get());
                 }
             }
         }
 
-        private JSONObject get_object() {
-
+        private String get() {
             try {
-                JSONObject got_obj = new JSONObject(Connection.encrypter.decrypt(br_player.readLine()));
-                LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + number + " got in Server" + got_obj.toString());
-                return got_obj;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+                return br_player.readLine();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return null;
+            return "";
         }
 
-
-        private void send(JSONObject send_obj) {
-            pw_player.println(Connection.encrypter.encrypt(send_obj.toString()));
-            LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + number + " sent " + send_obj.toString());
-        }
-
-        private void send_str(String str) {
-            pw_player.println(str);
+        private void send(String send_str) {
+            pw_player.println(send_str);
         }
     }
 }

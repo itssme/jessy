@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.security.InvalidKeyException;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import static controllers.SendBTNController.printToChat;
@@ -49,7 +50,6 @@ public class Connection implements Runnable {
         }
     }
 
-
     @Override
     public void run() {
         while (true) {
@@ -80,7 +80,9 @@ public class Connection implements Runnable {
                         Move move = new Move(from, to);
 
                         LoggingSingleton.getInstance().logToFile(Level.INFO, "GOT: " + move.toJsonObject().toString());
+
                         // TODO: validate (move)
+
                     } else {
                         LoggingSingleton.getInstance().logToFile(Level.WARNING, "GOT: not a valid object " + obj.toString());
                     }
@@ -105,6 +107,7 @@ public class Connection implements Runnable {
         try {
             send_object.put("chat", msg);
             send_object.put("player", USERNAME);
+            send_object.put("part", "false");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -114,12 +117,21 @@ public class Connection implements Runnable {
 
     public static void send_object(JSONObject obj) {
         LoggingSingleton.getInstance().logToFile(Level.INFO, "Sent object: " + obj.toString());
-        pw.println(encrypter.encrypt(obj.toString()));
+        try {
+            pw.println(encrypter.encrypt(obj.toString()));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     private JSONObject get_object() throws IOException, JSONException {
         String got_obj = br.readLine();
-        return new JSONObject(encrypter.decrypt(got_obj));
+        try {
+            return new JSONObject(encrypter.decrypt(got_obj));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
     }
 
     public boolean start() throws IOException {

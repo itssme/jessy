@@ -1,7 +1,10 @@
 package controllers;
 
+import logging.LoggingSingleton;
 import networking.Connection;
 import networking.Encrypter;
+import org.json.JSONException;
+import org.json.JSONObject;
 import sun.net.util.IPAddressUtil;
 
 import javax.swing.*;
@@ -40,7 +43,7 @@ public class ConnectController implements ActionListener {
             if (password.length() <= 4) {
                 JOptionPane.showMessageDialog(
                         null,
-                        "Weak or no password.\nInsecure connectoin!");
+                        "Weak or no password.\nInsecure connection!");
             }
 
             try {
@@ -95,5 +98,28 @@ public class ConnectController implements ActionListener {
         }
 
         return true;
+    }
+
+    public static void disconnect() {
+        JSONObject disconnectObj = new JSONObject();
+
+        try {
+            disconnectObj.put("disconnect", "true");
+        } catch (JSONException e) {
+            LoggingSingleton.getInstance().error("Failed to create disconnect object (not disconnecting)", e);
+            return;
+        }
+
+        Connection.send_object(disconnectObj);
+
+        while (! connection.gotDisconnect) {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        connection = null;
     }
 }

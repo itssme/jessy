@@ -33,7 +33,7 @@ public class HostController implements ActionListener {
                 if (password.length() <= 4) {
                     JOptionPane.showMessageDialog(
                             null,
-                            "Weak or no password.\nInsecure connectoin!");
+                            "Weak or no password.\nInsecure connection!");
                 }
 
                 System.out.println("server starting");

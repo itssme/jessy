@@ -2,16 +2,12 @@ package networking;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.util.DoubleSummaryStatistics;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class EncrypterTest {
     @Test
     void test1() {
-
         try {
             Encrypter encrypter = new Encrypter("passwort");
 
@@ -39,6 +35,7 @@ class EncrypterTest {
                 String decrypted = encrypter.decrypt(encrypted);
 
                 if (! encrypt.equals(decrypted)) {
+                    System.out.println(decrypted + " -> " + encrypt);
                     worked = false;
                 }
             }
@@ -47,5 +44,33 @@ class EncrypterTest {
         }
 
         assertTrue(worked);
+    }
+
+    @Test
+    void test3() {
+        try {
+            Encrypter encrypter = new Encrypter("password");
+
+            String encrypted = encrypter.encrypt("wwww");
+            String decrypted = encrypter.decrypt(encrypted);
+
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+
+    }
+
+    @Test
+    void test4() {
+        try {
+            Encrypter encrypter = new Encrypter("12sicher21");
+
+            String encrypted = encrypter.encrypt("how are you?");
+            String decrypted = encrypter.decrypt(encrypted);
+
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+
     }
 }

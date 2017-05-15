@@ -1,5 +1,5 @@
 package networking;
-import java.io.UnsupportedEncodingException;
+
 import java.security.InvalidKeyException;
 import java.security.Key;
 import javax.crypto.Cipher;
@@ -30,8 +30,7 @@ public class Encrypter  {
             throw new InvalidKeyException();
         }
 
-        try {
-            // generate key
+        try { // generate key
             this.key = key_in;
             aesKey = new SecretKeySpec(key.getBytes(), "AES");
             cipher = Cipher.getInstance("AES");
@@ -43,11 +42,18 @@ public class Encrypter  {
     public String encrypt(String text) {
         String encrypted_string = null;
 
-        try {
-            // encryption
+        try { // encryption
             cipher.init(Cipher.ENCRYPT_MODE, aesKey);
             byte[] encrypted = cipher.doFinal(text.getBytes());
-            encrypted_string = new String(encrypted, "ISO-8859-1");
+            StringBuilder sb = new StringBuilder();
+            for (byte b: encrypted) {
+                sb.append((char)b);
+            }
+
+            // the encrypted String
+            String enc = sb.toString();
+            encrypted_string = StringEncoder.encode(enc);
+
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -58,17 +64,16 @@ public class Encrypter  {
     public String decrypt(String encryptedStr) {
         String decrypted = null;
 
-        byte[] encrypted = new byte[0];
-        try {
-            encrypted = encryptedStr.getBytes("ISO-8859-1");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        encryptedStr = StringEncoder.decode(encryptedStr);
 
-        try {
-            // decryption
+        try { // decryption
+            byte[] bb = new byte[encryptedStr.length()];
+            for (int i=0; i<encryptedStr.length(); i++) {
+                bb[i] = (byte) encryptedStr.charAt(i);
+            }
+
             cipher.init(Cipher.DECRYPT_MODE, aesKey);
-            decrypted = new String(cipher.doFinal(encrypted));
+            decrypted = new String(cipher.doFinal(bb));
 
         } catch (Exception e) {
             e.printStackTrace();

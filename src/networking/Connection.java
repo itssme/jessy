@@ -34,7 +34,9 @@ public class Connection implements Runnable {
     private static Move      last_obj;
     private static PrintWriter     pw;
     private Thread this_thread;
-    public static Encrypter encrypter;
+    private static Encrypter encrypter;
+
+    public boolean gotDisconnect = false;
 
     public Connection(String connect_to_ip, int port, String password) throws IOException, InvalidKeyException {
         self = new Socket(connect_to_ip, port);
@@ -83,14 +85,14 @@ public class Connection implements Runnable {
 
                         // TODO: validate (move)
 
-                    } else {
+                    } else { // TODO: add else if with disconnect object
                         LoggingSingleton.getInstance().logToFile(Level.WARNING, "GOT: not a valid object " + obj.toString());
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LoggingSingleton.getInstance().error("Failed to send json object", e);
             } catch (JSONException e) {
-                e.printStackTrace();
+                LoggingSingleton.getInstance().error("Failed to create json object", e);
             }
         }
     }

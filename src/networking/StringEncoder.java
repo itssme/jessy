@@ -1,8 +1,6 @@
 package networking;
 
 import java.util.Base64;
-import java.util.Base64.Encoder;
-import java.util.Base64.Decoder;
 
 /**
  * Name:    Joel Klimont

@@ -12,7 +12,7 @@ import groovy.xml.MarkupBuilder
  */
 class XmlSave {
 
-    def moves = [];
+    def static moves = [];
 
     public static void addMove(Move move) {
         moves.add([move.getFrom().getRow(), move.getFrom().getCol(),

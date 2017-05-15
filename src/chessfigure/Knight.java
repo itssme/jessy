@@ -17,6 +17,7 @@ public class Knight extends ChessFigure {
 
     @Override
     public void calculateMove() {
+        this.resetMoves();
         this.positionIsMovable(
                 new Position(this.pos.getRow() + 2,
                         this.pos.getCol() + 1));

@@ -32,6 +32,14 @@ public abstract class ChessFigure {
         //this.display();
     }
 
+    public String getColor() {
+        if (this.isWhite()) {
+            return "white";
+        } else {
+            return "black";
+        }
+    }
+
     public Position getPos() {
         return pos;
     }
@@ -60,6 +68,10 @@ public abstract class ChessFigure {
     public String toString() {
         return "Position: " + pos.toString() + " | " + "Image: " + img + "\n" +
                 "Faction: " + ((this.isWhite()) ? "White" : "Black");
+    }
+
+    protected void resetMoves() {
+        this.possibleMoves = new MoveList<Position>();
     }
 
     abstract public void calculateMove();

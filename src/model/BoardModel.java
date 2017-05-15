@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -108,6 +107,13 @@ public class BoardModel extends JTable implements MouseListener {
     }
 
     public void drawFigures() {
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                this.setValueAt(null, i, j);
+            }
+        }
+
         blackFigures.forEach(new Consumer<ChessFigure>() {
             @Override
             public void accept(ChessFigure chessFigure) {
@@ -133,8 +139,6 @@ public class BoardModel extends JTable implements MouseListener {
         });
 
         this.refresh();
-        this.revalidate();
-        this.repaint();
     }
 
     public Component prepareRenderer(TableCellRenderer renderer,
@@ -177,15 +181,6 @@ public class BoardModel extends JTable implements MouseListener {
         if (this.selected != null) {
             LoggingSingleton.getInstance().logToFile(Level.INFO,
                     BoardModel.this.selected.toString());
-            for (Iterator<ChessFigure> i = this.getWholeList().iterator();
-                 i.hasNext(); ) {
-                ChessFigure fig = i.next();
-                ((ChessBoardModel) this.getModel()).setValueAt(
-                        new ImageIcon(fig.getImg()),
-                        fig.getPos().getRow(),
-                        fig.getPos().getCol()
-                );
-            }
         }
         if (this.selected != null
                 && !this.selected.getPos().equals(click)
@@ -195,12 +190,12 @@ public class BoardModel extends JTable implements MouseListener {
             Position after = click;
             this.selected.setPos(after);
             System.out.println("After:\n" + this.selected.toString());
-            this.drawFigures();
             //Connection.send_move(new Move(before, after));
         }
         if (this.selected != null && !this.selected.getPossibleMoves().contains(click)) {
             this.selected = figureAt(click);
         }
+        this.drawFigures();
 
     }
 

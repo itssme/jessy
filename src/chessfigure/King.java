@@ -17,6 +17,7 @@ public class King extends ChessFigure {
 
     @Override
     public void calculateMove() {
+        this.resetMoves();
         this.positionIsMovable(
                 new Position(this.pos.getRow() + 1,
                         this.pos.getCol()));

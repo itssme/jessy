@@ -2,7 +2,6 @@ package networking;
 
 import board.Move;
 import board.Position;
-import controllers.ConnectController;
 import logging.LoggingSingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,11 +26,11 @@ import static database.Scorer.USERNAME;
  */
 public class Connection implements Runnable {
 
-    private Socket       self;
+    private Socket self;
     private BufferedReader br;
-    private boolean   sending = false;
-    private static Move      last_obj;
-    private static PrintWriter     pw;
+    private boolean sending = false;
+    private static Move last_obj;
+    private static PrintWriter pw;
     private Thread this_thread;
     public static Encrypter encrypter;
 
@@ -71,7 +70,7 @@ public class Connection implements Runnable {
                     } else if (obj.has("resend")) {
                         send_move(last_obj);
 
-                    } else if (obj.has("from x")){
+                    } else if (obj.has("from x")) {
                         LoggingSingleton.getInstance().logToFile(Level.INFO, "GOT " + "got position object");
 
                         Position from = new Position(obj.getInt("from x"), obj.getInt("from y"));

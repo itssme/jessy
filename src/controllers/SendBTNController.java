@@ -7,6 +7,8 @@ import networking.Connection;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.logging.Level;
 
 
@@ -17,7 +19,7 @@ import java.util.logging.Level;
  * Project: jessy
  * Desc.:
  */
-public class SendBTNController implements ActionListener {
+public class SendBTNController implements ActionListener, KeyListener {
 
     private static ChatModel chat;
     private JTextField textField;
@@ -29,6 +31,10 @@ public class SendBTNController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        SendBTNController.this.fireClick();
+    }
+
+    private void fireClick() {
         try {
             String msg = textField.getText();
             textField.setText("");
@@ -51,5 +57,22 @@ public class SendBTNController implements ActionListener {
         String txt = chat.getText();
         txt = String.format("%s %n" + "%s: %s", txt, player, msg);
         chat.setText(txt);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+            SendBTNController.this.fireClick();
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

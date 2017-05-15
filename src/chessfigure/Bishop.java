@@ -17,30 +17,31 @@ public class Bishop extends ChessFigure {
 
     @Override
     public void calculateMove() {
-        for (int i = 1; i < 8; i++) {
+        this.resetMoves();
+        for (int i = 1; i < 16; i++) {
             Position p = new Position(this.pos.getRow() + i,
                     this.pos.getCol() + i);
             if (!this.positionIsMovable(p)) {
                 break;
             }
         }
-        for (int i = 1; i < 8; i++) {
+        for (int i = 1; i < 16; i++) {
             Position p = new Position(this.pos.getRow() - i,
                     this.pos.getCol() + i);
             if (!this.positionIsMovable(p)) {
                 break;
             }
         }
-        for (int i = 1; i < 8; i++) {
+        for (int i = 1; i < 16; i++) {
             Position p = new Position(this.pos.getRow() + i,
                     this.pos.getCol() - i);
             if (!this.positionIsMovable(p)) {
                 break;
             }
         }
-        for (int i = 1; i < 8; i++) {
-            Position p = new Position(this.pos.getRow() + i,
-                    this.pos.getCol() + i);
+        for (int i = 1; i < 16; i++) {
+            Position p = new Position(this.pos.getRow() - i,
+                    this.pos.getCol() - i);
             if (!this.positionIsMovable(p)) {
                 break;
             }

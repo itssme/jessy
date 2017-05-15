@@ -11,20 +11,26 @@ import board.Position;
  */
 public class Pawn extends ChessFigure {
 
-    private boolean isAtStartPosition = true;
+    private Position startPosition;
 
     public Pawn(Position pos, String img, boolean isWhite) {
         super(pos, img, isWhite, false);
+        this.startPosition = pos;
     }
 
     @Override
     public void calculateMove() {
+        this.resetMoves();
         if (this.isWhite() == true) {
-            if (this.isAtStartPosition == true) {
-                this.positionIsMovable(
-                        new Position(this.getPos().getRow() - 2,
-                                this.getPos().getCol()));
-                this.isAtStartPosition = false;
+            if (this.pos.equals(startPosition)) {
+                for (int i = 1; i < 3; i++) {
+                    if (!this.positionIsMovable(
+                            new Position(this.getPos().getRow() - i,
+                                    this.getPos().getCol()))) {
+                        break;
+                    }
+                }
+
             } else {
 
                 this.positionIsMovable(
@@ -32,11 +38,14 @@ public class Pawn extends ChessFigure {
                                 this.getPos().getCol()));
             }
         } else {
-            if (this.isAtStartPosition == true) {
-                this.positionIsMovable(new Position(
-                        this.getPos().getRow() + 2,
-                        this.getPos().getCol()));
-                this.isAtStartPosition = false;
+            if (this.pos.equals(startPosition)) {
+                for (int i = 1; i < 3; i++) {
+                    if (!this.positionIsMovable(new Position(
+                            this.getPos().getRow() + i,
+                            this.getPos().getCol()))) {
+                        break;
+                    }
+                }
             } else {
                 this.positionIsMovable(new Position(
                         this.getPos().getRow() + 1,

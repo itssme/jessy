@@ -17,6 +17,7 @@ public class Rook extends ChessFigure {
 
     @Override
     public void calculateMove() {
+        this.resetMoves();
         for (int i = 1; i < 8; i++) {
             if (!this.positionIsMovable(
                     new Position(this.pos.getRow() + i,

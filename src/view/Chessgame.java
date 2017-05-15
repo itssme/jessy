@@ -38,6 +38,8 @@ public class Chessgame extends WindowAdapter {
 
         board.addMouseListener(board);
         sendBTN.addActionListener(new SendBTNController(chat, chatTextInput));
+        sendBTN.setDefaultCapable(true);
+        chatTextInput.addKeyListener(new SendBTNController(chat, chatTextInput));
     }
 
     private void createUIComponents() {

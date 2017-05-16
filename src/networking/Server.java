@@ -69,6 +69,7 @@ public class Server extends Thread {
 
     }
 
+    @Deprecated
     public boolean all_connected() {
         return (player_connected == 2);
     }

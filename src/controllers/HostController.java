@@ -57,11 +57,9 @@ public class HostController implements ActionListener {
                 return;
             }
 
-
             JOptionPane.showMessageDialog(
                     null,
                     "Started the game");
-
 
             synchronized (server) {
                 try {

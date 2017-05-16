@@ -34,6 +34,8 @@ public class Chessgame extends WindowAdapter {
     private JPanel chatContainer;
     private JPanel chatBox;
 
+    public static boolean playerFactionWhite;
+
     public Chessgame() {
 
         board.addMouseListener(board);

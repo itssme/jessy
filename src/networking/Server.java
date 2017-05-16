@@ -22,7 +22,7 @@ import java.util.logging.Level;
  *          to it. The other player will be able to connect over the ip
  *          of the player which started the Server.
  */
-public class Server implements Runnable {
+public class Server extends Thread {
 
     private static ServerSocket self;
     private static int player_connected = 0;
@@ -49,19 +49,16 @@ public class Server implements Runnable {
         player1 = new player(1);
         player2 = new player(2);
 
-        while (! this.all_connected()) {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
         Thread player1_thread = new Thread(player1);
         Thread player2_thread = new Thread(player2);
 
-        player1_thread.start();
-        player2_thread.start();
+        synchronized (this) {
+            player1_thread.start();
+            player2_thread.start();
+            starter();
+
+            notify();
+        }
 
         LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER STARTED");
     }
@@ -69,6 +66,7 @@ public class Server implements Runnable {
     public void starter() {
         player1.send("start");
         player2.send("dont start");
+
     }
 
     public boolean all_connected() {

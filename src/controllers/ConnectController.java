@@ -73,7 +73,6 @@ public class ConnectController implements ActionListener {
                         "Connected: opponent starts");
             }
 
-
         } else {
             JOptionPane.showMessageDialog(
                     null,
@@ -82,6 +81,7 @@ public class ConnectController implements ActionListener {
     }
 
     public static boolean connect(String ipAddress, int port, String password) throws InvalidKeyException {
+
         if (! IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
             JOptionPane.showMessageDialog(
                     null,

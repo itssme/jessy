@@ -1,6 +1,8 @@
 package controllers;
 
+import logging.LoggingSingleton;
 import networking.Server;
+import view.Chessgame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -41,7 +43,7 @@ public class HostController implements ActionListener {
                 server.start();
                 System.out.println("server starting done");
                 try {
-                    ConnectController.connect("127.0.0.1", 5060, password); // get password
+                    ConnectController.connect("127.0.0.1", 5060, password);
                 } catch (InvalidKeyException e1) {
                     JOptionPane.showMessageDialog(
                             null,
@@ -55,20 +57,19 @@ public class HostController implements ActionListener {
                 return;
             }
 
+
             JOptionPane.showMessageDialog(
                     null,
                     "Started the game");
 
 
-            while (! server.all_connected()) {
+            synchronized (server) {
                 try {
-                    Thread.sleep(200);
+                    server.wait();
                 } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    LoggingSingleton.getInstance().error("Waiting for player connection failed -> starting game now!", e1);
                 }
             }
-
-            server.starter();
 
             try {
                 ConnectController.startFirst = connection.start();
@@ -82,10 +83,12 @@ public class HostController implements ActionListener {
                 JOptionPane.showMessageDialog(
                         null,
                         "Connected: you start");
+                Chessgame.playerFactionWhite = true;
             } else {
                 JOptionPane.showMessageDialog(
                         null,
                         "Connected: opponent starts");
+                Chessgame.playerFactionWhite = false;
             }
 
         } else {

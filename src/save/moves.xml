@@ -1,14 +1,12 @@
 <?xml version="1.0"?>
 <game>
     <move>
-        <color>white</color>
         <fromX>5</fromX>
         <fromY>3</fromY>
         <toX>7</toX>
         <toY>2</toY>
     </move>
     <move>
-        <color>black</color>
         <fromX>2</fromX>
         <fromY>10</fromY>
         <toX>4</toX>

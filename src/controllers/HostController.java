@@ -23,6 +23,11 @@ public class HostController implements ActionListener {
 
     public static Server server = null;
 
+    /**
+     *Starts the <code>Server</code> and the <code>Connection</code>
+     *
+     * @param e the button event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (server == null) {
@@ -96,6 +101,9 @@ public class HostController implements ActionListener {
         }
     }
 
+    /**
+     *Closes the connections of the server
+     */
     public static void closeServer() {
         if (server != null) {
             server.close();

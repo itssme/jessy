@@ -28,6 +28,11 @@ public class ConnectController implements ActionListener {
     public static Connection connection = null;
     public static boolean startFirst;
 
+    /**
+     *Starts the <code>Connection</code> if a button if pressed
+     *
+     * @param e the button event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -83,6 +88,16 @@ public class ConnectController implements ActionListener {
         }
     }
 
+    /**
+     *Connects to a server
+     *
+     * @param ipAddress the ip address of the server
+     * @param port the port the server listens on
+     * @param password the password for the connection
+     * @return <code>true</code> if the connection was a success
+     *         and <code>false</code> if the connection failed
+     * @throws InvalidKeyException the password is not valid
+     */
     public static boolean connect(String ipAddress, int port, String password) throws InvalidKeyException {
 
         if (! IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
@@ -103,6 +118,9 @@ public class ConnectController implements ActionListener {
         return true;
     }
 
+    /**
+     *Disconnects form the server and closes all networkstreams
+     */
     public static void disconnect() {
         printToChat("Server", "other player disconnected -> stopping game");
 
@@ -116,7 +134,7 @@ public class ConnectController implements ActionListener {
                 return;
             }
 
-            Connection.send_object(disconnectObj);
+            Connection.sendObject(disconnectObj);
             HostController.closeServer();
 
             connection.reset();

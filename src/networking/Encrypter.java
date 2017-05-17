@@ -18,6 +18,12 @@ public class Encrypter  {
     private Key aesKey;
     private Cipher cipher;
 
+    /**
+     *Checks the password and generates the key
+     *
+     * @param key_in the password the user typed in
+     * @throws InvalidKeyException the password is not valid
+     */
     public Encrypter(String key_in) throws InvalidKeyException {
         if (key_in.length() <= 16) {
             // the password must have a lenght of 16
@@ -39,6 +45,12 @@ public class Encrypter  {
         }
     }
 
+    /**
+     *Encrypts a <code>String</code>
+     *
+     * @param text the <code>String</code> to encrypt
+     * @return the encrypted <code>String</code>
+     */
     public String encrypt(String text) {
         String encrypted_string = null;
 
@@ -61,6 +73,12 @@ public class Encrypter  {
         return encrypted_string;
     }
 
+    /**
+     *Decrypt a <code>String</code>
+     *
+     * @param encryptedStr the encrypted <code>String</code>
+     * @return the decrypted <code>String</code>
+     */
     public String decrypt(String encryptedStr) {
         String decrypted = null;
 

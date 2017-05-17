@@ -37,6 +37,15 @@ public class Connection implements Runnable {
     private Thread this_thread;
     private static Encrypter encrypter;
 
+    /**
+     *Opens the connection to the server
+     *
+     * @param connect_to_ip ip of the server
+     * @param port ports of the server
+     * @param password password for the connection
+     * @throws IOException network error
+     * @throws InvalidKeyException invalid password
+     */
     public Connection(String connect_to_ip, int port, String password) throws IOException, InvalidKeyException {
         self = new Socket(connect_to_ip, port);
         br = new BufferedReader(new InputStreamReader(self.getInputStream()));
@@ -44,6 +53,9 @@ public class Connection implements Runnable {
         encrypter = new Encrypter(password);
     }
 
+    /**
+     *Starts this thread
+     */
     public void start_thread() {
         if (this_thread == null) {
             this_thread = new Thread(this);
@@ -51,13 +63,13 @@ public class Connection implements Runnable {
         }
     }
 
+    /**
+     *Calls <code>getObject()</code> and parses the object
+     */
     @Override
     public void run() {
         while (true) {
             try {
-
-                LoggingSingleton.getInstance().logToFile(Level.INFO, "Connection thread is running");
-
                 JSONObject obj = get_object();
 
                 if (obj != null) {
@@ -104,12 +116,25 @@ public class Connection implements Runnable {
         }
     }
 
+
+    /**
+     *Converts a <code>Move</code> Object to a <code>JSONObject</code>
+     * and then passes it onto <code>sendObject()</code>.
+     *
+     * @param move an object that represents a move of a chessfigure
+     */
     public static void send_move(Move move) {
-        JSONObject send_object = move.toJsonObject();
+        JSONObject sendObject = move.toJsonObject();
         last_obj = move;
-        send_object(send_object);
+        sendObject(sendObject);
     }
 
+    /**
+     *Converts a <code>String</code> o a <code>JSONObject</code>
+     * and then passes it onto <code>sendObject()</code>.
+     *
+     * @param msg a chat message
+     */
     public static void send_chat_msg(String msg) {
         JSONObject send_object = new JSONObject();
 
@@ -121,10 +146,16 @@ public class Connection implements Runnable {
             e.printStackTrace();
         }
 
-        send_object(send_object);
+        sendObject(send_object);
     }
 
-    public static void send_object(JSONObject obj) {
+    /**
+     *Gets an <code>JSONObject</code> and sends it
+     * over the newtork to the server
+     *
+     * @param obj object which will be sent to the server
+     */
+    public static void sendObject(JSONObject obj) {
         LoggingSingleton.getInstance().logToFile(Level.INFO, "Sent object: " + obj.toString());
         try {
             pw.println(encrypter.encrypt(obj.toString()));
@@ -133,6 +164,14 @@ public class Connection implements Runnable {
         }
     }
 
+    /**
+     *Listens for <code>String</code>, converts them into <code>JSONObjects</code>
+     * and then returns it
+     *
+     * @return returns a <code>JSONObject</code> or null if the received <code>String</code> is not valid
+     * @throws IOException network error
+     * @throws JSONException received <code>String</code> is not a valid <code>JSONObject</code>
+     */
     private JSONObject get_object() throws IOException, JSONException {
         String got_obj = br.readLine();
         try {
@@ -143,6 +182,9 @@ public class Connection implements Runnable {
         return null;
     }
 
+    /**
+     *Closes all network streams
+     */
     public void reset() {
         try {
             self.close();
@@ -153,6 +195,12 @@ public class Connection implements Runnable {
         }
     }
 
+    /**
+     *Waits for the start from the server
+     *
+     * @return if this player starts <code>true</code> else <code>false</code>
+     * @throws IOException network error
+     */
     public boolean start() throws IOException {
         /*
             This function determines which of the

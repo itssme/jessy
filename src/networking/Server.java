@@ -1,9 +1,6 @@
 package networking;
 
 import logging.LoggingSingleton;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,6 +39,20 @@ public class Server extends Thread {
         }
     }
 
+    public void close() {
+        player1.close();
+        player2.close();
+
+        try {
+            self.close();
+        } catch (IOException e) {
+            LoggingSingleton.getInstance().error("Could not close server", e);
+        }
+
+        player1 = null;
+        player2 = null;
+    }
+
     @Override
     public void run() {
         LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER: waiting for connection");
@@ -49,10 +60,10 @@ public class Server extends Thread {
         player1 = new player(1);
         player2 = new player(2);
 
-        Thread player1_thread = new Thread(player1);
-        Thread player2_thread = new Thread(player2);
-
         synchronized (this) {
+            Thread player1_thread = new Thread(player1);
+            Thread player2_thread = new Thread(player2);
+
             player1_thread.start();
             player2_thread.start();
             starter();
@@ -66,7 +77,6 @@ public class Server extends Thread {
     public void starter() {
         player1.send("start");
         player2.send("dont start");
-
     }
 
     @Deprecated
@@ -107,14 +117,32 @@ public class Server extends Thread {
             }
         }
 
+        public void close() {
+            try {
+                player.close();
+                pw_player.close();
+                br_player.close();
+            } catch (Exception e) {
+                LoggingSingleton.getInstance().error("Failed to close network streams (player " + number + ")", e);
+            }
+        }
+
         @Override
         public void run() {
             System.out.println("started " + number);
             while (true) { // TODO: stop by a static variable if the game is over
                 if (number == 1) {
-                    player2.send(this.get());
+                    if (player2 != null) {
+                        player2.send(this.get());
+                    } else {
+                        this.close();
+                    }
                 } else {
-                    player1.send(this.get());
+                    if (player1 != null) {
+                        player1.send(this.get());
+                    } else {
+                        this.close();
+                    }
                 }
             }
         }
@@ -123,7 +151,8 @@ public class Server extends Thread {
             try {
                 return br_player.readLine();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                this.close();
             }
 
             return "";

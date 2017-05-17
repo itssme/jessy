@@ -4,6 +4,7 @@ import controllers.ConnectController;
 import controllers.HostController;
 import controllers.SendBTNController;
 import database.Scorer;
+import logging.Logging;
 import logging.LoggingSingleton;
 import model.BoardModel;
 import model.ScoreList;
@@ -70,6 +71,11 @@ public class Chessgame extends WindowAdapter {
     @Override
     public void windowClosing(WindowEvent e) {
         super.windowClosing(e);
+
+        LoggingSingleton.getInstance().logToFile(Level.INFO,
+                "Closing connections");
+        ConnectController.disconnect();
+
         LoggingSingleton.getInstance().logToFile(
                 Level.INFO,
                 "Starting the logging Cleanup.");

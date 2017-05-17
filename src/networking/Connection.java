@@ -2,6 +2,8 @@ package networking;
 
 import board.Move;
 import board.Position;
+import controllers.ConnectController;
+import logging.Logging;
 import logging.LoggingSingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,8 +36,6 @@ public class Connection implements Runnable {
     private static PrintWriter pw;
     private Thread this_thread;
     private static Encrypter encrypter;
-
-    public boolean gotDisconnect = false;
 
     public Connection(String connect_to_ip, int port, String password) throws IOException, InvalidKeyException {
         self = new Socket(connect_to_ip, port);
@@ -84,7 +84,15 @@ public class Connection implements Runnable {
 
                         // TODO: validate (move)
 
-                    } else { // TODO: add else if with disconnect object
+                    } else if (obj.has("disconnect")) {
+                        if (obj.getString("disconnect").equals("true")) {
+                            LoggingSingleton.getInstance().info("got disconnect object");
+                            ConnectController.disconnect();
+                        }
+
+                        this_thread.stop();
+                        return;
+                    } else {
                         LoggingSingleton.getInstance().logToFile(Level.WARNING, "GOT: not a valid object " + obj.toString());
                     }
                 }
@@ -133,6 +141,16 @@ public class Connection implements Runnable {
             System.out.println(e);
         }
         return null;
+    }
+
+    public void reset() {
+        try {
+            self.close();
+            br.close();
+            pw.close();
+        } catch (Exception e) {
+            LoggingSingleton.getInstance().error("Failed to close network streams", e);
+        }
     }
 
     public boolean start() throws IOException {

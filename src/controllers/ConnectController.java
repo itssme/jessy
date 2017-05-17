@@ -3,6 +3,7 @@ package controllers;
 import logging.LoggingSingleton;
 import networking.Connection;
 import networking.Encrypter;
+import networking.Server;
 import org.json.JSONException;
 import org.json.JSONObject;
 import sun.net.util.IPAddressUtil;
@@ -12,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.security.InvalidKeyException;
+
+import static controllers.SendBTNController.printToChat;
 
 /**
  * Name:    Königsreiter Simon
@@ -101,25 +104,23 @@ public class ConnectController implements ActionListener {
     }
 
     public static void disconnect() {
-        JSONObject disconnectObj = new JSONObject();
+        printToChat("Server", "other player disconnected -> stopping game");
 
-        try {
-            disconnectObj.put("disconnect", "true");
-        } catch (JSONException e) {
-            LoggingSingleton.getInstance().error("Failed to create disconnect object (not disconnecting)", e);
-            return;
-        }
+        if (connection != null) {
+            JSONObject disconnectObj = new JSONObject();
 
-        Connection.send_object(disconnectObj);
-
-        while (! connection.gotDisconnect) {
             try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                disconnectObj.put("disconnect", "true");
+            } catch (JSONException e) {
+                LoggingSingleton.getInstance().error("Failed to create disconnect object (not disconnecting)", e);
+                return;
             }
-        }
 
-        connection = null;
+            Connection.send_object(disconnectObj);
+            HostController.closeServer();
+
+            connection.reset();
+            connection = null;
+        }
     }
 }

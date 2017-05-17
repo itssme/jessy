@@ -50,10 +50,10 @@ public class HostController implements ActionListener {
                             "Invalid password");
                     return;
                 }
-            } catch (IOException e1) {
+            } catch (IOException e1) {;
                 JOptionPane.showMessageDialog(
                         null,
-                        "Could not start server");
+                        "Could not start server\n" + e1.toString());
                 return;
             }
 
@@ -93,6 +93,13 @@ public class HostController implements ActionListener {
             JOptionPane.showMessageDialog(
                     null,
                     "Server is already started");
+        }
+    }
+
+    public static void closeServer() {
+        if (server != null) {
+            server.close();
+            server = null;
         }
     }
 }

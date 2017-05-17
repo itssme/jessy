@@ -52,8 +52,6 @@ class Open_server implements Runnable{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void start() {

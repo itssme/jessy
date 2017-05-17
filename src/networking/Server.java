@@ -1,6 +1,7 @@
 package networking;
 
 import logging.LoggingSingleton;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,7 +36,7 @@ public class Server extends Thread {
      */
     public Server(int port) throws IOException {
         self = new ServerSocket(port);
-        LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER: init " + port);
+        LoggingSingleton.getInstance().log(Level.INFO, "SERVER: init " + port);
     }
 
     /**
@@ -58,7 +59,7 @@ public class Server extends Thread {
         try {
             self.close();
         } catch (IOException e) {
-            LoggingSingleton.getInstance().error("Could not close server", e);
+            LoggingSingleton.getInstance().severe("Could not close server" + e.getLocalizedMessage());
         }
 
         player1 = null;
@@ -70,7 +71,7 @@ public class Server extends Thread {
      */
     @Override
     public void run() {
-        LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER: waiting for connection");
+        LoggingSingleton.getInstance().log(Level.INFO, "SERVER: waiting for connection");
 
         player1 = new player(1);
         player2 = new player(2);
@@ -86,7 +87,7 @@ public class Server extends Thread {
             notify();
         }
 
-        LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER STARTED");
+        LoggingSingleton.getInstance().log(Level.INFO, "SERVER STARTED");
     }
 
     /**
@@ -125,13 +126,13 @@ public class Server extends Thread {
         private player(int number) {
             this.number = number;
 
-            LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + "Thread " + this.number + " started");
+            LoggingSingleton.getInstance().log(Level.INFO, "IN SERVER " + "Thread " + this.number + " started");
 
             try {
                 player = self.accept();
                 pw_player = new PrintWriter(player.getOutputStream(), true);
                 br_player = new BufferedReader(new InputStreamReader(player.getInputStream()));
-                LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + " player connected: " + number);
+                LoggingSingleton.getInstance().log(Level.INFO, "IN SERVER " + " player connected: " + number);
                 Server.player_connected++;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -143,7 +144,7 @@ public class Server extends Thread {
          * Starts the dummy player thread
          */
         public void start () {
-            LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + "Starting " + number);
+            LoggingSingleton.getInstance().log(Level.INFO, "IN SERVER " + "Starting " + number);
             if (thread == null) {
                 thread = new Thread (this, Integer.toString(number));
                 thread.start ();
@@ -159,7 +160,7 @@ public class Server extends Thread {
                 pw_player.close();
                 br_player.close();
             } catch (Exception e) {
-                LoggingSingleton.getInstance().error("Failed to close network streams (player " + number + ")", e);
+                LoggingSingleton.getInstance().severe("Failed to close network streams (player " + number + ")" + e.getLocalizedMessage());
             }
         }
 

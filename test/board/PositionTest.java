@@ -1,6 +1,5 @@
 package board;
 
-import chessfigure.Queen;
 import model.BoardModel;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +18,6 @@ class PositionTest {
     @Test
     void isValid() {
         BoardModel board = new BoardModel(8, 8);
-        System.out.println(new Position(1, 2).isValid(
-                new Queen(new Position(2, 2),
-                        "graphics/queen_white.png", true)));
     }
 
     @Test

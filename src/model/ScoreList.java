@@ -34,7 +34,7 @@ public class ScoreList<T> extends JList<T> {
             this.setListData((T[]) userList.toArray());
 
         } catch (SQLException e) {
-            LoggingSingleton.getInstance().logToFile(
+            LoggingSingleton.getInstance().log(
                     Level.INFO,
                     e.getLocalizedMessage());
         }

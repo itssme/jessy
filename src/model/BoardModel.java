@@ -1,15 +1,16 @@
 package model;
 
-import board.Position;
-import logging.LoggingSingleton;
+import com.github.bhlangonijr.chesslib.Piece;
+import com.github.bhlangonijr.chesslib.Square;
+import main.Main;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.logging.Level;
+import java.util.TreeMap;
 
 /**
  * Name:    Königsreiter Simon
@@ -20,11 +21,34 @@ import java.util.logging.Level;
  */
 public class BoardModel extends JTable implements MouseListener {
 
-    static BoardModel boardReference;
-    private ArrayList<ChessFigure> whiteFigures;
-    private ArrayList<ChessFigure> blackFigures;
-    private ChessFigure selected = null;
+    /**
+     * A Map which converts Cells from the format E7 to two integers for
+     * the JTable
+     */
+    private static TreeMap<Character, Integer> rowToInt =
+            new TreeMap<Character, Integer>();
 
+    /**
+     * A small static block for the conversion-Map
+     */
+    static {
+        rowToInt.put('A', 0);
+        rowToInt.put('B', 1);
+        rowToInt.put('C', 2);
+        rowToInt.put('D', 3);
+        rowToInt.put('E', 4);
+        rowToInt.put('F', 5);
+        rowToInt.put('G', 6);
+        rowToInt.put('H', 7);
+    }
+
+    /**
+     * A small constructor which was inherited from DefaultTableModel.
+     * It initializes all the necessary stuff and set attributes for the table.
+     *
+     * @param rows The amount of rows which shall be used
+     * @param cols The amount of columns which shall be used
+     */
     public BoardModel(int rows, int cols) {
         super(new ChessBoardModel(rows, cols));
         this.getColumnModel().setColumnSelectionAllowed(false);
@@ -33,8 +57,6 @@ public class BoardModel extends JTable implements MouseListener {
         this.setCellSelectionEnabled(true);
         this.setSelectionBackground(Color.CYAN);
         this.setSelectionForeground(Color.CYAN);
-        this.genWhite();
-        this.genBlack();
         this.setMaximumSize(new Dimension((int) (1280 * 0.75),
                 (int) (720 * 0.75)));
         this.setRowHeight(60);
@@ -42,100 +64,72 @@ public class BoardModel extends JTable implements MouseListener {
             this.getColumnModel().getColumn(i).setPreferredWidth(60);
         }
         this.doLayout();
-        boardReference = this;
-        this.drawFigures();
+        this.initBoard();
     }
 
-    public ArrayList<ChessFigure> getWhiteFigures() {
-        return whiteFigures;
-    }
-
-    public ArrayList<ChessFigure> getBlackFigures() {
-        return blackFigures;
-    }
-
-    private void genWhite() {
-        whiteFigures = new ArrayList<>();
-        whiteFigures.add(new Rook(new Position(7, 0),
-                "graphics/rook_white.png", true));
-        whiteFigures.add(new Knight(new Position(7, 1),
-                "graphics/knight_white.png", true));
-        whiteFigures.add(new Bishop(new Position(7, 2),
-                "graphics/bishop_white.png", true));
-        whiteFigures.add(new King(new Position(7, 3),
-                "graphics/king_white.png", true));
-        whiteFigures.add(new Queen(new Position(7, 4),
-                "graphics/queen_white.png", true));
-        whiteFigures.add(new Bishop(new Position(7, 5),
-                "graphics/bishop_white.png", true));
-        whiteFigures.add(new Knight(new Position(7, 6),
-                "graphics/knight_white.png", true));
-        whiteFigures.add(new Rook(new Position(7, 7),
-                "graphics/rook_white.png", true));
-
-        for (int i = 0; i < 8; i++) {
-            whiteFigures.add(new Pawn(new Position(6, i),
-                    "graphics/pawn_white.png", true));
+    /**
+     * InitBoard is mainly there for drawing the figures onto the board
+     */
+    private void initBoard() {
+        for (Piece p :
+                Main.CHESSGAMEBOARD.boardToArray()) {
+            System.out.println(p.toString());
+            Main.CHESSGAMEBOARD.getPieceLocation(p).forEach(square -> {
+                int[] rowCol = getRowColPair(square);
+                // FIXME: How does this work when getRowColPair returns null?
+                drawFigures(getImageIconFromPiece(p.value()),
+                        rowCol[0],
+                        rowCol[1]);
+            });
         }
     }
 
-    private void genBlack() {
-        blackFigures = new ArrayList<>();
-        blackFigures.add(new Rook(new Position(0, 0),
-                "graphics/rook_black.png", false));
-        blackFigures.add(new Knight(new Position(0, 1),
-                "graphics/knight_black.png", false));
-        blackFigures.add(new Bishop(new Position(0, 2),
-                "graphics/bishop_black.png", false));
-        blackFigures.add(new King(new Position(0, 3),
-                "graphics/king_black.png", false));
-        blackFigures.add(new Queen(new Position(0, 4),
-                "graphics/queen_black.png", false));
-        blackFigures.add(new Bishop(new Position(0, 5),
-                "graphics/bishop_black.png", false));
-        blackFigures.add(new Knight(new Position(0, 6),
-                "graphics/knight_black.png", false));
-        blackFigures.add(new Rook(new Position(0, 7),
-                "graphics/rook_black.png", false));
-
-        for (int i = 0; i < 8; i++) {
-            blackFigures.add(new Pawn(new Position(1, i),
-                    "graphics/pawn_black.png", false));
+    /**
+     * This is a simple conversion function for converting the Piece-values -
+     * the description - to the filenames of the specific *.png
+     *
+     * @param pieceValue The textual representation of the specific Piece
+     * @return The correct Image of null, to draw nothing
+     */
+    public ImageIcon getImageIconFromPiece(String pieceValue) {
+        if (pieceValue.equals("NONE")) {
+            return null;
         }
+        String[] parts = pieceValue.toLowerCase().split("_");
+        return new ImageIcon("graphics/" +
+                parts[1] +
+                "_" +
+                parts[0] +
+                ".png");
     }
 
-    public void drawFigures() {
-        this.refresh();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                this.setValueAt(null, i, j);
-            }
+    /**
+     * This function draws the specified ImageIcon on the given row and column
+     *
+     * @param imageIcon The ImageIcon which should be drawn
+     * @param row       The row, where to draw
+     * @param col       The column, where to draw
+     */
+    public void drawFigures(ImageIcon imageIcon, int row, int col) {
+        this.setValueAt(imageIcon, row, col);
+        this.repaint();
+    }
+
+    /**
+     * This function converts the E7 format of the library to a tuple of
+     * integers
+     *
+     * @param sq The square, which should be converted
+     * @return The tuple specifying the row and column or null.
+     */
+    @Nullable
+    public static int[] getRowColPair(Square sq) {
+        char[] parts = sq.toString().toCharArray();
+        if (sq == Square.NONE) {
+            return null;
         }
-
-        blackFigures.forEach(new Consumer<ChessFigure>() {
-            @Override
-            public void accept(ChessFigure chessFigure) {
-                //System.out.println(chessFigure.toString());
-                ((ChessBoardModel) BoardModel.this.getModel()).setValueAt(
-                        new ImageIcon(chessFigure.getImg()),
-                        chessFigure.getPos().getRow(),
-                        chessFigure.getPos().getCol());
-            }
-        });
-
-
-        whiteFigures.forEach(new Consumer<ChessFigure>() {
-            @Override
-            public void accept(ChessFigure chessFigure) {
-                //System.out.println(chessFigure);
-                ((ChessBoardModel) BoardModel.this.getModel()).setValueAt(
-                        new ImageIcon(chessFigure.getImg()),
-                        chessFigure.getPos().getRow(),
-                        chessFigure.getPos().getCol());
-
-            }
-        });
-
+        return new int[]{Character.getNumericValue(parts[1]) - 1,
+                rowToInt.get(parts[0])};
     }
 
     public Component prepareRenderer(TableCellRenderer renderer,
@@ -154,13 +148,6 @@ public class BoardModel extends JTable implements MouseListener {
                 comp.setBackground(Color.BLACK);
             }
         }
-        if (selected != null) {
-            selected.getPossibleMoves().forEach(consumer -> {
-                if (row == consumer.getRow() && column == consumer.getCol()) {
-                    comp.setBackground(new Color(88, 115, 232, 100));
-                }
-            });
-        }
         return comp;
     }
 
@@ -171,41 +158,11 @@ public class BoardModel extends JTable implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent evt) {
-        JTable target = (JTable) evt.getSource();
-        int row = target.getSelectedRow();
-        int col = target.getSelectedColumn();
-        Position click = new Position(row, col);
-        if (this.selected != null) {
-            LoggingSingleton.getInstance().logToFile(Level.INFO,
-                    BoardModel.this.selected.toString());
-        }
-        if (this.selected != null
-                && !this.selected.getPos().equals(click)
-                && this.selected.getPossibleMoves().contains(click)) {
-            LoggingSingleton.getInstance().info("Selecting a new Position");
-            LoggingSingleton.getInstance().info("Before:\n" + this.selected.toString());
-            Position after = click;
-            this.selected.setPos(after);
-            LoggingSingleton.getInstance().info("After:\n" + this.selected.toString());
-            //Connection.send_move(new Move(before, after));
-        }
-        if (this.selected != null && !this.selected.getPossibleMoves().contains(click)) {
-            this.selected = figureAt(click);
-        }
-        this.drawFigures();
 
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        BoardModel src = (BoardModel) e.getSource();
-        int row = src.getSelectedRow();
-        int col = src.getSelectedColumn();
-        if (this.selected == null) {
-            this.selected = BoardModel.figureAt(new Position(row, col));
-            this.revalidate();
-            this.repaint();
-        }
     }
 
     @Override
@@ -222,35 +179,4 @@ public class BoardModel extends JTable implements MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
-
-    public ArrayList<ChessFigure> getWholeList() {
-        ArrayList<ChessFigure> wholeList = new ArrayList<>();
-        wholeList.addAll(getWhiteFigures());
-        wholeList.addAll(getBlackFigures());
-        return wholeList;
-    }
-
-    public static ChessFigure figureAt(Position p) {
-        ChessFigure[] wholeList = (ChessFigure[]) boardReference.getWholeList().
-                toArray(new ChessFigure[0]);
-        for (ChessFigure chessFig :
-                wholeList) {
-            if (chessFig.getPos().equals(p)) {
-                return chessFig;
-            }
-        }
-        return null;
-    }
-
-    public void refresh() {
-        this.getWholeList().forEach(new Consumer<ChessFigure>() {
-            @Override
-            public void accept(ChessFigure chessFigure) {
-                chessFigure.calculateMove();
-            }
-        });
-        this.revalidate();
-        this.repaint();
-    }
-
 }

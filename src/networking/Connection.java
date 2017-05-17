@@ -40,7 +40,7 @@ public class Connection implements Runnable {
      * @param connect_to_ip ip of the server
      * @param port ports of the server
      * @param password password for the connection
-     * @throws IOException network error
+     * @throws IOException network severe
      * @throws InvalidKeyException invalid password
      */
     public Connection(String connect_to_ip, int port, String password) throws IOException, InvalidKeyException {
@@ -76,20 +76,20 @@ public class Connection implements Runnable {
                         String player = obj.getString("player");
                         //printToChat(player, msg);
 
-                        LoggingSingleton.getInstance().logToFile(Level.INFO, "GOT CHAT: " + player + " " + msg);
+                        LoggingSingleton.getInstance().log(Level.INFO, "GOT CHAT: " + player + " " + msg);
 
                     } else if (obj.has("resend")) {
                         send_move(last_obj);
 
                     } else if (obj.has("from x")) {
-                        LoggingSingleton.getInstance().logToFile(Level.INFO, "GOT " + "got position object");
+                        LoggingSingleton.getInstance().log(Level.INFO, "GOT " + "got position object");
 
                         Position from = new Position(obj.getInt("from x"), obj.getInt("from y"));
                         Position to = new Position(obj.getInt("to x"), obj.getInt("to y"));
 
                         Move move = new Move(from, to);
 
-                        LoggingSingleton.getInstance().logToFile(Level.INFO, "GOT: " + move.toJsonObject().toString());
+                        LoggingSingleton.getInstance().log(Level.INFO, "GOT: " + move.toJsonObject().toString());
 
                         // TODO: validate (move)
 
@@ -102,13 +102,13 @@ public class Connection implements Runnable {
                         this_thread.stop();
                         return;
                     } else {
-                        LoggingSingleton.getInstance().logToFile(Level.WARNING, "GOT: not a valid object " + obj.toString());
+                        LoggingSingleton.getInstance().log(Level.WARNING, "GOT: not a valid object " + obj.toString());
                     }
                 }
             } catch (IOException e) {
-                LoggingSingleton.getInstance().error("Failed to send json object", e);
+                LoggingSingleton.getInstance().severe("Failed to send json object" + e.getLocalizedMessage());
             } catch (JSONException e) {
-                LoggingSingleton.getInstance().error("Failed to create json object", e);
+                LoggingSingleton.getInstance().severe("Failed to create json object" + e.getLocalizedMessage());
             }
         }
     }
@@ -152,7 +152,7 @@ public class Connection implements Runnable {
      * @param obj object which will be sent to the server
      */
     public static void sendObject(JSONObject obj) {
-        LoggingSingleton.getInstance().logToFile(Level.INFO, "Sent object: " + obj.toString());
+        LoggingSingleton.getInstance().log(Level.INFO, "Sent object: " + obj.toString());
         try {
             pw.println(encrypter.encrypt(obj.toString()));
         } catch (Exception e) {
@@ -165,7 +165,7 @@ public class Connection implements Runnable {
      * and then returns it
      *
      * @return returns a <code>JSONObject</code> or null if the received <code>String</code> is not valid
-     * @throws IOException network error
+     * @throws IOException network severe
      * @throws JSONException received <code>String</code> is not a valid <code>JSONObject</code>
      */
     private JSONObject get_object() throws IOException, JSONException {
@@ -187,7 +187,7 @@ public class Connection implements Runnable {
             br.close();
             pw.close();
         } catch (Exception e) {
-            LoggingSingleton.getInstance().error("Failed to close network streams", e);
+            LoggingSingleton.getInstance().severe("Failed to close network streams" + e.getLocalizedMessage());
         }
     }
 
@@ -195,7 +195,7 @@ public class Connection implements Runnable {
      * Waits for the start from the server
      *
      * @return if this player starts <code>true</code> else <code>false</code>
-     * @throws IOException network error
+     * @throws IOException network severe
      */
     public boolean start() throws IOException {
         /*

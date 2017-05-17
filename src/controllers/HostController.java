@@ -2,7 +2,6 @@ package controllers;
 
 import logging.LoggingSingleton;
 import networking.Server;
-import view.Chessgame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -38,10 +37,10 @@ public class HostController implements ActionListener {
                             "Weak or no password.\nInsecure connection!");
                 }
 
-                System.out.println("server starting");
+                LoggingSingleton.getInstance().info("server starting");
                 server = new Server(5060);
                 server.start();
-                System.out.println("server starting done");
+                LoggingSingleton.getInstance().info("server starting done");
                 try {
                     ConnectController.connect("127.0.0.1", 5060, password);
                 } catch (InvalidKeyException e1) {
@@ -81,12 +80,12 @@ public class HostController implements ActionListener {
                 JOptionPane.showMessageDialog(
                         null,
                         "Connected: you start");
-                Chessgame.playerFactionWhite = true;
+                //Chessgame.playerFactionWhite = true;
             } else {
                 JOptionPane.showMessageDialog(
                         null,
                         "Connected: opponent starts");
-                Chessgame.playerFactionWhite = false;
+                //  Chessgame.playerFactionWhite = false;
             }
 
         } else {

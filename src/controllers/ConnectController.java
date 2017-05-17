@@ -2,7 +2,6 @@ package controllers;
 
 import logging.LoggingSingleton;
 import networking.Connection;
-import networking.Encrypter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import sun.net.util.IPAddressUtil;

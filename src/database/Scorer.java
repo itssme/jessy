@@ -1,6 +1,5 @@
 package database;
 
-import com.sun.istack.internal.Nullable;
 import logging.LoggingSingleton;
 import model.ScoreList;
 
@@ -70,7 +69,7 @@ public class Scorer extends Thread implements Runnable {
 
     private boolean insertTestData(
             Connection conn,
-            @Nullable String[] exampleData) {
+            String[] exampleData) {
         try (PreparedStatement stmt = conn.prepareStatement(
                 "insert into player(name) values(?);")) {
             String[] names;
@@ -118,7 +117,6 @@ public class Scorer extends Thread implements Runnable {
         return true;
     }
 
-    @Nullable
     private ResultSet readUserDB(Connection conn) {
         PreparedStatement stmt;
         try {

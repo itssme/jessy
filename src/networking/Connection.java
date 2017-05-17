@@ -2,6 +2,7 @@ package networking;
 
 import board.Move;
 import board.Position;
+import javafx.scene.control.TextArea;
 import logging.LoggingSingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +13,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.security.InvalidKeyException;
-import java.util.Arrays;
 import java.util.logging.Level;
 
 import static controllers.SendBTNController.printToChat;
@@ -27,6 +27,7 @@ import static database.Scorer.USERNAME;
  */
 public class Connection implements Runnable {
 
+    public static TextArea chat;
     private Socket self;
     private BufferedReader br;
     private boolean sending = false;
@@ -65,7 +66,7 @@ public class Connection implements Runnable {
 
                         String msg = obj.getString("chat");
                         String player = obj.getString("player");
-                        printToChat(player, msg);
+                        printToChat(player, msg, chat);
 
                         LoggingSingleton.getInstance().logToFile(Level.INFO, "GOT CHAT: " + player + " " + msg);
 
@@ -144,7 +145,7 @@ public class Connection implements Runnable {
              be the client starting the Server)
          */
 
-        printToChat("Server", "Game has started");
+        printToChat("Server", "Game has started", chat);
         return br.readLine().equals("start");
     }
 }

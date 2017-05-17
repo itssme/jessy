@@ -91,10 +91,10 @@ public class ChessGameController implements Initializable {
                             "Weak or no password.\nInsecure connection!");
                 }
 
-                System.out.println("server starting");
+                LoggingSingleton.getInstance().info("server starting");
                 server = new Server(5060);
                 server.start();
-                System.out.println("server starting done");
+                LoggingSingleton.getInstance().info("server starting done");
                 try {
                     connect("127.0.0.1", 5060, password);
                 } catch (InvalidKeyException e1) {
@@ -103,7 +103,7 @@ public class ChessGameController implements Initializable {
                             "Invalid password");
                     return;
                 }
-            } catch (IOException e1) {;
+            } catch (IOException e1) {
                 JOptionPane.showMessageDialog(
                         null,
                         "Could not start server\n" + e1.toString());

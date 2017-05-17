@@ -1,7 +1,5 @@
 package board;
 
-import chessfigure.ChessFigure;
-import model.BoardModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,17 +59,5 @@ public class Position {
         }
 
         return obj;
-    }
-
-    public Position isValid(ChessFigure ref) {
-        ChessFigure fig = BoardModel.figureAt(this);
-        if ((this.row >= 0) && (this.row <= 7) &&
-                (this.col >= 0) && (this.col <= 7) &&
-                !ref.isOfSameFaction(fig)) {
-            return this;
-        } else {
-            return null;
-        }
-
     }
 }

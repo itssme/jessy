@@ -2,9 +2,8 @@ package networking;
 
 import board.Move;
 import board.Position;
-import controllers.ConnectController;
-import logging.Logging;
 import logging.LoggingSingleton;
+import main.ChessGameController;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,10 +13,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.security.InvalidKeyException;
-import java.util.Arrays;
 import java.util.logging.Level;
 
-import static controllers.SendBTNController.printToChat;
 import static database.Scorer.USERNAME;
 
 /**
@@ -99,7 +96,7 @@ public class Connection implements Runnable {
                     } else if (obj.has("disconnect")) {
                         if (obj.getString("disconnect").equals("true")) {
                             LoggingSingleton.getInstance().info("got disconnect object");
-                            ConnectController.disconnect();
+                            ChessGameController.disconnect();
                         }
 
                         this_thread.stop();
@@ -115,7 +112,6 @@ public class Connection implements Runnable {
             }
         }
     }
-
 
     /**
      * Converts a <code>Move</code> Object to a <code>JSONObject</code>

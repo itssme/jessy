@@ -1,7 +1,5 @@
 package main;
 
-import controllers.ConnectController;
-import controllers.SendBTNController;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,7 +36,6 @@ public class ChessGameController implements Initializable {
     public static Connection connection = null;
     public static boolean startFirst;
 
-
     @FXML
     public TextArea chat;
     @FXML
@@ -46,10 +43,23 @@ public class ChessGameController implements Initializable {
     @FXML
     private SwingNode chessBoard;
 
+    /*
     public void sendBTNClicked(ActionEvent actionEvent) {
         SendBTNController.fireClick(chatTextBox, chat);
     }
 
+    public static void printToChat(String player, String msg) {
+        String txt = chat.getText();
+        txt = String.format("%s %n" + "%s: %s", txt, player, msg);
+        chat.setText(txt);
+    }
+
+    public void keyTyped(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+            SendBTNController.fireClick(chatTextBox, chat);
+        }
+    }
+    */
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -62,6 +72,11 @@ public class ChessGameController implements Initializable {
         });
     }
 
+    /**
+     * Starts the <code>Server</code> and the <code>Connection</code>
+     *
+     * @param e the button event
+     */
     public void hostGame(ActionEvent actionEvent) {
         if (server == null) {
             try {
@@ -76,22 +91,22 @@ public class ChessGameController implements Initializable {
                             "Weak or no password.\nInsecure connection!");
                 }
 
-                LoggingSingleton.getInstance().info("server starting");
+                System.out.println("server starting");
                 server = new Server(5060);
                 server.start();
-                LoggingSingleton.getInstance().info("server starting done");
+                System.out.println("server starting done");
                 try {
-                    ConnectController.connect("127.0.0.1", 5060, password);
+                    connect("127.0.0.1", 5060, password);
                 } catch (InvalidKeyException e1) {
                     JOptionPane.showMessageDialog(
                             null,
                             "Invalid password");
                     return;
                 }
-            } catch (IOException e1) {
+            } catch (IOException e1) {;
                 JOptionPane.showMessageDialog(
                         null,
-                        "Could not start server");
+                        "Could not start server\n" + e1.toString());
                 return;
             }
 
@@ -108,14 +123,14 @@ public class ChessGameController implements Initializable {
             }
 
             try {
-                ConnectController.startFirst = connection.start();
+                startFirst = connection.start();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
 
             connection.start_thread();
 
-            if (ConnectController.startFirst) {
+            if (startFirst) {
                 JOptionPane.showMessageDialog(
                         null,
                         "Connected: you start");
@@ -124,7 +139,7 @@ public class ChessGameController implements Initializable {
                 JOptionPane.showMessageDialog(
                         null,
                         "Connected: opponent starts");
-                //  Chessgame.playerFactionWhite = false;
+                //Chessgame.playerFactionWhite = false;
             }
 
         } else {
@@ -134,8 +149,22 @@ public class ChessGameController implements Initializable {
         }
     }
 
-    public void connectToGame(ActionEvent actionEvent) {
+    /**
+     * Closes the connections of the server
+     */
+    public static void closeServer() {
+        if (server != null) {
+            server.close();
+            server = null;
+        }
+    }
 
+    /**
+     * Starts the <code>Connection</code> if a button if pressed
+     *
+     * @param e the button event
+     */
+    public void connectToGame(ActionEvent actionEvent) {
         if (connection == null) {
 
             String ipAddress = JOptionPane.showInputDialog(
@@ -188,9 +217,19 @@ public class ChessGameController implements Initializable {
         }
     }
 
+    /**
+     * Connects to a server
+     *
+     * @param ipAddress the ip address of the server
+     * @param port the port the server listens on
+     * @param password the password for the connection
+     * @return <code>true</code> if the connection was a success
+     *         and <code>false</code> if the connection failed
+     * @throws InvalidKeyException the password is not valid
+     */
     public static boolean connect(String ipAddress, int port, String password) throws InvalidKeyException {
 
-        if (!IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
+        if (! IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
             JOptionPane.showMessageDialog(
                     null,
                     ipAddress + " is not a valid ip");
@@ -208,32 +247,27 @@ public class ChessGameController implements Initializable {
         return true;
     }
 
+    /**
+     * Disconnects form the server and closes all networkstreams
+     */
     public static void disconnect() {
-        JSONObject disconnectObj = new JSONObject();
+        //printToChat("Server", "other player disconnected -> stopping game");
 
-        try {
-            disconnectObj.put("disconnect", "true");
-        } catch (JSONException e) {
-            LoggingSingleton.getInstance().error("Failed to create disconnect object (not disconnecting)", e);
-            return;
-        }
+        if (connection != null) {
+            JSONObject disconnectObj = new JSONObject();
 
-        Connection.send_object(disconnectObj);
-
-        while (!connection.gotDisconnect) {
             try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                disconnectObj.put("disconnect", "true");
+            } catch (JSONException e) {
+                LoggingSingleton.getInstance().error("Failed to create disconnect object (not disconnecting)", e);
+                return;
             }
-        }
 
-        connection = null;
-    }
+            Connection.sendObject(disconnectObj);
+            closeServer();
 
-    public void keyTyped(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ENTER) {
-            SendBTNController.fireClick(chatTextBox, chat);
+            connection.reset();
+            connection = null;
         }
     }
 }

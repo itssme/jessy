@@ -1,6 +1,7 @@
 package networking;
 
 import logging.LoggingSingleton;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,20 +28,11 @@ public class Server extends Thread {
     private player player2;
     private Thread  thread;
 
-    /**
-     *Binds the server ip
-     *
-     * @param port the port for the server
-     * @throws IOException network error
-     */
     public Server(int port) throws IOException {
         self = new ServerSocket(port);
         LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER: init " + port);
     }
 
-    /**
-     *Starts the server as a thread
-     */
     public void start() {
         if (thread == null) {
             thread = new Thread(this);
@@ -48,26 +40,6 @@ public class Server extends Thread {
         }
     }
 
-    /**
-     *Closes all networkstreams including the ones of the player dummies
-     */
-    public void close() {
-        player1.close();
-        player2.close();
-
-        try {
-            self.close();
-        } catch (IOException e) {
-            LoggingSingleton.getInstance().error("Could not close server", e);
-        }
-
-        player1 = null;
-        player2 = null;
-    }
-
-    /**
-     *The server thread, which lets the players connect
-     */
     @Override
     public void run() {
         LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER: waiting for connection");
@@ -75,10 +47,10 @@ public class Server extends Thread {
         player1 = new player(1);
         player2 = new player(2);
 
-        synchronized (this) {
-            Thread player1_thread = new Thread(player1);
-            Thread player2_thread = new Thread(player2);
+        Thread player1_thread = new Thread(player1);
+        Thread player2_thread = new Thread(player2);
 
+        synchronized (this) {
             player1_thread.start();
             player2_thread.start();
             starter();
@@ -89,25 +61,16 @@ public class Server extends Thread {
         LoggingSingleton.getInstance().logToFile(Level.INFO, "SERVER STARTED");
     }
 
-    /**
-     *Sends the start message to the player
-     */
     public void starter() {
         player1.send("start");
         player2.send("dont start");
+
     }
 
-    /**
-     *Checks if both players are connected
-     *
-     * @return <code>true</code> if both players are connected
-     *         and returns <code>false</code> if only one or no player is connected
-     */
     @Deprecated
     public boolean all_connected() {
         return (player_connected == 2);
     }
-
 
     private class player implements Runnable {
 
@@ -117,11 +80,6 @@ public class Server extends Thread {
         private int number;
         private Thread thread;
 
-        /**
-         *Starts the player dummy and listens for the client to connect
-         *
-         * @param number the number of the dummy
-         */
         private player(int number) {
             this.number = number;
 
@@ -139,9 +97,6 @@ public class Server extends Thread {
 
         }
 
-        /**
-         *Starts the dummy player thread
-         */
         public void start () {
             LoggingSingleton.getInstance().logToFile(Level.INFO, "IN SERVER " + "Starting " + number);
             if (thread == null) {
@@ -150,63 +105,28 @@ public class Server extends Thread {
             }
         }
 
-        /**
-         *Closes all networkstreams
-         */
-        public void close() {
-            try {
-                player.close();
-                pw_player.close();
-                br_player.close();
-            } catch (Exception e) {
-                LoggingSingleton.getInstance().error("Failed to close network streams (player " + number + ")", e);
-            }
-        }
-
-        /**
-         *Runs the thread which passes on the object between the players
-         */
         @Override
         public void run() {
             System.out.println("started " + number);
             while (true) { // TODO: stop by a static variable if the game is over
                 if (number == 1) {
-                    if (player2 != null) {
-                        player2.send(this.get());
-                    } else {
-                        this.close();
-                    }
+                    player2.send(this.get());
                 } else {
-                    if (player1 != null) {
-                        player1.send(this.get());
-                    } else {
-                        this.close();
-                    }
+                    player1.send(this.get());
                 }
             }
         }
 
-        /**
-         *Gets an <code>String</code> and return it
-         *
-         * @return <code>String</code> which has been received over network
-         */
         private String get() {
             try {
                 return br_player.readLine();
             } catch (IOException e) {
-                //e.printStackTrace();
-                this.close();
+                e.printStackTrace();
             }
 
             return "";
         }
 
-        /**
-         *Sends a <code>String</code> ot the player
-         *
-         * @param send_str <code>String</code> to send
-         */
         private void send(String send_str) {
             pw_player.println(send_str);
         }

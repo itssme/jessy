@@ -84,15 +84,19 @@ public abstract class ChessFigure {
         System.out.println();
     }
 
-    protected boolean isOfSameFaction(ChessFigure otherFigure) {
-        return this.isWhite() == this.isWhite();
+    public boolean isOfSameFaction(ChessFigure otherFigure) {
+
+        if (otherFigure == null) {
+            return false;
+        }
+        return otherFigure.isWhite() == this.isWhite();
     }
 
     protected boolean positionIsMovable(Position p) {
         if (BoardModel.figureAt(p) != null) {
             return false;
         } else {
-            this.possibleMoves.add(p.isValid());
+            this.possibleMoves.add(p.isValid(this));
             return true;
         }
     }

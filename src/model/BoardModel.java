@@ -107,7 +107,7 @@ public class BoardModel extends JTable implements MouseListener {
     }
 
     public void drawFigures() {
-
+        this.refresh();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 this.setValueAt(null, i, j);
@@ -138,7 +138,6 @@ public class BoardModel extends JTable implements MouseListener {
             }
         });
 
-        this.refresh();
     }
 
     public Component prepareRenderer(TableCellRenderer renderer,
@@ -173,7 +172,7 @@ public class BoardModel extends JTable implements MouseListener {
     }
 
     @Override
-    public void mouseClicked(java.awt.event.MouseEvent evt) {
+    public void mouseClicked(MouseEvent evt) {
         JTable target = (JTable) evt.getSource();
         int row = target.getSelectedRow();
         int col = target.getSelectedColumn();
@@ -185,11 +184,11 @@ public class BoardModel extends JTable implements MouseListener {
         if (this.selected != null
                 && !this.selected.getPos().equals(click)
                 && this.selected.getPossibleMoves().contains(click)) {
-            System.out.println("Selecting a new Position");
-            System.out.println("Before:\n" + this.selected.toString());
+            LoggingSingleton.getInstance().info("Selecting a new Position");
+            LoggingSingleton.getInstance().info("Before:\n" + this.selected.toString());
             Position after = click;
             this.selected.setPos(after);
-            System.out.println("After:\n" + this.selected.toString());
+            LoggingSingleton.getInstance().info("After:\n" + this.selected.toString());
             //Connection.send_move(new Move(before, after));
         }
         if (this.selected != null && !this.selected.getPossibleMoves().contains(click)) {

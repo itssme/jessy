@@ -1,9 +1,9 @@
 package networking;
 
-import java.security.InvalidKeyException;
-import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.Key;
 
 /**
  * Name:    Joel Klimont

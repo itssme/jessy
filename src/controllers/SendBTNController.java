@@ -1,14 +1,11 @@
 package controllers;
 
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import logging.LoggingSingleton;
-import model.ChatModel;
 import networking.Connection;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.logging.Level;
 
 
@@ -19,26 +16,14 @@ import java.util.logging.Level;
  * Project: jessy
  * Desc.:
  */
-public class SendBTNController implements ActionListener, KeyListener {
+public class SendBTNController {
 
-    private static ChatModel chat;
-    private JTextField textField;
 
-    public SendBTNController(ChatModel chat, JTextField textField) {
-        this.chat = chat;
-        this.textField = textField;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        SendBTNController.this.fireClick();
-    }
-
-    private void fireClick() {
+    public static void fireClick(TextField textField, TextArea chat) {
         try {
             String msg = textField.getText();
             textField.setText("");
-            printToChat("You", msg);
+            printToChat("You", msg, chat);
             Connection.send_chat_msg(msg);
             LoggingSingleton.getInstance().logToFile(
                     Level.INFO,
@@ -53,26 +38,11 @@ public class SendBTNController implements ActionListener, KeyListener {
         }
     }
 
-    public static void printToChat(String player, String msg) {
+    public static void printToChat(String player, String msg, TextArea chat) {
         String txt = chat.getText();
         txt = String.format("%s %n" + "%s: %s", txt, player, msg);
         chat.setText(txt);
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-            SendBTNController.this.fireClick();
-        }
-    }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
 }

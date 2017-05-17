@@ -2,6 +2,7 @@ package logging;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 import java.util.logging.XMLFormatter;
 
 /**
@@ -13,20 +14,24 @@ import java.util.logging.XMLFormatter;
  * Desc.:
  */
 public class LoggingSingleton {
-    private static Logging logObj;
+    private static Logger logger;
 
     static {
+        logger = Logger.getLogger("fileLogger");
+        FileHandler fh = null;
         try {
-            logObj = new Logging().initLogging(
-                    new FileHandler("jessy.log.xml"),
-                    new XMLFormatter());
+            fh = new FileHandler("jessy.log.xml");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        fh.setFormatter(new XMLFormatter());
+
+        logger.addHandler(fh);
+        logger.setUseParentHandlers(false);
     }
 
-    public static Logging getInstance() {
-        return logObj;
+    public static Logger getInstance() {
+        return logger;
     }
 
     private LoggingSingleton() {

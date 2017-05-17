@@ -43,24 +43,6 @@ public class ChessGameController implements Initializable {
     @FXML
     private SwingNode chessBoard;
 
-    /*
-    public void sendBTNClicked(ActionEvent actionEvent) {
-        SendBTNController.fireClick(chatTextBox, chat);
-    }
-
-    public static void printToChat(String player, String msg) {
-        String txt = chat.getText();
-        txt = String.format("%s %n" + "%s: %s", txt, player, msg);
-        chat.setText(txt);
-    }
-
-    public void keyTyped(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ENTER) {
-            SendBTNController.fireClick(chatTextBox, chat);
-        }
-    }
-    */
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -75,7 +57,7 @@ public class ChessGameController implements Initializable {
     /**
      * Starts the <code>Server</code> and the <code>Connection</code>
      *
-     * @param e the button event
+     * @param actionEvent the button event
      */
     public void hostGame(ActionEvent actionEvent) {
         if (server == null) {
@@ -118,7 +100,10 @@ public class ChessGameController implements Initializable {
                 try {
                     server.wait();
                 } catch (InterruptedException e1) {
-                    LoggingSingleton.getInstance().error("Waiting for player connection failed -> starting game now!", e1);
+                    LoggingSingleton.getInstance().severe(
+                            "Waiting for player connection failed -> " +
+                                    "starting game now!" +
+                                    e1.getLocalizedMessage());
                 }
             }
 
@@ -162,7 +147,7 @@ public class ChessGameController implements Initializable {
     /**
      * Starts the <code>Connection</code> if a button if pressed
      *
-     * @param e the button event
+     * @param actionEvent the button event
      */
     public void connectToGame(ActionEvent actionEvent) {
         if (connection == null) {
@@ -227,7 +212,8 @@ public class ChessGameController implements Initializable {
      *         and <code>false</code> if the connection failed
      * @throws InvalidKeyException the password is not valid
      */
-    public static boolean connect(String ipAddress, int port, String password) throws InvalidKeyException {
+    public static boolean connect(String ipAddress, int port, String password)
+            throws InvalidKeyException {
 
         if (! IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
             JOptionPane.showMessageDialog(
@@ -259,7 +245,7 @@ public class ChessGameController implements Initializable {
             try {
                 disconnectObj.put("disconnect", "true");
             } catch (JSONException e) {
-                LoggingSingleton.getInstance().error("Failed to create disconnect object (not disconnecting)", e);
+                LoggingSingleton.getInstance().severe("Failed to create disconnect object (not disconnecting)" + e.getLocalizedMessage());
                 return;
             }
 
@@ -269,5 +255,39 @@ public class ChessGameController implements Initializable {
             connection.reset();
             connection = null;
         }
+    }
+
+    /**
+     * Writes the text with the user, who sent the text to the ChatBox.
+     *
+     * @param user The user who sent the text. 'You' if it was sent by the local
+     *             user
+     * @param msg  The message sent.
+     */
+    public void printToChat(String user, String msg) {
+        String txt = String.format("%s %n" + "%s: %s", chat.getText(), user, msg);
+        chat.setText(txt);
+        chatTextBox.setText("");
+    }
+
+    /**
+     * The keyTyped event which is the keyboard-handler for the Text-Area
+     *
+     * @param keyEvent The key-input for the Text-Area
+     */
+    @FXML
+    public void keyTyped(KeyEvent keyEvent) {
+        if (keyEvent.getCode().compareTo(KeyCode.ENTER) == 0) {
+            printToChat("You", chatTextBox.getText());
+        }
+    }
+
+    /**
+     * The actionHandler for the 'send' Button
+     *
+     * @param actionEvent The Button-click
+     */
+    public void sendBTNClicked(ActionEvent actionEvent) {
+        printToChat("You", chatTextBox.getText());
     }
 }

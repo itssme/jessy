@@ -60,7 +60,7 @@ public class Scorer extends Thread implements Runnable {
             }
             targetList.fill(this.readUserDB(conn));
         } else {
-            LoggingSingleton.getInstance().logToFile(
+            LoggingSingleton.getInstance().log(
                     Level.WARNING,
                     "Couldn't initialize Connection");
         }
@@ -82,7 +82,7 @@ public class Scorer extends Thread implements Runnable {
             }
             return true;
         } catch (SQLException e) {
-            LoggingSingleton.getInstance().logToFile(
+            LoggingSingleton.getInstance().log(
                     Level.INFO,
                     e.getLocalizedMessage());
         }
@@ -109,7 +109,7 @@ public class Scorer extends Thread implements Runnable {
                     "insert into player(name) values('" + USERNAME + "');");
             stmt.close();
         } catch (SQLException e) {
-            LoggingSingleton.getInstance().logToFile(
+            LoggingSingleton.getInstance().log(
                     Level.SEVERE,
                     e.getLocalizedMessage());
             return false;
@@ -123,7 +123,7 @@ public class Scorer extends Thread implements Runnable {
             stmt = conn.prepareStatement("select * from player;");
             return stmt.executeQuery();
         } catch (SQLException e) {
-            LoggingSingleton.getInstance().logToFile(
+            LoggingSingleton.getInstance().log(
                     Level.SEVERE,
                     e.getLocalizedMessage());
         }

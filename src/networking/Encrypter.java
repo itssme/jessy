@@ -1,9 +1,9 @@
 package networking;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.Key;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Name:    Joel Klimont
@@ -19,7 +19,7 @@ public class Encrypter  {
     private Cipher cipher;
 
     /**
-     *Checks the password and generates the key
+     * Checks the password and generates the key
      *
      * @param key_in the password the user typed in
      * @throws InvalidKeyException the password is not valid
@@ -46,7 +46,7 @@ public class Encrypter  {
     }
 
     /**
-     *Encrypts a <code>String</code>
+     * Encrypts a <code>String</code>
      *
      * @param text the <code>String</code> to encrypt
      * @return the encrypted <code>String</code>
@@ -74,7 +74,7 @@ public class Encrypter  {
     }
 
     /**
-     *Decrypt a <code>String</code>
+     * Decrypt a <code>String</code>
      *
      * @param encryptedStr the encrypted <code>String</code>
      * @return the decrypted <code>String</code>

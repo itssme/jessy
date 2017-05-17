@@ -1,7 +1,6 @@
 package model;
 
 import board.Position;
-import chessfigure.*;
 import logging.LoggingSingleton;
 
 import javax.swing.*;
@@ -10,7 +9,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 
 /**

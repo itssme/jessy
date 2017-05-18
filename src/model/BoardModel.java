@@ -2,14 +2,16 @@ package model;
 
 import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.Square;
+import com.github.bhlangonijr.chesslib.move.Move;
+import com.github.bhlangonijr.chesslib.move.MoveGenerator;
+import com.github.bhlangonijr.chesslib.move.MoveGeneratorException;
 import com.sun.istack.internal.Nullable;
 import main.Main;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
@@ -19,27 +21,59 @@ import java.util.TreeMap;
  * Project: jessy
  * Desc.:
  */
-public class BoardModel extends JTable implements MouseListener {
+public class BoardModel extends JTable {
+
+    private Piece selected = null;
+    private Square selectedStartSquare = null;
+
+    /**
+     * An ArrayList which holds all the possibleMoves
+     */
+    private static ArrayList<Square> possibleMoves = new ArrayList<>();
 
     /**
      * A Map which converts Cells from the format E7 to two integers for
      * the JTable
      */
-    private static TreeMap<Character, Integer> rowToInt =
+    private static TreeMap<Character, Integer> colToInt =
             new TreeMap<Character, Integer>();
+    private static TreeMap<Integer, Character> intToCol =
+            new TreeMap<>();
+    private static TreeMap<Integer, Integer> libToInt =
+            new TreeMap<>();
 
     /**
      * A small static block for the conversion-Map
      */
     static {
-        rowToInt.put('A', 0);
-        rowToInt.put('B', 1);
-        rowToInt.put('C', 2);
-        rowToInt.put('D', 3);
-        rowToInt.put('E', 4);
-        rowToInt.put('F', 5);
-        rowToInt.put('G', 6);
-        rowToInt.put('H', 7);
+        colToInt.put('A', 0);
+        colToInt.put('B', 1);
+        colToInt.put('C', 2);
+        colToInt.put('D', 3);
+        colToInt.put('E', 4);
+        colToInt.put('F', 5);
+        colToInt.put('G', 6);
+        colToInt.put('H', 7);
+
+        intToCol.put(0, 'A');
+        intToCol.put(1, 'B');
+        intToCol.put(2, 'C');
+        intToCol.put(3, 'D');
+        intToCol.put(4, 'E');
+        intToCol.put(5, 'F');
+        intToCol.put(6, 'G');
+        intToCol.put(7, 'H');
+
+        libToInt.put(0, 8);
+        libToInt.put(1, 7);
+        libToInt.put(2, 6);
+        libToInt.put(3, 5);
+        libToInt.put(4, 4);
+        libToInt.put(5, 3);
+        libToInt.put(6, 2);
+        libToInt.put(7, 1);
+
+
     }
 
     /**
@@ -73,7 +107,6 @@ public class BoardModel extends JTable implements MouseListener {
     private void initBoard() {
         for (Piece p :
                 Main.CHESSGAMEBOARD.boardToArray()) {
-            System.out.println(p.toString());
             Main.CHESSGAMEBOARD.getPieceLocation(p).forEach(square -> {
                 int[] rowCol = getRowColPair(square);
                 // FIXME: How does this work when getRowColPair returns null?
@@ -96,10 +129,16 @@ public class BoardModel extends JTable implements MouseListener {
             return null;
         }
         String[] parts = pieceValue.toLowerCase().split("_");
+        String col = "white";
+        if (parts[0].equals("black")) {
+            col = "black";
+        } else {
+            col = "white";
+        }
         return new ImageIcon("graphics/" +
                 parts[1] +
                 "_" +
-                parts[0] +
+                col +
                 ".png");
     }
 
@@ -119,6 +158,8 @@ public class BoardModel extends JTable implements MouseListener {
      * This function converts the E7 format of the library to a tuple of
      * integers
      *
+     * Format: Pair[0] = row
+     * Format: Pair[1] = col
      * @param sq The square, which should be converted
      * @return The tuple specifying the row and column or null.
      */
@@ -128,8 +169,22 @@ public class BoardModel extends JTable implements MouseListener {
         if (sq == Square.NONE) {
             return null;
         }
-        return new int[]{Character.getNumericValue(parts[1]) - 1,
-                rowToInt.get(parts[0])};
+        return new int[]{
+                (Character.getNumericValue(parts[1]) - 8) * (-1),
+                colToInt.get(parts[0])
+        };
+    }
+
+    /**
+     * GetSquare returns an Enum-Element of the chesslibrary based on column
+     * and row
+     *
+     * @param row The row of the Piece
+     * @param col The column of the Piece
+     * @return The Enum-Value of NONE
+     */
+    public static Square getSquare(int row, int col) {
+        return Square.fromValue("" + intToCol.get(col) + libToInt.get(row));
     }
 
     public Component prepareRenderer(TableCellRenderer renderer,
@@ -148,6 +203,25 @@ public class BoardModel extends JTable implements MouseListener {
                 comp.setBackground(Color.BLACK);
             }
         }
+        if (selected != null && selectedStartSquare != null) {
+            try {
+                MoveGenerator.getInstance().generateLegalMoves(Main.CHESSGAMEBOARD).forEach(move -> {
+                    if (move.getFrom().compareTo(selectedStartSquare) == 0) {
+                        int[] rowCol = getRowColPair(move.getTo());
+                        if (rowCol[0] == row && rowCol[1] == column) {
+                            comp.setBackground(new Color(93, 205, 232, 50));
+                            possibleMoves.add(move.getTo());
+                        }
+                    }
+                });
+            } catch (MoveGeneratorException e) {
+                e.printStackTrace();
+            }
+        }
+        this.drawFigures(getImageIconFromPiece(
+                Main.CHESSGAMEBOARD.getPiece(getSquare(row, column)).value()),
+                row,
+                column);
         return comp;
     }
 
@@ -156,27 +230,23 @@ public class BoardModel extends JTable implements MouseListener {
         return ImageIcon.class;
     }
 
-    @Override
-    public void mouseClicked(MouseEvent evt) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
+    /**
+     * A method which handles mouseclicks
+     *
+     * @return The Square, where the user clicked
+     */
+    public Square mouseClick() {
+        int row = this.getSelectedRow();
+        int col = this.getSelectedColumn();
+        if (selectedStartSquare != null &&
+                selected != null &&
+                possibleMoves.contains(getSquare(row, col))) {
+            Main.CHESSGAMEBOARD.doMove(new Move(selectedStartSquare, getSquare(row, col)));
+            possibleMoves.clear();
+        }
+        selected = Main.CHESSGAMEBOARD.getPiece(getSquare(row, col));
+        selectedStartSquare = getSquare(row, col);
+        this.repaint();
+        return getSquare(row, col);
     }
 }

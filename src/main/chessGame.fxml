@@ -11,6 +11,13 @@
 
     <MenuBar GridPane.rowIndex="0">
         <menus>
+            <Menu text="App">
+                <items>
+                    <MenuItem text="Quit"
+                              onAction="#quitGame">
+                    </MenuItem>
+                </items>
+            </Menu>
             <Menu text="Connect">
                 <items>
                     <MenuItem text="Host a Game"
@@ -27,16 +34,20 @@
                GridPane.columnIndex="0"
                GridPane.columnSpan="2"
                GridPane.hgrow="NEVER"
-               GridPane.vgrow="NEVER">
+               GridPane.vgrow="NEVER"
+               onMouseClicked="#mouseClick">
 
     </SwingNode>
-    <TextArea GridPane.columnIndex="0"
+
+    <TextArea editable="false"
+              fx:id="chat"
+              GridPane.columnIndex="0"
               GridPane.columnSpan="2"
               GridPane.rowIndex="2"
-              editable="false"
-              fx:id="chat">
+              wrapText="true">
 
     </TextArea>
+
     <HBox GridPane.rowIndex="4"
           GridPane.columnSpan="3">
         <TextField HBox.hgrow="ALWAYS"

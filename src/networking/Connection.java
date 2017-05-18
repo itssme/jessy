@@ -33,6 +33,7 @@ public class Connection implements Runnable {
     private static PrintWriter pw;
     private Thread this_thread;
     private static Encrypter encrypter;
+    private ChessGameController controller;
 
     /**
      * Opens the connection to the server
@@ -43,11 +44,13 @@ public class Connection implements Runnable {
      * @throws IOException network severe
      * @throws InvalidKeyException invalid password
      */
-    public Connection(String connect_to_ip, int port, String password) throws IOException, InvalidKeyException {
+    public Connection(String connect_to_ip, int port, String password, ChessGameController controller) throws IOException, InvalidKeyException {
         self = new Socket(connect_to_ip, port);
         br = new BufferedReader(new InputStreamReader(self.getInputStream()));
         pw = new PrintWriter(self.getOutputStream(), true);
         encrypter = new Encrypter(password);
+        this.controller = controller;
+
     }
 
     /**
@@ -74,7 +77,7 @@ public class Connection implements Runnable {
 
                         String msg = obj.getString("chat");
                         String player = obj.getString("player");
-                        //printToChat(player, msg);
+                        controller.printToChat(player, msg);
 
                         LoggingSingleton.getInstance().log(Level.INFO, "GOT CHAT: " + player + " " + msg);
 
@@ -96,7 +99,7 @@ public class Connection implements Runnable {
                     } else if (obj.has("disconnect")) {
                         if (obj.getString("disconnect").equals("true")) {
                             LoggingSingleton.getInstance().info("got disconnect object");
-                            ChessGameController.disconnect();
+                            controller.disconnect();
                         }
 
                         this_thread.stop();
@@ -206,7 +209,7 @@ public class Connection implements Runnable {
              be the client starting the Server)
          */
 
-        //printToChat("Server", "Game has started");
+        controller.printToChat("Server", "Game has started");
         return br.readLine().equals("start");
     }
 }

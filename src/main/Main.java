@@ -28,6 +28,8 @@ public class Main extends Application {
      */
     public static final Board CHESSGAMEBOARD = new Board();
 
+    private ChessGameController gameController = null;
+
     /**
      * The start-point of the GUI. This class has to be implemented as
      * specified by <strong>javafx.Application</strong>.
@@ -49,9 +51,16 @@ public class Main extends Application {
 
     }
 
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        ChessGameController.disconnect();
+    }
+
     /**
      * The main-entry point of the Program. It initializes some Classes and
      * asks the Player for his name.
+     *
      * @param args The command-line arguments
      */
     public static void main(String[] args) {
@@ -71,5 +80,4 @@ public class Main extends Application {
         }
         launch(args);
     }
-
 }

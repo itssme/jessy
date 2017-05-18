@@ -8,6 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import logging.LoggingSingleton;
 import model.BoardModel;
 import networking.Connection;
@@ -35,6 +36,7 @@ public class ChessGameController implements Initializable {
     private static Server server = null;
     public static Connection connection = null;
     public static boolean startFirst;
+    private BoardModel model = new BoardModel(8, 8);
 
     @FXML
     public TextArea chat;
@@ -49,7 +51,7 @@ public class ChessGameController implements Initializable {
             @Override
             public void run() {
 
-                chessBoard.setContent(new BoardModel(8, 8));
+                chessBoard.setContent(model);
             }
         });
     }
@@ -289,5 +291,26 @@ public class ChessGameController implements Initializable {
      */
     public void sendBTNClicked(ActionEvent actionEvent) {
         printToChat("You", chatTextBox.getText());
+    }
+
+    /**
+     * Disconnects from the opponent and closes the application
+     *
+     * @param actionEvent The MenuItem click.
+     */
+    public void quitGame(ActionEvent actionEvent) {
+        this.disconnect();
+        System.exit(0);
+    }
+
+    /**
+     * The mouseClick for the JTable. Just calls the mouseClick event of the
+     * model.
+     *
+     * @param mouseEvent A mouseEvent from the Caller - gets ignored as it is
+     *                   unnecessary
+     */
+    public void mouseClick(MouseEvent mouseEvent) {
+        model.mouseClick();
     }
 }

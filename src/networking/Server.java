@@ -1,6 +1,7 @@
 package networking;
 
 import logging.LoggingSingleton;
+import main.ChessGameController;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -169,8 +170,8 @@ public class Server extends Thread {
          */
         @Override
         public void run() {
-            System.out.println("started " + number);
             while (true) { // TODO: stop by a static variable if the game is over
+
                 if (number == 1) {
                     if (player2 != null) {
                         player2.send(this.get());
@@ -196,7 +197,7 @@ public class Server extends Thread {
             try {
                 return br_player.readLine();
             } catch (IOException e) {
-                //e.printStackTrace();
+                LoggingSingleton.getInstance().severe("Could not read network stream -> closing connection" + e.getLocalizedMessage());
                 this.close();
             }
 

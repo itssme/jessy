@@ -137,16 +137,6 @@ public class ChessGameController implements Initializable {
     }
 
     /**
-     * Closes the connections of the server
-     */
-    public static void closeServer() {
-        if (server != null) {
-            server.close();
-            server = null;
-        }
-    }
-
-    /**
      * Starts the <code>Connection</code> if a button if pressed
      *
      * @param actionEvent the button event
@@ -214,7 +204,7 @@ public class ChessGameController implements Initializable {
      *         and <code>false</code> if the connection failed
      * @throws InvalidKeyException the password is not valid
      */
-    public static boolean connect(String ipAddress, int port, String password)
+    public boolean connect(String ipAddress, int port, String password)
             throws InvalidKeyException {
 
         if (! IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
@@ -223,7 +213,7 @@ public class ChessGameController implements Initializable {
                     ipAddress + " is not a valid ip");
         } else {
             try {
-                connection = new Connection(ipAddress, port, password);
+                connection = new Connection(ipAddress, port, password, this);
             } catch (IOException e1) {
                 JOptionPane.showMessageDialog(
                         null,
@@ -238,8 +228,8 @@ public class ChessGameController implements Initializable {
     /**
      * Disconnects form the server and closes all networkstreams
      */
-    public static void disconnect() {
-        //printToChat("Server", "other player disconnected -> stopping game");
+    public void disconnect() {
+        printToChat("Server", "other player disconnected -> stopping game");
 
         if (connection != null) {
             JSONObject disconnectObj = new JSONObject();
@@ -256,6 +246,16 @@ public class ChessGameController implements Initializable {
 
             connection.reset();
             connection = null;
+        }
+    }
+
+    /**
+     * Closes the connections of the server and stops it
+     */
+    public static void closeServer() {
+        if (server != null) {
+            server.close();
+            server = null;
         }
     }
 
@@ -280,7 +280,9 @@ public class ChessGameController implements Initializable {
     @FXML
     public void keyTyped(KeyEvent keyEvent) {
         if (keyEvent.getCode().compareTo(KeyCode.ENTER) == 0) {
-            printToChat("You", chatTextBox.getText());
+            String msg = chatTextBox.getText();
+            Connection.send_chat_msg(msg);
+            printToChat("You", msg);
         }
     }
 
@@ -290,7 +292,9 @@ public class ChessGameController implements Initializable {
      * @param actionEvent The Button-click
      */
     public void sendBTNClicked(ActionEvent actionEvent) {
-        printToChat("You", chatTextBox.getText());
+        String msg = chatTextBox.getText();
+        Connection.send_chat_msg(msg);
+        printToChat("You", msg);
     }
 
     /**

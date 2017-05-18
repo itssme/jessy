@@ -37,6 +37,7 @@ public class ChessGameController implements Initializable {
     public static Connection connection = null;
     public static boolean startFirst;
     private BoardModel model = new BoardModel(8, 8);
+    public static ChessGameController reference;
 
     @FXML
     public TextArea chat;
@@ -54,6 +55,7 @@ public class ChessGameController implements Initializable {
                 chessBoard.setContent(model);
             }
         });
+        reference = this;
     }
 
     /**

@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 
 /**
@@ -54,7 +53,7 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        ChessGameController.disconnect();
+        ChessGameController.reference.disconnect();
     }
 
     /**
@@ -64,6 +63,7 @@ public class Main extends Application {
      * @param args The command-line arguments
      */
     public static void main(String[] args) {
+
         try {
             Class.forName("logging.LoggingSingleton");
         } catch (ClassNotFoundException e) {

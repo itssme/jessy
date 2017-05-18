@@ -5,7 +5,6 @@ import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import com.github.bhlangonijr.chesslib.move.MoveGenerator;
 import com.github.bhlangonijr.chesslib.move.MoveGeneratorException;
-import com.sun.istack.internal.Nullable;
 import logging.LoggingSingleton;
 import main.Main;
 
@@ -164,7 +163,6 @@ public class BoardModel extends JTable {
      * @param sq The square, which should be converted
      * @return The tuple specifying the row and column or null.
      */
-    @Nullable
     public static int[] getRowColPair(Square sq) {
         char[] parts = sq.toString().toCharArray();
         if (sq == Square.NONE) {

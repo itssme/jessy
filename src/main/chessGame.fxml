@@ -64,7 +64,8 @@
 
     <ListView GridPane.columnIndex="3"
               GridPane.rowIndex="1"
-              GridPane.rowSpan="4">
+              GridPane.rowSpan="4"
+              fx:id="targetList">
 
     </ListView>
 

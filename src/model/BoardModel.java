@@ -6,6 +6,7 @@ import com.github.bhlangonijr.chesslib.move.Move;
 import com.github.bhlangonijr.chesslib.move.MoveGenerator;
 import com.github.bhlangonijr.chesslib.move.MoveGeneratorException;
 import com.sun.istack.internal.Nullable;
+import logging.LoggingSingleton;
 import main.Main;
 
 import javax.swing.*;
@@ -215,7 +216,9 @@ public class BoardModel extends JTable {
                     }
                 });
             } catch (MoveGeneratorException e) {
-                e.printStackTrace();
+                LoggingSingleton.getInstance().severe(
+                        "An error occured: " +
+                                e.getLocalizedMessage());
             }
         }
         this.drawFigures(getImageIconFromPiece(

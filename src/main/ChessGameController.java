@@ -37,7 +37,7 @@ public class ChessGameController implements Initializable {
     public static Connection connection = null;
     public static boolean startFirst;
     private BoardModel model = new BoardModel(8, 8);
-    public static ChessGameController reference;
+    static ChessGameController reference;
 
     @FXML
     public TextArea chat;
@@ -56,6 +56,7 @@ public class ChessGameController implements Initializable {
             }
         });
         reference = this;
+
     }
 
     /**
@@ -269,9 +270,7 @@ public class ChessGameController implements Initializable {
      * @param msg  The message sent.
      */
     public void printToChat(String user, String msg) {
-        String txt = String.format("%s %n" + "%s: %s", chat.getText(), user, msg);
-        chat.setText(txt);
-        chatTextBox.setText("");
+        chat.appendText("\n" + user + ": " + msg);
     }
 
     /**
@@ -285,6 +284,7 @@ public class ChessGameController implements Initializable {
             String msg = chatTextBox.getText();
             Connection.send_chat_msg(msg);
             printToChat("You", msg);
+            chatTextBox.setText("");
         }
     }
 
@@ -297,6 +297,7 @@ public class ChessGameController implements Initializable {
         String msg = chatTextBox.getText();
         Connection.send_chat_msg(msg);
         printToChat("You", msg);
+        chatTextBox.setText("");
     }
 
     /**

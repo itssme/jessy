@@ -159,7 +159,7 @@ public class Connection implements Runnable {
         try {
             pw.println(encrypter.encrypt(obj.toString()));
         } catch (Exception e) {
-            System.out.println(e);
+            LoggingSingleton.getInstance().info("Couldn't send the object");
         }
     }
 

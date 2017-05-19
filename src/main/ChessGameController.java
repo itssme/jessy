@@ -144,7 +144,6 @@ public class ChessGameController implements Initializable {
                 JOptionPane.showMessageDialog(
                         null,
                         "Connected: you start");
-                //Chessgame.playerFactionWhite = true;
             } else {
                 JOptionPane.showMessageDialog(
                         null,
@@ -210,7 +209,6 @@ public class ChessGameController implements Initializable {
                         "Connected: opponent starts");
                 Utilities.switchPlayer();
             }
-
         } else {
             JOptionPane.showMessageDialog(
                     null,
@@ -305,9 +303,11 @@ public class ChessGameController implements Initializable {
     public void keyTyped(KeyEvent keyEvent) {
         if (keyEvent.getCode().compareTo(KeyCode.ENTER) == 0) {
             String msg = chatTextBox.getText();
-            Connection.send_chat_msg(msg);
-            printToChat("You", msg);
-            chatTextBox.setText("");
+            if (! msg.equals("")) {
+                Connection.send_chat_msg(msg);
+                printToChat("You", msg);
+                chatTextBox.setText("");
+            }
         }
     }
 
@@ -316,9 +316,11 @@ public class ChessGameController implements Initializable {
      */
     public void sendBTNClicked() {
         String msg = chatTextBox.getText();
-        Connection.send_chat_msg(msg);
-        printToChat("You", msg);
-        chatTextBox.setText("");
+        if (! msg.equals("")) {
+            Connection.send_chat_msg(msg);
+            printToChat("You", msg);
+            chatTextBox.setText("");
+        }
     }
 
     /**

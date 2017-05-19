@@ -8,6 +8,7 @@ import com.github.bhlangonijr.chesslib.move.MoveGeneratorException;
 import logging.LoggingSingleton;
 import main.ChessGameController;
 import main.Main;
+import networking.Connection;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -167,6 +168,8 @@ public class BoardModel extends JTable {
         if (selectedStartSquare != null &&
                 selected != null &&
                 possibleMoves.contains(getSquare(row, col))) {
+
+            ChessGameController.connection.send_move(board.Move.getMoveFromLib(new Move(selectedStartSquare, getSquare(row, col))));
             ChessGameController.getGameController().
                     executeMove(
                             new Move(selectedStartSquare, getSquare(row, col)));

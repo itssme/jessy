@@ -87,7 +87,6 @@ public class Server extends Thread {
 
             notify();
         }
-
         LoggingSingleton.getInstance().log(Level.INFO, "SERVER STARTED");
     }
 
@@ -109,7 +108,6 @@ public class Server extends Thread {
     public boolean all_connected() {
         return (player_connected == 2);
     }
-
 
     private class player implements Runnable {
 
@@ -144,7 +142,7 @@ public class Server extends Thread {
         /**
          * Starts the dummy player thread
          */
-        public void start () {
+        public void startThread() {
             LoggingSingleton.getInstance().log(Level.INFO, "IN SERVER " + "Starting " + number);
             if (thread == null) {
                 thread = new Thread (this, Integer.toString(number));
@@ -171,7 +169,6 @@ public class Server extends Thread {
         @Override
         public void run() {
             while (true) { // TODO: stop by a static variable if the game is over
-
                 if (number == 1) {
                     if (player2 != null) {
                         player2.send(this.get());

@@ -4,6 +4,7 @@ import board.Move;
 import board.Position;
 import logging.LoggingSingleton;
 import main.ChessGameController;
+import model.BoardModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,9 +40,9 @@ public class Connection implements Runnable {
      * Opens the connection to the server
      *
      * @param connect_to_ip ip of the server
-     * @param port ports of the server
-     * @param password password for the connection
-     * @throws IOException network severe
+     * @param port          ports of the server
+     * @param password      password for the connection
+     * @throws IOException         network severe
      * @throws InvalidKeyException invalid password
      */
     public Connection(String connect_to_ip, int port, String password, ChessGameController controller) throws IOException, InvalidKeyException {
@@ -94,7 +95,7 @@ public class Connection implements Runnable {
 
                         LoggingSingleton.getInstance().log(Level.INFO, "GOT: " + move.toJsonObject().toString());
 
-                        // TODO: validate (move)
+                        ChessGameController.getGameController().executeMove(Move.convertMoveToLib(move));
 
                     } else if (obj.has("disconnect")) {
                         if (obj.getString("disconnect").equals("true")) {
@@ -168,15 +169,15 @@ public class Connection implements Runnable {
      * and then returns it
      *
      * @return returns a <code>JSONObject</code> or null if the received <code>String</code> is not valid
-     * @throws IOException network severe
+     * @throws IOException   network severe
      * @throws JSONException received <code>String</code> is not a valid <code>JSONObject</code>
      */
-    private JSONObject get_object() throws IOException, JSONException {
+    public JSONObject get_object() throws IOException, JSONException {
         String got_obj = br.readLine();
         try {
             return new JSONObject(encrypter.decrypt(got_obj));
         } catch (Exception e) {
-            System.out.println(e);
+            LoggingSingleton.getInstance().severe("Failed to decrypt object " + e.getMessage());
         }
         return null;
     }
@@ -209,7 +210,11 @@ public class Connection implements Runnable {
              be the client starting the Server)
          */
 
-        controller.printToChat("Server", "Game has started");
+        try {
+            controller.printToChat("Server", "Game has started");
+        } catch (Exception e) {
+            LoggingSingleton.getInstance().severe("Failed to print chat " + e.getMessage());
+        }
         return br.readLine().equals("start");
     }
 }

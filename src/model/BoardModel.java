@@ -13,7 +13,9 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.TreeMap;
+
+import static board.Move.getRowColPair;
+import static board.Move.getSquare;
 
 /**
  * Name:    Königsreiter Simon
@@ -34,50 +36,6 @@ public class BoardModel extends JTable {
      */
     private static ArrayList<Square> possibleMoves = new ArrayList<>();
 
-    /**
-     * A Map which converts Cells from the format E7 to two integers for
-     * the JTable
-     */
-    private static TreeMap<Character, Integer> colToInt =
-            new TreeMap<Character, Integer>();
-    private static TreeMap<Integer, Character> intToCol =
-            new TreeMap<>();
-    private static TreeMap<Integer, Integer> libToInt =
-            new TreeMap<>();
-
-    /**
-     * A small static block for the conversion-Map
-     */
-    static {
-        colToInt.put('A', 0);
-        colToInt.put('B', 1);
-        colToInt.put('C', 2);
-        colToInt.put('D', 3);
-        colToInt.put('E', 4);
-        colToInt.put('F', 5);
-        colToInt.put('G', 6);
-        colToInt.put('H', 7);
-
-        intToCol.put(0, 'A');
-        intToCol.put(1, 'B');
-        intToCol.put(2, 'C');
-        intToCol.put(3, 'D');
-        intToCol.put(4, 'E');
-        intToCol.put(5, 'F');
-        intToCol.put(6, 'G');
-        intToCol.put(7, 'H');
-
-        libToInt.put(0, 8);
-        libToInt.put(1, 7);
-        libToInt.put(2, 6);
-        libToInt.put(3, 5);
-        libToInt.put(4, 4);
-        libToInt.put(5, 3);
-        libToInt.put(6, 2);
-        libToInt.put(7, 1);
-
-
-    }
 
     /**
      * A small constructor which was inherited from DefaultTableModel.
@@ -152,37 +110,6 @@ public class BoardModel extends JTable {
         this.repaint();
     }
 
-    /**
-     * This function converts the E7 format of the library to a tuple of
-     * integers
-     *
-     * Format: Pair[0] = row
-     * Format: Pair[1] = col
-     * @param sq The square, which should be converted
-     * @return The tuple specifying the row and column or null.
-     */
-    public static int[] getRowColPair(Square sq) {
-        char[] parts = sq.toString().toCharArray();
-        if (sq == Square.NONE) {
-            return null;
-        }
-        return new int[]{
-                (Character.getNumericValue(parts[1]) - 8) * (-1),
-                colToInt.get(parts[0])
-        };
-    }
-
-    /**
-     * GetSquare returns an Enum-Element of the chesslibrary based on column
-     * and row
-     *
-     * @param row The row of the Piece
-     * @param col The column of the Piece
-     * @return The Enum-Value of NONE
-     */
-    public static Square getSquare(int row, int col) {
-        return Square.fromValue("" + intToCol.get(col) + libToInt.get(row));
-    }
 
     public Component prepareRenderer(TableCellRenderer renderer,
                                      int row, int column) {

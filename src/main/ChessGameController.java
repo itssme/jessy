@@ -19,6 +19,7 @@ import networking.Server;
 import org.json.JSONException;
 import org.json.JSONObject;
 import sun.net.util.IPAddressUtil;
+import utils.Utilities;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -43,13 +44,17 @@ public class ChessGameController implements Initializable {
     private static ChessGameController reference;
 
     @FXML
-    public TextArea chat;
+    private TextArea chat;
     @FXML
-    public TextField chatTextBox;
+    private TextField chatTextBox;
     @FXML
     private SwingNode chessBoard;
     @FXML
-    public ListView<String> targetList;
+    private ListView<String> targetList;
+
+    public SwingNode getChessBoard() {
+        return chessBoard;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -335,5 +340,16 @@ public class ChessGameController implements Initializable {
      */
     public void mouseClick(MouseEvent mouseEvent) {
         model.mouseClick();
+    }
+
+    /**
+     * Executes a move for the Board
+     *
+     * @param mv The move to execute
+     */
+    public void executeMove(com.github.bhlangonijr.chesslib.move.Move mv) {
+        Main.CHESSGAMEBOARD.doMove(mv);
+        BoardModel.refresh();
+        Utilities.switchPlayer();
     }
 }

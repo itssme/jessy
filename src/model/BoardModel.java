@@ -6,6 +6,7 @@ import com.github.bhlangonijr.chesslib.move.Move;
 import com.github.bhlangonijr.chesslib.move.MoveGenerator;
 import com.github.bhlangonijr.chesslib.move.MoveGeneratorException;
 import logging.LoggingSingleton;
+import main.ChessGameController;
 import main.Main;
 
 import javax.swing.*;
@@ -25,6 +26,8 @@ public class BoardModel extends JTable {
 
     private Piece selected = null;
     private Square selectedStartSquare = null;
+
+    private static BoardModel ref;
 
     /**
      * An ArrayList which holds all the possibleMoves
@@ -99,6 +102,7 @@ public class BoardModel extends JTable {
         }
         this.doLayout();
         this.initBoard();
+        ref = this;
     }
 
     /**
@@ -129,16 +133,10 @@ public class BoardModel extends JTable {
             return null;
         }
         String[] parts = pieceValue.toLowerCase().split("_");
-        String col = "white";
-        if (parts[0].equals("black")) {
-            col = "black";
-        } else {
-            col = "white";
-        }
         return new ImageIcon("graphics/" +
                 parts[1] +
                 "_" +
-                col +
+                parts[0] +
                 ".png");
     }
 
@@ -242,12 +240,18 @@ public class BoardModel extends JTable {
         if (selectedStartSquare != null &&
                 selected != null &&
                 possibleMoves.contains(getSquare(row, col))) {
-            Main.CHESSGAMEBOARD.doMove(new Move(selectedStartSquare, getSquare(row, col)));
+            ChessGameController.getGameController().
+                    executeMove(
+                            new Move(selectedStartSquare, getSquare(row, col)));
             possibleMoves.clear();
         }
         selected = Main.CHESSGAMEBOARD.getPiece(getSquare(row, col));
         selectedStartSquare = getSquare(row, col);
         this.repaint();
         return getSquare(row, col);
+    }
+
+    public static void refresh() {
+        ref.initBoard();
     }
 }

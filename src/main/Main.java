@@ -52,6 +52,7 @@ public class Main extends Application {
     public void stop() throws Exception {
         super.stop();
         ChessGameController.getGameController().disconnect();
+        System.exit(0);
     }
 
     /**

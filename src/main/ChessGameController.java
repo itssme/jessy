@@ -149,7 +149,7 @@ public class ChessGameController implements Initializable {
                 JOptionPane.showMessageDialog(
                         null,
                         "Connected: opponent starts");
-                //Chessgame.playerFactionWhite = false;
+                Utilities.switchPlayer();
             }
 
         } else {
@@ -208,6 +208,7 @@ public class ChessGameController implements Initializable {
                 JOptionPane.showMessageDialog(
                         null,
                         "Connected: opponent starts");
+                Utilities.switchPlayer();
             }
 
         } else {

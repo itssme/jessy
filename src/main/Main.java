@@ -22,12 +22,10 @@ import java.io.IOException;
 public class Main extends Application {
 
     /**
-     * The Chess-Board for this round. It is public and static because it has
-     * to be always accessible and may never be overridden.
+     * The Chess-Board for this round. It is public, static and static because 
+     * it has to be always accessible and may never be overridden.
      */
     public static final Board CHESSGAMEBOARD = new Board();
-
-    private ChessGameController gameController = null;
 
     /**
      * The start-point of the GUI. This class has to be implemented as
@@ -53,7 +51,7 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        ChessGameController.reference.disconnect();
+        ChessGameController.getGameController().disconnect();
     }
 
     /**

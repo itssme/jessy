@@ -1,9 +1,11 @@
 package main;
 
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -11,6 +13,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import logging.LoggingSingleton;
 import model.BoardModel;
+import model.ScoreList;
 import networking.Connection;
 import networking.Server;
 import org.json.JSONException;
@@ -37,7 +40,7 @@ public class ChessGameController implements Initializable {
     public static Connection connection = null;
     public static boolean startFirst;
     private BoardModel model = new BoardModel(8, 8);
-    public static ChessGameController reference;
+    private static ChessGameController reference;
 
     @FXML
     public TextArea chat;
@@ -45,6 +48,8 @@ public class ChessGameController implements Initializable {
     public TextField chatTextBox;
     @FXML
     private SwingNode chessBoard;
+    @FXML
+    public ListView<String> targetList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -56,6 +61,18 @@ public class ChessGameController implements Initializable {
             }
         });
         reference = this;
+        new ScoreList<String>(FXCollections.observableArrayList(), targetList);
+
+    }
+
+    /**
+     * GetGameController returns the class-Reference of this particular
+     * Controller for clean-ups.
+     *
+     * @return The GameController
+     */
+    public static ChessGameController getGameController() {
+        return reference;
     }
 
     /**
@@ -269,9 +286,7 @@ public class ChessGameController implements Initializable {
      * @param msg  The message sent.
      */
     public void printToChat(String user, String msg) {
-        String txt = String.format("%s %n" + "%s: %s", chat.getText(), user, msg);
-        chat.setText(txt);
-        chatTextBox.setText("");
+        chat.appendText("\n" + user + ": " + msg);
     }
 
     /**
@@ -285,6 +300,7 @@ public class ChessGameController implements Initializable {
             String msg = chatTextBox.getText();
             Connection.send_chat_msg(msg);
             printToChat("You", msg);
+            chatTextBox.setText("");
         }
     }
 
@@ -297,6 +313,7 @@ public class ChessGameController implements Initializable {
         String msg = chatTextBox.getText();
         Connection.send_chat_msg(msg);
         printToChat("You", msg);
+        chatTextBox.setText("");
     }
 
     /**

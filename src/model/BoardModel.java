@@ -5,8 +5,8 @@ import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import com.github.bhlangonijr.chesslib.move.MoveGenerator;
 import com.github.bhlangonijr.chesslib.move.MoveGeneratorException;
+import logging.LoggingSingleton;
 import main.Main;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -163,7 +163,6 @@ public class BoardModel extends JTable {
      * @param sq The square, which should be converted
      * @return The tuple specifying the row and column or null.
      */
-    @Nullable
     public static int[] getRowColPair(Square sq) {
         char[] parts = sq.toString().toCharArray();
         if (sq == Square.NONE) {
@@ -215,7 +214,9 @@ public class BoardModel extends JTable {
                     }
                 });
             } catch (MoveGeneratorException e) {
-                e.printStackTrace();
+                LoggingSingleton.getInstance().severe(
+                        "An error occured: " +
+                                e.getLocalizedMessage());
             }
         }
         this.drawFigures(getImageIconFromPiece(

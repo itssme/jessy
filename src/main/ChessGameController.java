@@ -10,7 +10,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import logging.LoggingSingleton;
 import model.BoardModel;
 import model.ScoreList;
@@ -222,16 +221,16 @@ public class ChessGameController implements Initializable {
      * Connects to a server
      *
      * @param ipAddress the ip address of the server
-     * @param port the port the server listens on
-     * @param password the password for the connection
+     * @param port      the port the server listens on
+     * @param password  the password for the connection
      * @return <code>true</code> if the connection was a success
-     *         and <code>false</code> if the connection failed
+     * and <code>false</code> if the connection failed
      * @throws InvalidKeyException the password is not valid
      */
     public boolean connect(String ipAddress, int port, String password)
             throws InvalidKeyException {
 
-        if (! IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
+        if (!IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
             JOptionPane.showMessageDialog(
                     null,
                     ipAddress + " is not a valid ip");
@@ -292,6 +291,8 @@ public class ChessGameController implements Initializable {
      */
     public void printToChat(String user, String msg) {
         chat.appendText("\n" + user + ": " + msg);
+        chat.selectAll();
+        chat.deselect();
     }
 
     /**
@@ -311,10 +312,8 @@ public class ChessGameController implements Initializable {
 
     /**
      * The actionHandler for the 'send' Button
-     *
-     * @param actionEvent The Button-click
      */
-    public void sendBTNClicked(ActionEvent actionEvent) {
+    public void sendBTNClicked() {
         String msg = chatTextBox.getText();
         Connection.send_chat_msg(msg);
         printToChat("You", msg);
@@ -323,10 +322,8 @@ public class ChessGameController implements Initializable {
 
     /**
      * Disconnects from the opponent and closes the application
-     *
-     * @param actionEvent The MenuItem click.
      */
-    public void quitGame(ActionEvent actionEvent) {
+    public void quitGame() {
         this.disconnect();
         System.exit(0);
     }
@@ -334,11 +331,8 @@ public class ChessGameController implements Initializable {
     /**
      * The mouseClick for the JTable. Just calls the mouseClick event of the
      * model.
-     *
-     * @param mouseEvent A mouseEvent from the Caller - gets ignored as it is
-     *                   unnecessary
      */
-    public void mouseClick(MouseEvent mouseEvent) {
+    public void mouseClick() {
         model.mouseClick();
     }
 

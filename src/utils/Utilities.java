@@ -46,6 +46,9 @@ public class Utilities {
                 if (!canPlay) {
                     ChessGameController.getGameController().
                             getChessBoard().setDisable(true);
+                } else {
+                    ChessGameController.getGameController().
+                            getChessBoard().setDisable(false);
                 }
             }
         });

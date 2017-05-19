@@ -148,4 +148,24 @@ public class Move {
     public static Square getSquare(int row, int col) {
         return Square.fromValue("" + intToCol.get(col) + libToInt.get(row));
     }
+
+    /**
+     * Returns our Move-Object from the library-Move object
+     *
+     * @param mv The Library-defined Move object
+     * @return A Move object
+     */
+    public static Move
+    getMoveFromLib(com.github.bhlangonijr.chesslib.move.Move mv) {
+        Square from = mv.getFrom();
+        Square to = mv.getTo();
+
+        int[] fromArr = getRowColPair(from);
+        int[] toArr = getRowColPair(to);
+
+        return new Move(
+                new Position(fromArr[0], fromArr[1]),
+                new Position(toArr[0], toArr[1])
+        );
+    }
 }

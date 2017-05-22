@@ -2,6 +2,7 @@ package model;
 
 import database.ConnectionFactory;
 import logging.LoggingSingleton;
+import utils.ModelIterator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -50,7 +51,7 @@ public class Game {
      * @param p The Player which should be found for the games
      * @return An ArrayList of type Game with all the games.
      */
-    public ArrayList<Game> getGameByPlayer(Player p) {
+    public ModelIterator<Game> getGameByPlayer(Player p) {
         Connection conn = this.getConnection();
         ArrayList<Game> result = new ArrayList<>();
         try {
@@ -68,7 +69,7 @@ public class Game {
         } catch (SQLException e) {
             LoggingSingleton.getInstance().severe(e.getLocalizedMessage());
         }
-        return result;
+        return new ModelIterator<>(result);
     }
 
     /**
@@ -94,6 +95,7 @@ public class Game {
                     "selelct max(GID) from game;");
             ResultSet res = psmt.executeQuery();
             res.next();
+            conn.close();
             return res.getInt(1);
         } catch (SQLException e) {
             LoggingSingleton.getInstance().severe(e.getLocalizedMessage());

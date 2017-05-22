@@ -37,6 +37,7 @@ public class Utilities {
     }
 
     static {
+
         addPlayerSwitchListener(new PlayerSwitchObserver() {
             @Override
             public void onPlayerSwitch(boolean canPlay) {

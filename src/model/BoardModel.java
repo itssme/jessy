@@ -8,7 +8,6 @@ import com.github.bhlangonijr.chesslib.move.MoveGeneratorException;
 import logging.LoggingSingleton;
 import main.ChessGameController;
 import main.Main;
-import networking.Connection;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -30,6 +29,12 @@ public class BoardModel extends JTable {
     private Piece selected = null;
     private Square selectedStartSquare = null;
 
+    private board.Move madeMove = null;
+
+    public void setMadeMove(board.Move madeMove) {
+        this.madeMove = madeMove;
+    }
+
     private static BoardModel ref;
 
     /**
@@ -37,6 +42,13 @@ public class BoardModel extends JTable {
      */
     private static ArrayList<Square> possibleMoves = new ArrayList<>();
 
+    public void setSelected(Piece selected) {
+        this.selected = selected;
+    }
+
+    public void setSelectedStartSquare(Square selectedStartSquare) {
+        this.selectedStartSquare = selectedStartSquare;
+    }
 
     /**
      * A small constructor which was inherited from DefaultTableModel.
@@ -126,6 +138,16 @@ public class BoardModel extends JTable {
                 comp.setBackground(Color.WHITE);
             } else {
                 comp.setBackground(Color.BLACK);
+            }
+        }
+        if (madeMove != null) {
+            if (row == madeMove.getFrom().getRow() &&
+                    column == madeMove.getFrom().getCol()) {
+                comp.setBackground(Color.GREEN);
+            }
+            if (row == madeMove.getTo().getRow() &&
+                    column == madeMove.getTo().getCol()) {
+                comp.setBackground(Color.GREEN);
             }
         }
         if (selected != null && selectedStartSquare != null) {

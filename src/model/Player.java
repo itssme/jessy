@@ -2,6 +2,7 @@ package model;
 
 import database.ConnectionFactory;
 import logging.LoggingSingleton;
+import utils.ModelIterator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,11 +49,8 @@ public class Player {
      * @param name The name of the player
      * @return An ArrayList containing the Player-Objects
      */
-    public ArrayList<Player> getPlayerByName(String name) {
-        Connection conn = new ConnectionFactory(
-                ConnectionFactory.SQLITE,
-                "db/jessy.db"
-        ).establishConnection();
+    public ModelIterator<Player> getPlayerByName(String name) {
+        Connection conn = this.getConnection();
         ArrayList<Player> result = new ArrayList<>();
         try {
             PreparedStatement psmt = conn.prepareStatement(
@@ -64,10 +62,21 @@ public class Player {
                         rs.getInt("UID"),
                         rs.getString("name")));
             }
+            conn.close();
         } catch (SQLException e) {
             LoggingSingleton.getInstance().severe(e.getLocalizedMessage());
         }
-        return result;
+        return new ModelIterator<>(result);
+    }
 
+    /**
+     * Returns an finished instance of a Connection to the SQLITE-DB
+     *
+     * @return The Connection-Object for the SQLITE-DB
+     */
+    private Connection getConnection() {
+        return new ConnectionFactory(
+                ConnectionFactory.SQLITE,
+                "db/jessy.db").establishConnection();
     }
 }

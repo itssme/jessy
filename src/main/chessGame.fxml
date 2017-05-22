@@ -10,23 +10,21 @@
           hgap="2.5" vgap="2.5">
 
     <MenuBar GridPane.rowIndex="0">
-        <menus>
-            <Menu text="App">
-                <items>
-                    <MenuItem text="Quit"
-                              onAction="#quitGame">
-                    </MenuItem>
-                </items>
-            </Menu>
-            <Menu text="Connect">
-                <items>
-                    <MenuItem text="Host a Game"
-                              onAction="#hostGame"></MenuItem>
-                    <MenuItem text="Connect to a Game"
-                              onAction="#connectToGame"></MenuItem>
-                </items>
-            </Menu>
-        </menus>
+        <Menu text="App">
+            <MenuItem text="Save"
+                      onAction="#saveGame"/>
+            <MenuItem text="Load"
+                      onAction="#loadGame"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="Quit"
+                      onAction="#quitGame"/>
+        </Menu>
+        <Menu text="Connect">
+            <MenuItem text="Host a Game"
+                      onAction="#hostGame"/>
+            <MenuItem text="Connect to a Game"
+                      onAction="#connectToGame"/>
+        </Menu>
     </MenuBar>
 
     <SwingNode fx:id="chessBoard"
@@ -35,38 +33,28 @@
                GridPane.columnSpan="2"
                GridPane.hgrow="NEVER"
                GridPane.vgrow="NEVER"
-               onMouseClicked="#mouseClick">
-
-    </SwingNode>
+               onMouseClicked="#mouseClick"/>
 
     <TextArea editable="false"
               fx:id="chat"
               GridPane.columnIndex="0"
               GridPane.columnSpan="2"
               GridPane.rowIndex="2"
-              wrapText="true">
-
-    </TextArea>
+              wrapText="true"/>
 
     <HBox GridPane.rowIndex="4"
           GridPane.columnSpan="3">
         <TextField HBox.hgrow="ALWAYS"
                    fx:id="chatTextBox"
-                   onKeyPressed="#keyTyped">
-
-        </TextField>
+                   onKeyPressed="#keyTyped"/>
         <Button text="Send"
-                onAction="#sendBTNClicked">
-
-        </Button>
+                onAction="#sendBTNClicked"/>
     </HBox>
 
 
     <ListView GridPane.columnIndex="3"
               GridPane.rowIndex="1"
               GridPane.rowSpan="4"
-              fx:id="targetList">
-
-    </ListView>
+              fx:id="targetList"/>
 
 </GridPane>

@@ -1,5 +1,8 @@
 package main;
 
+import board.Move;
+import com.github.bhlangonijr.chesslib.Piece;
+import com.github.bhlangonijr.chesslib.Square;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
@@ -10,6 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import logging.ChessSaver;
 import logging.LoggingSingleton;
 import model.BoardModel;
 import model.ScoreList;
@@ -37,8 +41,9 @@ import java.util.ResourceBundle;
 public class ChessGameController implements Initializable {
 
     private static Server server = null;
+    private boolean canPlay = false;
     public static Connection connection = null;
-    public static boolean startFirst;
+    private static boolean startFirst;
     private BoardModel model = new BoardModel(8, 8);
     private static ChessGameController reference;
 
@@ -57,13 +62,7 @@ public class ChessGameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-
-                chessBoard.setContent(model);
-            }
-        });
+        SwingUtilities.invokeLater(() -> chessBoard.setContent(model));
         reference = this;
         new ScoreList<String>(FXCollections.observableArrayList(), targetList);
 
@@ -82,9 +81,8 @@ public class ChessGameController implements Initializable {
     /**
      * Starts the <code>Server</code> and the <code>Connection</code>
      *
-     * @param actionEvent the button event
      */
-    public void hostGame(ActionEvent actionEvent) {
+    public void hostGame() {
         if (server == null) {
             try {
                 String password = JOptionPane.showInputDialog(
@@ -150,6 +148,7 @@ public class ChessGameController implements Initializable {
                         "Connected: opponent starts");
                 Utilities.switchPlayer();
             }
+            canPlay = true;
 
         } else {
             JOptionPane.showMessageDialog(
@@ -161,9 +160,8 @@ public class ChessGameController implements Initializable {
     /**
      * Starts the <code>Connection</code> if a button if pressed
      *
-     * @param actionEvent the button event
      */
-    public void connectToGame(ActionEvent actionEvent) {
+    public void connectToGame() {
         if (connection == null) {
 
             String ipAddress = JOptionPane.showInputDialog(
@@ -209,6 +207,7 @@ public class ChessGameController implements Initializable {
                         "Connected: opponent starts");
                 Utilities.switchPlayer();
             }
+            canPlay = true;
         } else {
             JOptionPane.showMessageDialog(
                     null,
@@ -226,7 +225,7 @@ public class ChessGameController implements Initializable {
      * and <code>false</code> if the connection failed
      * @throws InvalidKeyException the password is not valid
      */
-    public boolean connect(String ipAddress, int port, String password)
+    private boolean connect(String ipAddress, int port, String password)
             throws InvalidKeyException {
 
         if (!IPAddressUtil.isIPv4LiteralAddress(ipAddress)) {
@@ -274,7 +273,7 @@ public class ChessGameController implements Initializable {
     /**
      * Closes the connections of the server and stops it
      */
-    public static void closeServer() {
+    private static void closeServer() {
         if (server != null) {
             server.close();
             server = null;
@@ -303,7 +302,7 @@ public class ChessGameController implements Initializable {
     public void keyTyped(KeyEvent keyEvent) {
         if (keyEvent.getCode().compareTo(KeyCode.ENTER) == 0) {
             String msg = chatTextBox.getText();
-            if (! msg.equals("")) {
+            if (!msg.equals("")) {
                 Connection.send_chat_msg(msg);
                 printToChat("You", msg);
                 chatTextBox.setText("");
@@ -316,7 +315,7 @@ public class ChessGameController implements Initializable {
      */
     public void sendBTNClicked() {
         String msg = chatTextBox.getText();
-        if (! msg.equals("")) {
+        if (!msg.equals("")) {
             Connection.send_chat_msg(msg);
             printToChat("You", msg);
             chatTextBox.setText("");
@@ -345,8 +344,28 @@ public class ChessGameController implements Initializable {
      * @param mv The move to execute
      */
     public void executeMove(com.github.bhlangonijr.chesslib.move.Move mv) {
-        Main.CHESSGAMEBOARD.doMove(mv);
-        BoardModel.refresh();
-        Utilities.switchPlayer();
+        if (canPlay) {
+            model.setSelected(Piece.NONE);
+            model.setSelectedStartSquare(Square.NONE);
+            model.setMadeMove(Move.getMoveFromLib(mv));
+            Main.CHESSGAMEBOARD.doMove(mv);
+            BoardModel.refresh();
+            Utilities.switchPlayer();
+        }
+    }
+
+    /**
+     * Saves the Game and quits
+     */
+    public boolean saveGame() {
+        boolean writeRes = ChessSaver.getInstance().
+                saveGame(Main.CHESSGAMEBOARD.getFEN()).
+                writeToXML("jessy.sav.xml");
+        this.quitGame();
+        return writeRes;
+    }
+
+    public void loadGame(ActionEvent actionEvent) {
+        ChessSaver.getInstance().loadGame();
     }
 }

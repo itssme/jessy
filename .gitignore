@@ -7,4 +7,4 @@ jessy.iml
 
 # We don't need the log file in the git-Repository
 jessy.log.xml
-chessSave.xml
+jessy.sav.xml

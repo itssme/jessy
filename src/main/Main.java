@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import logging.ChessSaver;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -62,7 +63,6 @@ public class Main extends Application {
      * @param args The command-line arguments
      */
     public static void main(String[] args) {
-
         try {
             Class.forName("logging.LoggingSingleton");
         } catch (ClassNotFoundException e) {
@@ -77,6 +77,7 @@ public class Main extends Application {
         } else {
             Scorer.USERNAME = userName;
         }
+        ChessSaver.getInstance().init(CHESSGAMEBOARD.getFEN());
         launch(args);
     }
 }

@@ -396,7 +396,7 @@ public class ChessGameController implements Initializable {
             model.setMadeMove(Move.getMoveFromLib(mv));
             Main.CHESSGAMEBOARD.doMove(mv);
             BoardModel.refresh();
-            Sound.playSound("chessMove1w.wav");
+            Sound.playSound("chessMove1.wav");
             Utilities.switchPlayer();
         }
     }

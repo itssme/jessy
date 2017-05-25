@@ -28,7 +28,6 @@ class PositionTest {
         assertTrue(new Position(5, 5).equals(new Position(5, 5)));
 
         assertFalse(new Position(5, 3).equals(5));
-        //assert new Position(5, 5).equals(5, 3);
 
     }
 

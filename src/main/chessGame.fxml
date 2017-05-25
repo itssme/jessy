@@ -16,6 +16,8 @@
             <MenuItem text="Load"
                       onAction="#loadGame"/>
             <SeparatorMenuItem/>
+            <MenuItem text="Disconnect"
+                      onAction="#disconnect"/>
             <MenuItem text="Quit"
                       onAction="#quitGame"/>
         </Menu>

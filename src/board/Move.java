@@ -15,9 +15,21 @@ import java.util.TreeMap;
  */
 public class Move {
 
+    /**
+     * Where did the Move come from
+     */
     private Position from;
+    /**
+     * Where will the Move go
+     */
     private Position to;
 
+    /**
+     * A constructor which takes two Positions
+     *
+     * @param from The Position from where the Move came
+     * @param to   The Position where the Move goes
+     */
     public Move(Position from, Position to) {
         this.from = from;
         this.to = to;
@@ -31,6 +43,10 @@ public class Move {
         return to;
     }
 
+    /**
+     * Returns a JSONObject representation of the Move-Object
+     * @return The JSONObject of this Move
+     */
     public JSONObject toJsonObject() {
         JSONObject obj = new JSONObject();
 
@@ -61,7 +77,7 @@ public class Move {
             new TreeMap<>();
 
     /**
-     * A small static block for the conversion-Map
+     * A small static block for the conversion-Maps
      */
     static {
         colToInt.put('A', 0);
@@ -94,6 +110,11 @@ public class Move {
 
     }
 
+    /**
+     * Returns a Move object from the chesslib based on our Move-object
+     * @param m The custom Move object defined for this Project
+     * @return The Move-Object from the library
+     */
     public static com.github.bhlangonijr.chesslib.move.Move
     convertMoveToLib(Move m) {
 

@@ -14,15 +14,36 @@ import java.util.logging.Level;
  * Class:   3CHIF
  * Date:    2017-04-07
  * Project: jessy
- * Desc.:
+ * Desc.:   A factory which will Initialize the Database-driver and take care
+ *          of returning a suitable Connection-Object to work with
  */
 public class ConnectionFactory {
 
+    /**
+     * A final integer variable to represent the SQLite database.
+     * This is mostly for calling the Factory
+     */
     public static final int SQLITE = 0;
 
+    /**
+     * This will store, which Database System will be used.
+     * This will be the values as defined in the declarations above
+     */
     private final int DATABASE_SYSTEM;
+    /**
+     * The connectionString, to which location the Database-driver will connect
+     * to
+     */
     private String connectionString;
 
+    /**
+     * This Constructor will initialize the Database-driver and takes care of
+     * setting up the database
+     *
+     * @param dbSys            The Database-System for this factory.
+     * @param connectionString The connectionString, to which file or database
+     *                         the driver will connect.
+     */
     public ConnectionFactory(int dbSys, String connectionString) {
         this.connectionString = connectionString;
         this.DATABASE_SYSTEM = dbSys;
@@ -44,6 +65,11 @@ public class ConnectionFactory {
         }
     }
 
+    /**
+     * Establishes a Connection to the Database and returns the resulting
+     * Connection-Object.
+     * @return The Connection-Object for this connection.
+     */
     public Connection establishConnection() {
         Connection conn = null;
         if (this.DATABASE_SYSTEM == SQLITE) {

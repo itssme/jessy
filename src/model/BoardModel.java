@@ -83,11 +83,6 @@ public class BoardModel extends JTable {
         this.revalidate();
         System.gc();
         Runtime.getRuntime().gc();
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                this.setValueAt(null, row, col);
-            }
-        }
         for (Piece p :
                 Main.CHESSGAMEBOARD.boardToArray()) {
             Main.CHESSGAMEBOARD.getPieceLocation(p).forEach(square -> {
@@ -164,7 +159,8 @@ public class BoardModel extends JTable {
                     if (move.getFrom().compareTo(selectedStartSquare) == 0) {
                         int[] rowCol = getRowColPair(move.getTo());
                         if (rowCol[0] == row && rowCol[1] == column) {
-                            comp.setBackground(new Color(93, 205, 232, 50));
+                            comp.setBackground(
+                                    new Color(93, 150, 255, 75));
                             possibleMoves.add(move.getTo());
                         }
                     }

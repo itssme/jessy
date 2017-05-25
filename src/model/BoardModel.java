@@ -22,19 +22,30 @@ import static board.Move.getSquare;
  * Class:   3CHIF
  * Date:    2017-03-24
  * Project: jessy
- * Desc.:
+ * Desc.:   The model for the Graphic ChessBoard. This is mostly the Graphical
+ *          Model of a ChessBoard, and not rather the underlying table.
  */
 public class BoardModel extends JTable {
 
+    /**
+     * Which Piece was selected last, to paint the recommendations
+     */
     private Piece selected = null;
     private Square selectedStartSquare = null;
 
+    /**
+     * Which move was made to paint the last move
+     */
     private board.Move madeMove = null;
+
 
     public void setMadeMove(board.Move madeMove) {
         this.madeMove = madeMove;
     }
 
+    /**
+     * A reference to itself to access the Model from other classes
+     */
     private static BoardModel ref;
 
     /**
@@ -127,6 +138,16 @@ public class BoardModel extends JTable {
     }
 
 
+    /**
+     * Prepares the renderer To draw the Board as a Black and White table with
+     * the Figures layered on top and all the moves above that
+     *
+     * @param renderer The TableCellRenderer, which was passed down from the
+     *                 JTable
+     * @param row      Which row is currently edited
+     * @param column   Which column is currently edited
+     * @return The Component which is essentially each Cell
+     */
     public Component prepareRenderer(TableCellRenderer renderer,
                                      int row, int column) {
         Component comp = super.prepareRenderer(renderer, row, column);
@@ -210,6 +231,9 @@ public class BoardModel extends JTable {
         return getSquare(row, col);
     }
 
+    /**
+     * Refreshes the Board and redraws all the figures.
+     */
     public static void refresh() {
         ref.initBoard();
     }

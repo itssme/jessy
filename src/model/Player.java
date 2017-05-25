@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * Date:    18.05.17
  * Poject:  jessy
  * Package: model
- * Desc.:
+ * Desc.:   The programmatic representation of a Player as in the database
  */
 public class Player {
 
@@ -97,6 +97,11 @@ public class Player {
         return false;
     }
 
+    /**
+     * An inherited method to represent the
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return this.getName() + " - " + this.getScore();

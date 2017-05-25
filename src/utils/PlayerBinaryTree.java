@@ -11,7 +11,7 @@ import java.util.Collection;
  * Date:    23.05.17
  * Poject:  jessy
  * Package: utils
- * Desc.:
+ * Desc.:   A Binary Tree which will sort the Players based on their scores
  */
 public class PlayerBinaryTree<K extends String, V extends Float> {
 
@@ -54,11 +54,17 @@ public class PlayerBinaryTree<K extends String, V extends Float> {
         }
     }
 
+    /**
+     * The Root-Node of the BinaryTree
+     */
     private Node<K, V> root = null;
 
-    public PlayerBinaryTree() {
-    }
-
+    /**
+     * A Constructor which takes a ModelIterator as a parameter. It will then
+     * iterate over all the elements and insert them.
+     *
+     * @param allPlayers The Collection containing all players
+     */
     public PlayerBinaryTree(ModelIterator<Player> allPlayers) {
         while (allPlayers.hasNext()) {
             Player p = allPlayers.next();
@@ -66,6 +72,12 @@ public class PlayerBinaryTree<K extends String, V extends Float> {
         }
     }
 
+    /**
+     * A sequential Method which inserts the a new Node
+     * @param name The Name of the Player which should be inserted
+     * @param value The Score of the Player
+     * @return True, if the Node was successfully inserted
+     */
     public boolean insert(K name, V value) {
         Node<K, V> nodeToInsert = new Node(name, value);
         if (root == null) {
@@ -76,6 +88,12 @@ public class PlayerBinaryTree<K extends String, V extends Float> {
         }
     }
 
+    /**
+     * Inserts a new Node recursively into the BinaryTree
+     * @param root The root-Node of the Binary Sub-Tree
+     * @param nodeToInsert The node which should be inserted
+     * @return True, if the Node was successfully inserted, false otherwise
+     */
     private boolean insertRecursive(Node<K, V> root, Node<K, V> nodeToInsert) {
         if (nodeToInsert.getValue().floatValue() <
                 root.getValue().floatValue()) {
@@ -97,6 +115,10 @@ public class PlayerBinaryTree<K extends String, V extends Float> {
         return true;
     }
 
+    /**
+     * Returns a Collection of the BinaryTree
+     * @return The Collection with an ascending order
+     */
     public Collection asCollection() {
         ArrayList list = new ArrayList();
         if (root == null) {
@@ -106,11 +128,20 @@ public class PlayerBinaryTree<K extends String, V extends Float> {
         }
     }
 
+    /**
+     * A recursive Method which fills an ArrayList with all the elements ordered
+     * by the score of each Player
+     * @param list The Collection which will be filled
+     * @param root The root-Node of the binary sub-tree
+     * @return The Complete Collection where the elements will be added in
+     *         ascending Order
+     */
     private Collection getColl(ArrayList list, Node<K, V> root) {
         if (root.getLeft() != null) {
             this.getColl(list, root.getLeft());
         }
-        list.add("" + root.getKey() + " - " + root.getValue());
+        list.add(new Player((String) root.getKey(), (float) root.getValue()).
+                toString());
         if (root.getRight() != null) {
             this.getColl(list, root.getRight());
         }

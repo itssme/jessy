@@ -22,8 +22,8 @@ import networking.Connection;
 import networking.Server;
 import org.json.JSONException;
 import org.json.JSONObject;
-import sun.net.util.IPAddressUtil;
 import sound.Sound;
+import sun.net.util.IPAddressUtil;
 import utils.Utilities;
 
 import javax.swing.*;
@@ -38,7 +38,7 @@ import java.util.ResourceBundle;
  * Date:    17.05.17
  * Poject:  jessy_jfx
  * Package: main
- * Desc.:
+ * Desc.:   The GameController for the User Interface.
  */
 public class ChessGameController implements Initializable {
 

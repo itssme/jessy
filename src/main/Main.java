@@ -18,7 +18,8 @@ import java.io.IOException;
  * Date:    17.05.17
  * Poject:  jessy_jfx
  * Package: main
- * Desc.:
+ * Desc.:   The main Class for the Program. It startes the UI, loads the FXML
+ *          and Initializes the Logging.
  */
 public class Main extends Application {
 
@@ -49,6 +50,11 @@ public class Main extends Application {
 
     }
 
+    /**
+     * The stop method which will be called at the end of the JavaFX Lifecycle
+     *
+     * @throws Exception In case of an Exception in super.stop()
+     */
     @Override
     public void stop() throws Exception {
         super.stop();

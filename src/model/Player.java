@@ -1,14 +1,12 @@
 package model;
 
 import database.ConnectionFactory;
-import logging.LoggingSingleton;
 import utils.ModelIterator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  * Author:  Königsreiter Simon
@@ -22,61 +20,73 @@ public class Player {
 
     private int UID;
     private String name;
+    private float score;
 
     /**
-     * The Player Constructor takes the UserID and the name as an Argument.
-     *
-     * @param UID  The User-ID
-     * @param name The name of the player
+     * A simple constructor to get Access to all the class-methods
      */
-    public Player(int UID, String name) {
+    public Player() {
+    }
+
+    /**
+     * The Player Constructor takes the UserID, the name and the score
+     * as an Argument.
+     *
+     * @param UID   The User-ID
+     * @param name  The name of the player
+     * @param score The score of the game
+     */
+    public Player(int UID, String name, float score) {
         this.UID = UID;
         this.name = name;
+        this.score = score;
     }
 
-    public String getName() {
-        return name;
-    }
+    public ModelIterator<Player> getAllPlayers() {
+        ModelIterator<Player> ret = new ModelIterator<>();
 
-    public int getUID() {
-        return UID;
-    }
+        try (Connection conn =
+                     new ConnectionFactory(ConnectionFactory.SQLITE,
+                             "db/jessy.db").establishConnection()) {
 
-    /**
-     * Returns an ArrayList of type Player where all the players with the
-     * specified names
-     *
-     * @param name The name of the player
-     * @return An ArrayList containing the Player-Objects
-     */
-    public ModelIterator<Player> getPlayerByName(String name) {
-        Connection conn = this.getConnection();
-        ArrayList<Player> result = new ArrayList<>();
-        try {
-            PreparedStatement psmt = conn.prepareStatement(
-                    "select * from player where name = ?;");
-            psmt.setString(1, name);
-            ResultSet rs = psmt.executeQuery();
-            while (rs.next()) {
-                result.add(new Player(
-                        rs.getInt("UID"),
-                        rs.getString("name")));
+            try (PreparedStatement psmt =
+                         conn.prepareStatement("select * from game;");
+                 ResultSet res = psmt.executeQuery();) {
+
+                while (res.next()) {
+                    ret.addElement(new Player(
+                            res.getInt("UID"),
+                            res.getString("name"),
+                            res.getFloat("score"))
+                    );
+                }
             }
-            conn.close();
+
         } catch (SQLException e) {
-            LoggingSingleton.getInstance().severe(e.getLocalizedMessage());
+            e.printStackTrace();
         }
-        return new ModelIterator<>(result);
+
+        return ret;
     }
 
-    /**
-     * Returns an finished instance of a Connection to the SQLITE-DB
-     *
-     * @return The Connection-Object for the SQLITE-DB
-     */
-    private Connection getConnection() {
-        return new ConnectionFactory(
+    public int getMaxUID() {
+        try (Connection conn = new ConnectionFactory(
                 ConnectionFactory.SQLITE,
-                "db/jessy.db").establishConnection();
+                "db/jessy.db").establishConnection()) {
+
+            try (PreparedStatement psmt = conn.prepareStatement(
+                    "select max(UID) from game;");
+                 ResultSet res = psmt.executeQuery()) {
+
+                res.next();
+                return res.getInt(1);
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
+
 }

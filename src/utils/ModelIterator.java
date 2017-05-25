@@ -1,5 +1,8 @@
 package utils;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,6 +22,10 @@ public class ModelIterator<T> implements Iterator<T> {
 
     public ModelIterator(Collection<T> c) {
         list = new ArrayList<T>(c);
+    }
+
+    public ModelIterator() {
+        list = new ArrayList<T>();
     }
 
     @Override
@@ -41,5 +48,18 @@ public class ModelIterator<T> implements Iterator<T> {
     @Override
     public void forEachRemaining(Consumer<? super T> action) {
         list.forEach(action);
+    }
+
+    /**
+     * Returns this Iterator as an ObservableList
+     *
+     * @return An ObservableList containing all the Elements
+     */
+    public ObservableList<T> asObservableList() {
+        return FXCollections.observableArrayList(list);
+    }
+
+    public boolean addElement(T elem) {
+        return list.add(elem);
     }
 }

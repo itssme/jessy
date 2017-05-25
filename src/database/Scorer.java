@@ -3,7 +3,10 @@ package database;
 import logging.LoggingSingleton;
 import model.ScoreList;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 
 /**
@@ -14,16 +17,6 @@ import java.util.logging.Level;
  * Desc.:
  */
 public class Scorer extends Thread implements Runnable {
-
-    public static int MOVES = 0;
-
-    public static void incrementMoves() {
-        MOVES += 1;
-    }
-
-    public static int getMOVES() {
-        return MOVES;
-    }
 
     private final int ENV_DEV = 0;
     private final int ENV_REL = 1;
@@ -58,7 +51,7 @@ public class Scorer extends Thread implements Runnable {
             if (this.DEVENV == ENV_DEV) {
                 this.insertTestData(conn, null);
             }
-            targetList.fill(this.readUserDB(conn));
+            //targetList.fill(this.readUserDB(conn));
         } else {
             LoggingSingleton.getInstance().log(
                     Level.WARNING,
@@ -94,39 +87,20 @@ public class Scorer extends Thread implements Runnable {
         try {
             stmt = conn.createStatement();
             String TABLE_STRING = "" +
-                    "create table if not exists player(" +
-                    "UID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "name text not null unique" +
-                    ");" +
-                    "" +
                     "create table if not exists game(" +
-                    "GID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "UID references player" +
-                    "score integer not null default 30" +
+                    "UID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "name text not null," +
+                    "score float not null" +
                     ");";
             stmt.execute(TABLE_STRING);
-            stmt.execute(
-                    "insert into player(name) values('" + USERNAME + "');");
             stmt.close();
         } catch (SQLException e) {
             LoggingSingleton.getInstance().log(
                     Level.SEVERE,
-                    e.getLocalizedMessage());
+                    e.getLocalizedMessage()
+            );
             return false;
         }
         return true;
-    }
-
-    private ResultSet readUserDB(Connection conn) {
-        PreparedStatement stmt;
-        try {
-            stmt = conn.prepareStatement("select * from player;");
-            return stmt.executeQuery();
-        } catch (SQLException e) {
-            LoggingSingleton.getInstance().log(
-                    Level.SEVERE,
-                    e.getLocalizedMessage());
-        }
-        return null;
     }
 }

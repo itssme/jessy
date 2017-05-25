@@ -49,11 +49,6 @@ class ChessSaver {
                 ])
             }
         }
-        saves.each { index, values ->
-            println "Index: ${index}"
-            println "Time: ${values[0]}"
-            println()
-        }
         return this
     }
 
@@ -86,7 +81,7 @@ class ChessSaver {
     }
 
     void recoverStartUpPositions() {
-        Main.CHESSGAMEBOARD.loadFromFEN(startFEN)
+        this.loadGameFromFEN(backup)
     }
 
 
@@ -95,8 +90,8 @@ class ChessSaver {
 
         saves.each { index, values ->
             if (values[0] == res) {
-                println values[1]
                 Main.CHESSGAMEBOARD.loadFromFEN((String) values[1])
+                return;
             }
         }
     }
@@ -121,7 +116,7 @@ class ChessSaver {
             result = listView.selectionModel.getSelectedItem()
             outPut.hide()
         }
-        okButton.minWidth = 295.0
+        okButton.prefWidth = 295.0
 
         Scene scene = new Scene(new VBox(listView, okButton))
 
@@ -132,6 +127,10 @@ class ChessSaver {
         outPut.showAndWait()
         return result
 
+    }
+
+    void loadGameFromFEN(String FEN) {
+        Main.CHESSGAMEBOARD.loadFromFEN(FEN)
     }
 
 }

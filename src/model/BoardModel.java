@@ -80,6 +80,14 @@ public class BoardModel extends JTable {
      * InitBoard is mainly there for drawing the figures onto the board
      */
     private void initBoard() {
+        this.revalidate();
+        System.gc();
+        Runtime.getRuntime().gc();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                this.setValueAt(null, row, col);
+            }
+        }
         for (Piece p :
                 Main.CHESSGAMEBOARD.boardToArray()) {
             Main.CHESSGAMEBOARD.getPieceLocation(p).forEach(square -> {
@@ -90,6 +98,7 @@ public class BoardModel extends JTable {
                         rowCol[1]);
             });
         }
+        this.repaint();
     }
 
     /**
@@ -104,11 +113,11 @@ public class BoardModel extends JTable {
             return null;
         }
         String[] parts = pieceValue.toLowerCase().split("_");
-        return new ImageIcon("graphics/" +
+        return new ImageIcon(this.getClass().getResource(
                 parts[1] +
                 "_" +
                 parts[0] +
-                ".png");
+                        ".png"));
     }
 
     /**
@@ -120,7 +129,6 @@ public class BoardModel extends JTable {
      */
     public void drawFigures(ImageIcon imageIcon, int row, int col) {
         this.setValueAt(imageIcon, row, col);
-        this.repaint();
     }
 
 
@@ -191,7 +199,10 @@ public class BoardModel extends JTable {
                 selected != null &&
                 possibleMoves.contains(getSquare(row, col))) {
 
-            ChessGameController.connection.send_move(board.Move.getMoveFromLib(new Move(selectedStartSquare, getSquare(row, col))));
+            ChessGameController.connection.send_move(
+                    board.Move.getMoveFromLib(
+                            new Move(
+                                    selectedStartSquare, getSquare(row, col))));
             ChessGameController.getGameController().
                     executeMove(
                             new Move(selectedStartSquare, getSquare(row, col)));

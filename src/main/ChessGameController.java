@@ -16,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import logging.ChessSaver;
 import logging.LoggingSingleton;
 import model.BoardModel;
+import model.Player;
 import model.ScoreList;
 import networking.Connection;
 import networking.Server;
@@ -64,7 +65,7 @@ public class ChessGameController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         SwingUtilities.invokeLater(() -> chessBoard.setContent(model));
         reference = this;
-        new ScoreList<String>(FXCollections.observableArrayList(), targetList);
+        new ScoreList<Player>(FXCollections.observableArrayList(), targetList);
 
     }
 
@@ -242,7 +243,8 @@ public class ChessGameController implements Initializable {
                 return false;
             }
         }
-
+        ChessSaver.getInstance().recoverStartUpPositions();
+        if (!Utilities.canPlay()) Utilities.switchPlayer();
         return true;
     }
 
@@ -359,7 +361,7 @@ public class ChessGameController implements Initializable {
      */
     public boolean saveGame() {
         boolean writeRes = ChessSaver.getInstance().
-                saveGame(Main.CHESSGAMEBOARD.getFEN()).
+                saveGame(Main.CHESSGAMEBOARD.getFEN(true)).
                 writeToXML("jessy.sav.xml");
         this.quitGame();
         return writeRes;

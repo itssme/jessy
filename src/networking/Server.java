@@ -83,6 +83,7 @@ public class Server extends Thread {
 
             player1_thread.start();
             player2_thread.start();
+
             starter();
 
             notify();
@@ -137,17 +138,6 @@ public class Server extends Thread {
                 e.printStackTrace();
             }
 
-        }
-
-        /**
-         * Starts the dummy player thread
-         */
-        public void startThread() {
-            LoggingSingleton.getInstance().log(Level.INFO, "IN SERVER " + "Starting " + number);
-            if (thread == null) {
-                thread = new Thread (this, Integer.toString(number));
-                thread.start ();
-            }
         }
 
         /**

@@ -23,6 +23,7 @@ import networking.Server;
 import org.json.JSONException;
 import org.json.JSONObject;
 import sun.net.util.IPAddressUtil;
+import sound.Sound;
 import utils.Utilities;
 
 import javax.swing.*;
@@ -47,6 +48,7 @@ public class ChessGameController implements Initializable {
     private static boolean startFirst;
     private BoardModel model = new BoardModel(8, 8);
     private static ChessGameController reference;
+    private boolean creatingConnection = false;
 
     @FXML
     private TextArea chat;
@@ -83,137 +85,181 @@ public class ChessGameController implements Initializable {
      * Starts the <code>Server</code> and the <code>Connection</code>
      *
      */
-    public void hostGame() {
-        if (server == null) {
-            try {
-                String password = JOptionPane.showInputDialog(
-                        null,
-                        "Do you want to encrypt your game with a password?",
-                        "password");
-
-                if (password.length() <= 4) {
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Weak or no password.\nInsecure connection!");
-                }
-
-                LoggingSingleton.getInstance().info("server starting");
-                server = new Server(5060);
-                server.start();
-                LoggingSingleton.getInstance().info("server starting done");
+    public synchronized void hostGame() {
+        new Thread(() -> {
+            if (server == null && ! creatingConnection) {
+                creatingConnection = true;
                 try {
-                    connect("127.0.0.1", 5060, password);
-                } catch (InvalidKeyException e1) {
+                    String password = JOptionPane.showInputDialog(
+                            null,
+                            "Do you want to encrypt your game with a password?",
+                            "password");
+
+                    if (password.length() <= 4) {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Weak or no password.\nInsecure connection!");
+                    }
+
+                    LoggingSingleton.getInstance().info("server starting");
+                    server = new Server(5060);
+                    server.start();
+                    LoggingSingleton.getInstance().info("server starting done");
+
+                    try {
+
+                        connect("127.0.0.1", 5060, password);
+                    } catch (InvalidKeyException e1) {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Invalid password");
+                        creatingConnection = false;
+                        return;
+                    }
+                } catch (IOException e1) {
                     JOptionPane.showMessageDialog(
                             null,
-                            "Invalid password");
+                            "Could not start server\n" + e1.toString());
+                    creatingConnection = false;
                     return;
                 }
-            } catch (IOException e1) {
+
                 JOptionPane.showMessageDialog(
                         null,
-                        "Could not start server\n" + e1.toString());
-                return;
-            }
+                        "Started the game");
 
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Started the game");
-
-            synchronized (server) {
-                try {
-                    server.wait();
-                } catch (InterruptedException e1) {
-                    LoggingSingleton.getInstance().severe(
-                            "Waiting for player connection failed -> " +
-                                    "starting game now!" +
-                                    e1.getLocalizedMessage());
+                synchronized (server) {
+                    printToChat("Server", "Started game, waiting for players to connect.");
+                    try {
+                        server.wait();
+                    } catch (InterruptedException e1) {
+                        LoggingSingleton.getInstance().severe(
+                                "Waiting for player connection failed -> " +
+                                        "starting game now!" +
+                                        e1.getLocalizedMessage());
+                    }
                 }
-            }
 
-            try {
-                startFirst = connection.start();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+                try {
+                    startFirst = connection.start();
+                } catch (IOException e1) {
+                    LoggingSingleton.getInstance().severe("Could not get starting signal from server " + e1.getMessage());
+                    creatingConnection = false;
+                    return;
+                }
 
-            connection.start_thread();
+                connection.start_thread();
 
-            if (startFirst) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Connected: you start");
+                if (startFirst) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Connected: you start");
+                    printToChat("Server", "You start first");
+                } else {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Connected: opponent starts");
+                    Utilities.switchPlayer();
+                    printToChat("Server", "opponent starts first");
+                }
+                canPlay = true;
+                creatingConnection = false;
+
             } else {
                 JOptionPane.showMessageDialog(
                         null,
-                        "Connected: opponent starts");
-                Utilities.switchPlayer();
+                        "Server is already started");
             }
-            canPlay = true;
-
-        } else {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Server is already started");
-        }
+        }).start();
     }
 
     /**
      * Starts the <code>Connection</code> if a button if pressed
      *
      */
-    public void connectToGame() {
-        if (connection == null) {
+    public synchronized void connectToGame() {
+        new Thread(() -> {
+            if (connection == null && ! creatingConnection) {
+                creatingConnection = true;
 
-            String ipAddress = JOptionPane.showInputDialog(
-                    null,
-                    "Type in the ip:",
-                    "192.168.1.100");
+                String ipAddress = "";
+                String password  = "";
 
-            String password = JOptionPane.showInputDialog(
-                    null,
-                    "Do you want to encrypt your game with a password?",
-                    "password");
+                try {
 
-            if (password.length() <= 4) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Weak or no password.\nInsecure connection!");
-            }
+                    ipAddress = JOptionPane.showInputDialog(
+                            null,
+                            "Type in the ip:",
+                            "192.168.1.100");
 
-            try {
-                connect(ipAddress, 5060, password);
-            } catch (InvalidKeyException e1) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Invalid password");
-                return;
-            }
+                    password = JOptionPane.showInputDialog(
+                            null,
+                            "Do you want to encrypt your game with a password?",
+                            "password");
 
-            try {
-                startFirst = connection.start();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+                    if (password.length() <= 4) {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Weak or no password.\nInsecure connection!");
+                    }
+                } catch (Exception e) {
+                    LoggingSingleton.getInstance().severe(e.getMessage());
+                    creatingConnection = false;
+                    return;
+                }
 
-            connection.start_thread();
+                try {
+                    if (! connect(ipAddress, 5060, password)) {
+                        throw new IOException();
+                    }
 
-            if (startFirst) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Connected: you start");
+                } catch (InvalidKeyException e1) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Invalid password");
+                    creatingConnection = false;
+                    return;
+                } catch (IOException e) {
+                    LoggingSingleton.getInstance().severe("Failed to connect " + e.getMessage());
+                    creatingConnection = false;
+                    return;
+                }
+
+                try {
+                    startFirst = connection.start();
+                } catch (IOException e1) {
+                    LoggingSingleton.getInstance().severe("Could not get starting signal from server " + e1.getMessage());
+                    creatingConnection = false;
+                    return;
+                } catch (NullPointerException e2) {
+                    LoggingSingleton.getInstance().severe("Failed to connect " + e2.getMessage());
+                    creatingConnection = false;
+                    return;
+                }
+
+                connection.start_thread();
+
+                if (startFirst) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Connected: you start");
+                    printToChat("Server", "You start first");
+                } else {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Connected: opponent starts");
+                    Utilities.switchPlayer();
+                    printToChat("Server", "opponent starts first");
+                }
+
+                canPlay = true;
+                creatingConnection = false;
             } else {
                 JOptionPane.showMessageDialog(
                         null,
-                        "Connected: opponent starts");
-                Utilities.switchPlayer();
+                        "Your are already connected to a game");
             }
-            canPlay = true;
-        } else {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Your are already connected to a game");
-        }
+        }).start();
     }
 
     /**
@@ -352,6 +398,7 @@ public class ChessGameController implements Initializable {
             model.setMadeMove(Move.getMoveFromLib(mv));
             Main.CHESSGAMEBOARD.doMove(mv);
             BoardModel.refresh();
+            Sound.playSound("chessMove1.wav");
             Utilities.switchPlayer();
         }
     }

@@ -1,6 +1,9 @@
 package utils;
 
+import database.Scorer;
 import main.ChessGameController;
+import main.Main;
+import model.Player;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -42,15 +45,30 @@ public class Utilities {
             @Override
             public void onPlayerSwitch(boolean canPlay) {
                 if (CHESSGAMEBOARD.isMated()) {
-                    JOptionPane.showMessageDialog(null, "One Player is Mate!");
+                    if (!canPlay) {
+                        JOptionPane.showMessageDialog(null, "You won!");
+                        new Player(
+                                Scorer.USERNAME,
+                                (50 / Main.CHESSGAMEBOARD.getMoveCounter()) + 10
+                        ).savePlayer();
+                        new Player(
+                                Scorer.OPONENT,
+                                (50 / Main.CHESSGAMEBOARD.getMoveCounter()) - 10
+                        ).savePlayer();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "You lost!");
+                        new Player(
+                                Scorer.OPONENT,
+                                (50 / Main.CHESSGAMEBOARD.getMoveCounter()) + 10
+                        ).savePlayer();
+                        new Player(
+                                Scorer.USERNAME,
+                                (50 / Main.CHESSGAMEBOARD.getMoveCounter()) - 10
+                        ).savePlayer();
+                    }
                 }
-                if (!canPlay) {
-                    ChessGameController.getGameController().
-                            getChessBoard().setDisable(true);
-                } else {
-                    ChessGameController.getGameController().
-                            getChessBoard().setDisable(false);
-                }
+                ChessGameController.getGameController().
+                        getChessBoard().setDisable(!canPlay);
             }
         });
     }

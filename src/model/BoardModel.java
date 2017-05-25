@@ -113,7 +113,7 @@ public class BoardModel extends JTable {
             return null;
         }
         String[] parts = pieceValue.toLowerCase().split("_");
-        return new ImageIcon(this.getClass().getResource(
+        return new ImageIcon(this.getClass().getResource("graphics/" +
                 parts[1] +
                 "_" +
                 parts[0] +

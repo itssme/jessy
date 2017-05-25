@@ -1,10 +1,12 @@
 package model;
 
 import database.Scorer;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import logging.LoggingSingleton;
-import utils.ModelIterator;
+
+import java.util.Collection;
 
 /**
  * Name:    Königsreiter Simon
@@ -26,9 +28,9 @@ public class ScoreList<T> {
     }
 
 
-    public void fill(ModelIterator<T> targetFill) {
+    public void fill(Collection<T> collection) {
         LoggingSingleton.getInstance().info("Starting the Score-Fill");
-        target.setItems(targetFill.asObservableList());
+        target.setItems(FXCollections.observableArrayList(collection));
 
     }
 }

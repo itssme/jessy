@@ -30,7 +30,7 @@ public class ModelIterator<T> implements Iterator<T> {
 
     @Override
     public boolean hasNext() {
-        return list.isEmpty();
+        return !list.isEmpty();
     }
 
     @Override

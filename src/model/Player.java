@@ -1,6 +1,8 @@
 package model;
 
 import database.ConnectionFactory;
+import database.Scorer;
+import logging.LoggingSingleton;
 import utils.ModelIterator;
 
 import java.sql.Connection;
@@ -18,9 +20,16 @@ import java.sql.SQLException;
  */
 public class Player {
 
-    private int UID;
     private String name;
     private float score;
+
+    public String getName() {
+        return name;
+    }
+
+    public float getScore() {
+        return score;
+    }
 
     /**
      * A simple constructor to get Access to all the class-methods
@@ -32,12 +41,10 @@ public class Player {
      * The Player Constructor takes the UserID, the name and the score
      * as an Argument.
      *
-     * @param UID   The User-ID
      * @param name  The name of the player
      * @param score The score of the game
      */
-    public Player(int UID, String name, float score) {
-        this.UID = UID;
+    public Player(String name, float score) {
         this.name = name;
         this.score = score;
     }
@@ -47,7 +54,7 @@ public class Player {
 
         try (Connection conn =
                      new ConnectionFactory(ConnectionFactory.SQLITE,
-                             "db/jessy.db").establishConnection()) {
+                             Scorer.DB).establishConnection()) {
 
             try (PreparedStatement psmt =
                          conn.prepareStatement("select * from game;");
@@ -55,7 +62,6 @@ public class Player {
 
                 while (res.next()) {
                     ret.addElement(new Player(
-                            res.getInt("UID"),
                             res.getString("name"),
                             res.getFloat("score"))
                     );
@@ -69,24 +75,30 @@ public class Player {
         return ret;
     }
 
-    public int getMaxUID() {
+    public boolean savePlayer() {
         try (Connection conn = new ConnectionFactory(
                 ConnectionFactory.SQLITE,
-                "db/jessy.db").establishConnection()) {
+                Scorer.DB
+        ).establishConnection()) {
 
             try (PreparedStatement psmt = conn.prepareStatement(
-                    "select max(UID) from game;");
-                 ResultSet res = psmt.executeQuery()) {
+                    "insert into game values(?, ?);"
+            )) {
 
-                res.next();
-                return res.getInt(1);
+                psmt.setString(1, this.getName());
+                psmt.setFloat(2, this.getScore());
 
+                return psmt.execute();
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LoggingSingleton.getInstance().severe(e.getLocalizedMessage());
         }
-        return 0;
+        return false;
     }
 
+    @Override
+    public String toString() {
+        return this.getName() + " - " + this.getScore();
+    }
 }

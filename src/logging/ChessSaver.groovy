@@ -81,7 +81,7 @@ class ChessSaver {
     }
 
     void recoverStartUpPositions() {
-        this.loadGameFromFEN(backup)
+        this.loadGameFromFEN(startFEN)
     }
 
 

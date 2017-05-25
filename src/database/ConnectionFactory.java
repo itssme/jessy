@@ -26,9 +26,6 @@ public class ConnectionFactory {
     public ConnectionFactory(int dbSys, String connectionString) {
         this.connectionString = connectionString;
         this.DATABASE_SYSTEM = dbSys;
-    }
-
-    public Connection establishConnection() {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
@@ -45,6 +42,9 @@ public class ConnectionFactory {
                 System.exit(1);
             }
         }
+    }
+
+    public Connection establishConnection() {
         Connection conn = null;
         if (this.DATABASE_SYSTEM == SQLITE) {
             try {

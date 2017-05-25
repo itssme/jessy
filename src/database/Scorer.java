@@ -1,10 +1,11 @@
 package database;
 
 import logging.LoggingSingleton;
+import model.Player;
 import model.ScoreList;
+import utils.PlayerBinaryTree;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -18,14 +19,11 @@ import java.util.logging.Level;
  */
 public class Scorer extends Thread implements Runnable {
 
-    private final int ENV_DEV = 0;
-    private final int ENV_REL = 1;
-
-    private final int DEVENV = ENV_DEV;
 
     private ScoreList targetList;
-    private final String DBFILE = "jessy.db";
+    public static final String DB = "db/jessy.db";
     public static String USERNAME;
+    public static String OPONENT;
 
     public Scorer(ScoreList target) {
         this.targetList = target;
@@ -34,24 +32,15 @@ public class Scorer extends Thread implements Runnable {
     @Override
     public void run() {
         super.run();
-        Connection conn = null;
-        if (this.DEVENV == this.ENV_REL) {
-            conn = new ConnectionFactory(ConnectionFactory.SQLITE,
-                    "db/" + DBFILE).
-                    establishConnection();
-        } else if (this.DEVENV == this.ENV_DEV) {
-            // Connects to an in-memory Database which makes it easier to get
-            // rid of the Database.
-            conn = new ConnectionFactory(ConnectionFactory.SQLITE,
-                    ":memory:").
-                    establishConnection();
-        }
+        Connection conn;
+        conn = new ConnectionFactory(ConnectionFactory.SQLITE,
+                DB).
+                establishConnection();
         if (conn != null) {
             this.setupDB(conn);
-            if (this.DEVENV == ENV_DEV) {
-                this.insertTestData(conn, null);
-            }
-            //targetList.fill(this.readUserDB(conn));
+            targetList.fill(
+                    new PlayerBinaryTree<String, Float>(
+                            new Player().getAllPlayers()).asCollection());
         } else {
             LoggingSingleton.getInstance().log(
                     Level.WARNING,
@@ -60,36 +49,13 @@ public class Scorer extends Thread implements Runnable {
     }
 
 
-    private boolean insertTestData(
-            Connection conn,
-            String[] exampleData) {
-        try (PreparedStatement stmt = conn.prepareStatement(
-                "insert into player(name) values(?);")) {
-            String[] names;
-            names = (exampleData != null) ? exampleData :
-                    new String[]{"John", "Hans", "Harald"};
-            for (String name :
-                    names) {
-                stmt.setString(1, name);
-                stmt.execute();
-            }
-            return true;
-        } catch (SQLException e) {
-            LoggingSingleton.getInstance().log(
-                    Level.INFO,
-                    e.getLocalizedMessage());
-        }
-        return false;
-    }
-
     private boolean setupDB(Connection conn) {
         Statement stmt;
         try {
             stmt = conn.createStatement();
             String TABLE_STRING = "" +
                     "create table if not exists game(" +
-                    "UID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "name text not null," +
+                    "name varchar(255) not null," +
                     "score float not null" +
                     ");";
             stmt.execute(TABLE_STRING);

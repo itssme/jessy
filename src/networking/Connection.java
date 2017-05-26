@@ -6,7 +6,6 @@ import database.Scorer;
 import logging.ChessSaver;
 import logging.LoggingSingleton;
 import main.ChessGameController;
-import model.BoardModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -99,7 +98,7 @@ public class Connection implements Runnable {
 
                     } else if (obj.has("gameState")) {
                         System.out.println("got game state");
-                        ChessSaver.getInstance().loadGameFromFEN(obj.getString("gameState"), true);
+                        ChessSaver.getInstance().loadGameFromFEN(obj.getString("gameState"));
                         Scorer.OPPONENT = obj.getString("username");
 
                     }else if (obj.has("disconnect")) {

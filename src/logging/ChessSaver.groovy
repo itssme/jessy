@@ -1,6 +1,5 @@
 package logging
 
-import com.github.bhlangonijr.chesslib.Side
 import groovy.xml.MarkupBuilder
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -10,7 +9,6 @@ import javafx.scene.control.ListView
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import main.Main
-import utils.Utilities
 
 import java.text.SimpleDateFormat
 import java.util.concurrent.atomic.AtomicInteger
@@ -132,14 +130,14 @@ class ChessSaver {
         }
         fw.flush()
         fw.close()
-        return true;
+        return true
     }
 
     /**
      * RecoverStartUpPositions will load the initial FEN
      */
     void recoverStartUpPositions() {
-        this.loadGameFromFEN(startFEN, false)
+        this.loadGameFromFEN(startFEN)
     }
 
     /**
@@ -201,36 +199,8 @@ class ChessSaver {
      * @param isClient A boolean variable, indicating whether the player is the
      *                 Client or the server
      */
-    void loadGameFromFEN(String FEN, boolean isClient) {
+    void loadGameFromFEN(String FEN) {
         Main.CHESSGAMEBOARD.loadFromFEN(FEN)
-        Side s = Main.CHESSGAMEBOARD.getSideToMove()
-        if (!isClient) {
-            if (s == Side.BLACK) {
-                if (!Utilities.canPlay()) {
-                    Utilities.switchPlayer()
-                }
-            } else {
-
-                if (Utilities.canPlay()) {
-                    Utilities.switchPlayer()
-                }
-            }
-        } else {
-            if (s == Side.WHITE) {
-                if (!Utilities.canPlay()) {
-                    Utilities.switchPlayer()
-                }
-            } else {
-                if (Utilities.canPlay()) {
-                    Utilities.switchPlayer()
-                }
-            }
-        }
-
-        if (!isClient && Main.CHESSGAMEBOARD.getSideToMove().equals(Side.BLACK)) {
-            Utilities.switchPlayer()
-        }
-
     }
 
 }

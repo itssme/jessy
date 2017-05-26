@@ -104,7 +104,7 @@ public class Connection implements Runnable {
                         ChessSaver.getInstance().loadGameFromFEN(obj.getString("gameState"));
                         Scorer.OPPONENT = obj.getString("username");
 
-                        if (Main.CHESSGAMEBOARD.getSideToMove().equals(Side.WHITE)) {
+                        if (! Main.CHESSGAMEBOARD.getSideToMove().equals(Side.WHITE)) {
                             Utilities.switchPlayer();
                         }
 

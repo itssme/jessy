@@ -154,7 +154,6 @@ public class ChessGameController implements Initializable {
                 connection.start_thread();
 
                 if (Main.CHESSGAMEBOARD.getSideToMove().equals(Side.BLACK)) {
-                    Utilities.switchPlayer();
                     startFirst = false;
                 } else {
                     startFirst = true;

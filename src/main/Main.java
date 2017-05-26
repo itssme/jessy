@@ -8,6 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import logging.ChessSaver;
+import model.Player;
+import utils.PlayerSwitchObserver;
+import utils.Utilities;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -60,6 +63,84 @@ public class Main extends Application {
         super.stop();
         ChessGameController.getGameController().disconnect();
         System.exit(0);
+    }
+
+
+    @Override
+    public void init() throws Exception {
+        super.init();
+        /**
+         * Adds the default PlayerSwitchObserver to the listeners
+         */
+        Utilities.addPlayerSwitchListener(new PlayerSwitchObserver() {
+            @Override
+            public void onPlayerSwitch(boolean canPlay) {
+                if (CHESSGAMEBOARD.isMated()) {
+                    if (!canPlay) {
+                        JOptionPane.showMessageDialog(null, "You won!");
+                        new Player(
+                                Scorer.USERNAME,
+                                (50 / CHESSGAMEBOARD.getHalfMoveCounter()) + 10
+                        ).savePlayer();
+                        new Player(
+                                Scorer.OPPONENT,
+                                (50 / CHESSGAMEBOARD.getHalfMoveCounter()) - 10
+                        ).savePlayer();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "You lost!");
+                        new Player(
+                                Scorer.OPPONENT,
+                                (50 / CHESSGAMEBOARD.getHalfMoveCounter()) + 10
+                        ).savePlayer();
+                        new Player(
+                                Scorer.USERNAME,
+                                (50 / CHESSGAMEBOARD.getHalfMoveCounter()) - 10
+                        ).savePlayer();
+                    }
+                }
+                ChessGameController.getGameController().
+                        getChessBoard().setDisable(!canPlay);
+            }
+        });
+
+        Utilities.addPlayerSwitchListener(canPlay -> {
+            if (CHESSGAMEBOARD.isMated()) {
+                ChessGameController.getGameController().printToChat(
+                        "Server",
+                        "A player is Mated!"
+                );
+            }
+            if (CHESSGAMEBOARD.isDraw()) {
+                ChessGameController.getGameController().printToChat(
+                        "Server",
+                        "A Draw happened"
+                );
+                JOptionPane.showMessageDialog(null,
+                        "A draw happened");
+                new Player(
+                        Scorer.USERNAME,
+                        25
+                ).savePlayer();
+                new Player(
+                        Scorer.OPPONENT,
+                        25
+                ).savePlayer();
+                ChessGameController.getGameController().disconnect();
+
+            }
+            if (CHESSGAMEBOARD.isKingAttacked()) {
+                ChessGameController.getGameController().printToChat(
+                        "Server",
+                        "A king is under attack"
+                );
+            }
+            if (CHESSGAMEBOARD.isStaleMate()) {
+                ChessGameController.getGameController().printToChat(
+                        "Server",
+                        "A Stale is mate"
+                );
+            }
+        });
     }
 
     /**

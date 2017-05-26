@@ -14,16 +14,28 @@ import java.util.function.Consumer;
  * Date:    19.05.17
  * Poject:  jessy
  * Package: utils
- * Desc.:
+ * Desc.:   An Iterator over all the Models
  */
 public class ModelIterator<T> implements Iterator<T> {
 
+    /**
+     * The underlying list for the Iterator
+     */
     private ArrayList<T> list;
 
+    /**
+     * The Constructor which takes a collection of Items to start the Iterator
+     * with
+     *
+     * @param c The collection which should be used to initialize the Iterator
+     */
     public ModelIterator(Collection<T> c) {
         list = new ArrayList<T>(c);
     }
 
+    /**
+     * An empty base Iterator
+     */
     public ModelIterator() {
         list = new ArrayList<T>();
     }
@@ -59,6 +71,11 @@ public class ModelIterator<T> implements Iterator<T> {
         return FXCollections.observableArrayList(list);
     }
 
+    /**
+     * Adds an element to the Iterator
+     * @param elem The element to add
+     * @return True, if it was successfully added
+     */
     public boolean addElement(T elem) {
         return list.add(elem);
     }

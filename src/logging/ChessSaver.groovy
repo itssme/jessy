@@ -139,7 +139,7 @@ class ChessSaver {
      * RecoverStartUpPositions will load the initial FEN
      */
     void recoverStartUpPositions() {
-        this.loadGameFromFEN(startFEN)
+        this.loadGameFromFEN(startFEN, false)
     }
 
     /**
@@ -204,12 +204,13 @@ class ChessSaver {
     void loadGameFromFEN(String FEN, boolean isClient) {
         Main.CHESSGAMEBOARD.loadFromFEN(FEN)
         Side s = Main.CHESSGAMEBOARD.getSideToMove()
-        if (isClient) {
+        if (!isClient) {
             if (s == Side.BLACK) {
                 if (!Utilities.canPlay()) {
                     Utilities.switchPlayer()
                 }
             } else {
+
                 if (Utilities.canPlay()) {
                     Utilities.switchPlayer()
                 }
@@ -224,6 +225,10 @@ class ChessSaver {
                     Utilities.switchPlayer()
                 }
             }
+        }
+
+        if (!isClient && Main.CHESSGAMEBOARD.getSideToMove().equals(Side.BLACK)) {
+            Utilities.switchPlayer()
         }
 
     }

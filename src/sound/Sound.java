@@ -13,13 +13,18 @@ import javax.sound.sampled.Clip;
  * Date:    24.05.17
  * Poject:  jessy_jfx
  * Package: utils
- * Desc.:
+ * Desc.:   The Class responsible for Sound
  */
-
 public class Sound {
 
-    public synchronized void playSound(final String url) {
-        new Thread(() -> {
+    /**
+     * Plays the specified Sound in the URL
+     *
+     * @param url The URL where the file is located
+     * @return True, if the Thread was successfully started
+     */
+    public synchronized boolean playSound(final String url) {
+        Thread t = new Thread(() -> {
             try {
                 Clip clip = AudioSystem.getClip();
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(
@@ -30,6 +35,8 @@ public class Sound {
                 System.out.println(e);
                 LoggingSingleton.getInstance().warning("Could not play sound " + e.getMessage());
             }
-        }).start();
+        });
+        t.start();
+        return true;
     }
 }

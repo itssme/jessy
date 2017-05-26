@@ -20,7 +20,13 @@ import java.sql.SQLException;
  */
 public class Player {
 
+    /**
+     * The name of the Player
+     */
     private String name;
+    /**
+     * The score of the player
+     */
     private float score;
 
     public String getName() {
@@ -49,6 +55,11 @@ public class Player {
         this.score = score;
     }
 
+    /**
+     * Returns an Iterator with all Players in the database
+     *
+     * @return The Iterator with all Players
+     */
     public ModelIterator<Player> getAllPlayers() {
         ModelIterator<Player> ret = new ModelIterator<>();
 
@@ -75,6 +86,10 @@ public class Player {
         return ret;
     }
 
+    /**
+     * Saves a player and the Score to the database
+     * @return True, if it was saved successful
+     */
     public boolean savePlayer() {
         try (Connection conn = new ConnectionFactory(
                 ConnectionFactory.SQLITE,
@@ -98,9 +113,9 @@ public class Player {
     }
 
     /**
-     * An inherited method to represent the
+     * An inherited method to represent the Player
      *
-     * @return
+     * @return The String representing the Player
      */
     @Override
     public String toString() {

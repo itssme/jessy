@@ -15,15 +15,31 @@ import java.util.Collection;
  */
 public class PlayerBinaryTree<K extends String, V extends Float> {
 
-
+    /**
+     * A custom class for a Node of the binary Tree
+     *
+     * @param <K> The Type of the key
+     * @param <V> The Type of the value
+     */
     private class Node<K extends String, V extends Float> {
 
+        /**
+         * The key
+         */
         private K key;
+        /**
+         * The value
+         */
         private V value;
 
         private Node<K, V> left = null;
         private Node<K, V> right = null;
 
+        /**
+         * The Constructor for this Node
+         * @param key The key for the Node
+         * @param value The value for the node
+         */
         public Node(K key, V value) {
             this.key = key;
             this.value = value;

@@ -165,7 +165,6 @@ public class ChessGameController implements Initializable {
                     printToChat("Server", "opponent starts first");
                 }
                 Connection.sendGameState(Main.CHESSGAMEBOARD.getFEN(true));
-                canPlay = true;
                 creatingConnection = false;
 
             } else {
@@ -255,7 +254,7 @@ public class ChessGameController implements Initializable {
                     printToChat("Server", "opponent starts first");
                 }
 
-                canPlay = true;
+
                 creatingConnection = false;
             } else {
                 JOptionPane.showMessageDialog(
@@ -292,8 +291,8 @@ public class ChessGameController implements Initializable {
                 return false;
             }
         }
-        ChessSaver.getInstance().recoverStartUpPositions();
         if (!Utilities.canPlay()) Utilities.switchPlayer();
+        canPlay = true;
         return true;
     }
 
@@ -301,7 +300,7 @@ public class ChessGameController implements Initializable {
      * Disconnects form the server and closes all networkstreams
      */
     public void disconnect() {
-        printToChat("Server", "other player disconnected -> stopping game");
+        printToChat("Server", "player disconnected -> stopping game");
 
         if (connection != null) {
             JSONObject disconnectObj = new JSONObject();

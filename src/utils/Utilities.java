@@ -1,14 +1,6 @@
 package utils;
 
-import database.Scorer;
-import main.ChessGameController;
-import main.Main;
-import model.Player;
-
-import javax.swing.*;
 import java.util.ArrayList;
-
-import static main.Main.CHESSGAMEBOARD;
 
 /**
  * Author:  Königsreiter Simon
@@ -36,7 +28,7 @@ public class Utilities {
      *
      * @param observer The PlayerSwitchObserver which will handle a playerSwitch
      */
-    private static void addPlayerSwitchListener(PlayerSwitchObserver observer) {
+    public static void addPlayerSwitchListener(PlayerSwitchObserver observer) {
         playerSwitchObservers.add(observer);
     }
 
@@ -55,43 +47,6 @@ public class Utilities {
         canPlay = !canPlay;
         playerSwitchObservers.forEach(observer -> {
             observer.onPlayerSwitch(canPlay);
-        });
-    }
-
-    static {
-
-        /**
-         * Adds the default PlayerSwitchObserver to the listeners
-         */
-        addPlayerSwitchListener(new PlayerSwitchObserver() {
-            @Override
-            public void onPlayerSwitch(boolean canPlay) {
-                if (CHESSGAMEBOARD.isMated()) {
-                    if (!canPlay) {
-                        JOptionPane.showMessageDialog(null, "You won!");
-                        new Player(
-                                Scorer.USERNAME,
-                                (50 / Main.CHESSGAMEBOARD.getHalfMoveCounter()) + 10
-                        ).savePlayer();
-                        new Player(
-                                Scorer.OPPONENT,
-                                (50 / Main.CHESSGAMEBOARD.getHalfMoveCounter()) - 10
-                        ).savePlayer();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "You lost!");
-                        new Player(
-                                Scorer.OPPONENT,
-                                (50 / Main.CHESSGAMEBOARD.getHalfMoveCounter()) + 10
-                        ).savePlayer();
-                        new Player(
-                                Scorer.USERNAME,
-                                (50 / Main.CHESSGAMEBOARD.getHalfMoveCounter()) - 10
-                        ).savePlayer();
-                    }
-                }
-                ChessGameController.getGameController().
-                        getChessBoard().setDisable(!canPlay);
-            }
         });
     }
 

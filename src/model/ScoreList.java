@@ -13,13 +13,25 @@ import java.util.Collection;
  * Class:   3CHIF
  * Date:    2017-03-24
  * Project: jessy
- * Desc.:
+ * Desc.:   A ScoreList which is displayed at the right of the Application
  */
 public class ScoreList<T> {
 
+    /**
+     * The list containing all the Players
+     */
     private ObservableList<T> list;
+    /**
+     * The actual list
+     */
     private ListView<T> target;
 
+    /**
+     * A constructor taking an ObservableList and the targetList as a parameter
+     *
+     * @param observableList The list of Items for the listView
+     * @param targetList     The TargetList which should be updated
+     */
     public ScoreList(ObservableList<T> observableList, ListView targetList) {
         this.target = targetList;
         list = observableList;
@@ -28,6 +40,11 @@ public class ScoreList<T> {
     }
 
 
+    /**
+     * Fills the Targetlist with the specified Collection
+     * @param collection The Collection which should be set as the content of
+     *                   the list
+     */
     public void fill(Collection<T> collection) {
         LoggingSingleton.getInstance().info("Starting the Score-Fill");
         target.setItems(FXCollections.observableArrayList(collection));

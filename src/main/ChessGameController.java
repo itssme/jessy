@@ -2,6 +2,7 @@ package main;
 
 import board.Move;
 import com.github.bhlangonijr.chesslib.Piece;
+import com.github.bhlangonijr.chesslib.Side;
 import com.github.bhlangonijr.chesslib.Square;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
@@ -143,7 +144,7 @@ public class ChessGameController implements Initializable {
                 }
 
                 try {
-                    startFirst = connection.start();
+                    startFirst = connection.start(); // TODO: remove start first
                 } catch (IOException e1) {
                     LoggingSingleton.getInstance().severe("Could not get starting signal from server " + e1.getMessage());
                     creatingConnection = false;
@@ -151,6 +152,13 @@ public class ChessGameController implements Initializable {
                 }
 
                 connection.start_thread();
+
+                if (Main.CHESSGAMEBOARD.getSideToMove().equals(Side.BLACK)) {
+                    Utilities.switchPlayer();
+                    startFirst = false;
+                } else {
+                    startFirst = true;
+                }
 
                 if (startFirst) {
                     JOptionPane.showMessageDialog(
@@ -165,6 +173,7 @@ public class ChessGameController implements Initializable {
                     printToChat("Server", "opponent starts first");
                 }
                 Connection.sendGameState(Main.CHESSGAMEBOARD.getFEN(true));
+
                 creatingConnection = false;
 
             } else {
@@ -241,6 +250,7 @@ public class ChessGameController implements Initializable {
 
                 connection.start_thread();
 
+                // TODO: fix start first
                 if (startFirst) {
                     JOptionPane.showMessageDialog(
                             null,

@@ -2,12 +2,16 @@ package networking;
 
 import board.Move;
 import board.Position;
+import com.github.bhlangonijr.chesslib.Side;
 import database.Scorer;
 import logging.ChessSaver;
 import logging.LoggingSingleton;
 import main.ChessGameController;
+import main.Main;
+import model.BoardModel;
 import org.json.JSONException;
 import org.json.JSONObject;
+import utils.Utilities;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -97,9 +101,12 @@ public class Connection implements Runnable {
                         ChessGameController.getGameController().executeMove(Move.convertMoveToLib(move));
 
                     } else if (obj.has("gameState")) {
-                        System.out.println("got game state");
                         ChessSaver.getInstance().loadGameFromFEN(obj.getString("gameState"));
                         Scorer.OPPONENT = obj.getString("username");
+
+                        if (Main.CHESSGAMEBOARD.getSideToMove().equals(Side.WHITE)) {
+                            Utilities.switchPlayer();
+                        }
 
                     }else if (obj.has("disconnect")) {
                         if (obj.getString("disconnect").equals("true")) {

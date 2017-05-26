@@ -36,10 +36,10 @@ public class Scorer extends Thread implements Runnable {
      */
     public static String USERNAME;
     /**
-     * The Oponent is the Name of the enemy. It will be collected at the
+     * The Opponent is the Name of the enemy. It will be collected at the
      * beginning of the game, as soon as a player connects to the host.
      */
-    public static String OPONENT;
+    public static String OPPONENT;
 
     /**
      * A constructor which will take the targetList - the ScoreList at the right

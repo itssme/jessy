@@ -94,8 +94,10 @@ public class ChessGameController implements Initializable {
                             null,
                             "Do you want to encrypt your game with a password?",
                             "password");
-
-                    if (password.length() <= 4) {
+                    if (password == null) {
+                        creatingConnection = false;
+                        return;
+                    } else if (password.length() <= 4) {
                         JOptionPane.showMessageDialog(
                                 null,
                                 "Weak or no password.\nInsecure connection!");
@@ -162,6 +164,7 @@ public class ChessGameController implements Initializable {
                     Utilities.switchPlayer();
                     printToChat("Server", "opponent starts first");
                 }
+                Connection.sendGameState(Main.CHESSGAMEBOARD.getFEN(true));
                 canPlay = true;
                 creatingConnection = false;
 
@@ -398,7 +401,7 @@ public class ChessGameController implements Initializable {
             model.setMadeMove(Move.getMoveFromLib(mv));
             Main.CHESSGAMEBOARD.doMove(mv);
             BoardModel.refresh();
-            Sound.playSound("chessMove1.wav");
+            new Sound().playSound("chessMove1.wav");
             Utilities.switchPlayer();
         }
     }

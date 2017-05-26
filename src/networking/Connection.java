@@ -2,6 +2,8 @@ package networking;
 
 import board.Move;
 import board.Position;
+import database.Scorer;
+import logging.ChessSaver;
 import logging.LoggingSingleton;
 import main.ChessGameController;
 import model.BoardModel;
@@ -29,7 +31,6 @@ public class Connection implements Runnable {
 
     private Socket self;
     private BufferedReader br;
-    private boolean sending = false;
     private static Move last_obj;
     private static PrintWriter pw;
     private Thread this_thread;
@@ -51,7 +52,6 @@ public class Connection implements Runnable {
         pw = new PrintWriter(self.getOutputStream(), true);
         encrypter = new Encrypter(password);
         this.controller = controller;
-
     }
 
     /**
@@ -97,7 +97,12 @@ public class Connection implements Runnable {
 
                         ChessGameController.getGameController().executeMove(Move.convertMoveToLib(move));
 
-                    } else if (obj.has("disconnect")) {
+                    } else if (obj.has("gameState")) {
+                        System.out.println("got game state");
+                        ChessSaver.getInstance().loadGameFromFEN(obj.getString("gameState"), true);
+                        Scorer.OPPONENT = obj.getString("username");
+
+                    }else if (obj.has("disconnect")) {
                         if (obj.getString("disconnect").equals("true")) {
                             LoggingSingleton.getInstance().info("got disconnect object");
                             controller.disconnect();
@@ -136,17 +141,38 @@ public class Connection implements Runnable {
      * @param msg a chat message
      */
     public static void send_chat_msg(String msg) {
-        JSONObject send_object = new JSONObject();
+        JSONObject sendObject = new JSONObject();
 
         try {
-            send_object.put("chat", msg);
-            send_object.put("player", USERNAME);
-            send_object.put("part", "false");
+            sendObject.put("chat", msg);
+            sendObject.put("player", USERNAME);
+            sendObject.put("part", "false");
         } catch (JSONException e) {
-            e.printStackTrace();
+            LoggingSingleton.getInstance().severe("Failed to create chat object " + e.getMessage());
+            return;
         }
 
-        sendObject(send_object);
+        sendObject(sendObject);
+    }
+
+    /**
+     * Send the status of the current game to the other player
+     *
+     * @param gameState the current game state
+     */
+    public static void sendGameState(String gameState) {
+        JSONObject sendObject = new JSONObject();
+
+        try {
+            sendObject.put("gameState", gameState);
+            sendObject.put("username", USERNAME);
+        } catch (JSONException e) {
+            LoggingSingleton.getInstance().severe("Failed to create gameState object " + e.getMessage());
+            return;
+        }
+
+        sendObject(sendObject);
+
     }
 
     /**

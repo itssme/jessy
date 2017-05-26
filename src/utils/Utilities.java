@@ -74,13 +74,13 @@ public class Utilities {
                                 (50 / Main.CHESSGAMEBOARD.getHalfMoveCounter()) + 10
                         ).savePlayer();
                         new Player(
-                                Scorer.OPONENT,
+                                Scorer.OPPONENT,
                                 (50 / Main.CHESSGAMEBOARD.getHalfMoveCounter()) - 10
                         ).savePlayer();
                     } else {
                         JOptionPane.showMessageDialog(null, "You lost!");
                         new Player(
-                                Scorer.OPONENT,
+                                Scorer.OPPONENT,
                                 (50 / Main.CHESSGAMEBOARD.getHalfMoveCounter()) + 10
                         ).savePlayer();
                         new Player(

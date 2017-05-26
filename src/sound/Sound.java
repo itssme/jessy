@@ -18,12 +18,12 @@ import javax.sound.sampled.Clip;
 
 public class Sound {
 
-    public static synchronized void playSound(final String url) {
+    public synchronized void playSound(final String url) {
         new Thread(() -> {
             try {
                 Clip clip = AudioSystem.getClip();
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-                        Sound.class.getResourceAsStream("sounds/" + url));
+                        this.getClass().getResourceAsStream("sounds/" + url));
                 clip.open(inputStream);
                 clip.start();
             } catch (Exception e) {

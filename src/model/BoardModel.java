@@ -8,6 +8,7 @@ import com.github.bhlangonijr.chesslib.move.MoveGeneratorException;
 import logging.LoggingSingleton;
 import main.ChessGameController;
 import main.Main;
+import networking.Connection;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -96,12 +97,13 @@ public class BoardModel extends JTable {
         Runtime.getRuntime().gc();
         for (Piece p :
                 Main.CHESSGAMEBOARD.boardToArray()) {
-            Main.CHESSGAMEBOARD.getPieceLocation(p).forEach(square -> {
+            Main.CHESSGAMEBOARD.getPieceLocation(p).forEach((Square square) -> {
                 int[] rowCol = getRowColPair(square);
-                // FIXME: How does this work when getRowColPair returns null?
-                drawFigures(getImageIconFromPiece(p.value()),
-                        rowCol[0],
-                        rowCol[1]);
+                if (rowCol != null) {
+                    drawFigures(getImageIconFromPiece(p.value()),
+                            rowCol[0],
+                            rowCol[1]);
+                }
             });
         }
         this.repaint();
@@ -114,7 +116,7 @@ public class BoardModel extends JTable {
      * @param pieceValue The textual representation of the specific Piece
      * @return The correct Image of null, to draw nothing
      */
-    public ImageIcon getImageIconFromPiece(String pieceValue) {
+    private ImageIcon getImageIconFromPiece(String pieceValue) {
         if (pieceValue.equals("NONE")) {
             return null;
         }
@@ -133,7 +135,7 @@ public class BoardModel extends JTable {
      * @param row       The row, where to draw
      * @param col       The column, where to draw
      */
-    public void drawFigures(ImageIcon imageIcon, int row, int col) {
+    private void drawFigures(ImageIcon imageIcon, int row, int col) {
         this.setValueAt(imageIcon, row, col);
     }
 
@@ -179,10 +181,16 @@ public class BoardModel extends JTable {
                 MoveGenerator.getInstance().generateLegalMoves(Main.CHESSGAMEBOARD).forEach(move -> {
                     if (move.getFrom().compareTo(selectedStartSquare) == 0) {
                         int[] rowCol = getRowColPair(move.getTo());
-                        if (rowCol[0] == row && rowCol[1] == column) {
+                        if (rowCol != null
+                                && rowCol[0] == row && rowCol[1] == column) {
                             comp.setBackground(
                                     new Color(93, 150, 255, 75));
                             possibleMoves.add(move.getTo());
+                        } else {
+                            LoggingSingleton.getInstance().info(
+                                    "A None Square got passed into" +
+                                            "getRowColPair"
+                            );
                         }
                     }
                 });
@@ -216,7 +224,7 @@ public class BoardModel extends JTable {
                 selected != null &&
                 possibleMoves.contains(getSquare(row, col))) {
 
-            ChessGameController.connection.send_move(
+            Connection.send_move(
                     board.Move.getMoveFromLib(
                             new Move(
                                     selectedStartSquare, getSquare(row, col))));

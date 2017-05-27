@@ -1,6 +1,7 @@
 package board;
 
 import com.github.bhlangonijr.chesslib.Square;
+import logging.LoggingSingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,14 +71,12 @@ public class Move {
      * the JTable
      */
     private static TreeMap<Character, Integer> colToInt =
-            new TreeMap<Character, Integer>();
+            new TreeMap<>();
     private static TreeMap<Integer, Character> intToCol =
             new TreeMap<>();
-    private static TreeMap<Integer, Integer> libToInt =
-            new TreeMap<>();
 
-    /**
-     * A small static block for the conversion-Maps
+    /*
+      A small static block for the conversion-Maps
      */
     static {
         colToInt.put('A', 0);
@@ -97,17 +96,6 @@ public class Move {
         intToCol.put(5, 'F');
         intToCol.put(6, 'G');
         intToCol.put(7, 'H');
-
-        libToInt.put(0, 8);
-        libToInt.put(1, 7);
-        libToInt.put(2, 6);
-        libToInt.put(3, 5);
-        libToInt.put(4, 4);
-        libToInt.put(5, 3);
-        libToInt.put(6, 2);
-        libToInt.put(7, 1);
-
-
     }
 
     /**
@@ -129,10 +117,10 @@ public class Move {
 
     /**
      * This function converts the E7 format of the library to a tuple of
-     * integers
-     * <p>
-     * Format: Pair[0] = row
-     * Format: Pair[1] = col
+     * integers.
+     * It returns B7 as follows:
+     * B7: {6, 1}, whereas the B is the second element, and 7 turns into the,
+     * by one, decremented row
      *
      * @param sq The square, which should be converted
      * @return The tuple specifying the row and column or null.
@@ -143,7 +131,8 @@ public class Move {
             return null;
         }
         return new int[]{
-                (Character.getNumericValue(parts[1]) - 8) * (-1),
+                //(Character.getNumericValue(parts[1]) - 8) * (-1),
+                Character.getNumericValue(parts[1]) - 1,
                 colToInt.get(parts[0])
         };
     }
@@ -167,7 +156,7 @@ public class Move {
      * @return The Enum-Value of NONE
      */
     public static Square getSquare(int row, int col) {
-        return Square.fromValue("" + intToCol.get(col) + libToInt.get(row));
+        return Square.fromValue("" + intToCol.get(col) + (row + 1));
     }
 
     /**
@@ -184,9 +173,19 @@ public class Move {
         int[] fromArr = getRowColPair(from);
         int[] toArr = getRowColPair(to);
 
-        return new Move(
-                new Position(fromArr[0], fromArr[1]),
-                new Position(toArr[0], toArr[1])
-        );
+        if (toArr != null && fromArr != null) {
+            return new Move(
+                    new Position(fromArr[0], fromArr[1]),
+                    new Position(toArr[0], toArr[1])
+            );
+        } else {
+            LoggingSingleton.getInstance().info(
+                    "An invalid move got passed in, returning empty" +
+                            "dummy move...");
+            return new Move(
+                    new Position(0, 0),
+                    new Position(0, 0)
+            );
+        }
     }
 }

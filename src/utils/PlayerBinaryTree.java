@@ -76,6 +76,14 @@ public class PlayerBinaryTree<K extends String, V extends Float> {
     private Node<K, V> root = null;
 
     /**
+     * A simple default Constructor
+     */
+    public PlayerBinaryTree() {
+    }
+
+    ;
+
+    /**
      * A Constructor which takes a ModelIterator as a parameter. It will then
      * iterate over all the elements and insert them.
      *
@@ -111,7 +119,7 @@ public class PlayerBinaryTree<K extends String, V extends Float> {
      * @return True, if the Node was successfully inserted, false otherwise
      */
     private boolean insertRecursive(Node<K, V> root, Node<K, V> nodeToInsert) {
-        if (nodeToInsert.getValue().floatValue() <
+        if (nodeToInsert.getValue().floatValue() <=
                 root.getValue().floatValue()) {
             if (root.getLeft() != null) {
                 return insertRecursive(root.getLeft(), nodeToInsert);
@@ -119,8 +127,7 @@ public class PlayerBinaryTree<K extends String, V extends Float> {
                 root.setLeft(nodeToInsert);
                 return true;
             }
-        } else if (nodeToInsert.getValue().floatValue() >
-                root.getValue().floatValue()) {
+        } else {
             if (root.getRight() != null) {
                 return insertRecursive(root.getRight(), nodeToInsert);
             } else {
@@ -128,7 +135,6 @@ public class PlayerBinaryTree<K extends String, V extends Float> {
                 return true;
             }
         }
-        return true;
     }
 
     /**

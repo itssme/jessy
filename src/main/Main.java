@@ -9,10 +9,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import logging.ChessSaver;
 import model.Player;
-import utils.PlayerSwitchObserver;
 import utils.Utilities;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -46,6 +46,7 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        assert root != null;
         Scene scene = new Scene(root);
         stage.setTitle("jessy - " + Scorer.USERNAME);
         stage.setScene(scene);
@@ -69,38 +70,35 @@ public class Main extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-        /**
-         * Adds the default PlayerSwitchObserver to the listeners
+        /*
+          Adds the default PlayerSwitchObserver to the listeners
          */
-        Utilities.addPlayerSwitchListener(new PlayerSwitchObserver() {
-            @Override
-            public void onPlayerSwitch(boolean canPlay) {
-                if (CHESSGAMEBOARD.isMated()) {
-                    if (!canPlay) {
-                        JOptionPane.showMessageDialog(null, "You won!");
-                        new Player(
-                                Scorer.USERNAME,
-                                (50 / CHESSGAMEBOARD.getHalfMoveCounter()) + 10
-                        ).savePlayer();
-                        new Player(
-                                Scorer.OPPONENT,
-                                (50 / CHESSGAMEBOARD.getHalfMoveCounter()) - 10
-                        ).savePlayer();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "You lost!");
-                        new Player(
-                                Scorer.OPPONENT,
-                                (50 / CHESSGAMEBOARD.getHalfMoveCounter()) + 10
-                        ).savePlayer();
-                        new Player(
-                                Scorer.USERNAME,
-                                (50 / CHESSGAMEBOARD.getHalfMoveCounter()) - 10
-                        ).savePlayer();
-                    }
+        Utilities.addPlayerSwitchListener(canPlay -> {
+            if (CHESSGAMEBOARD.isMated()) {
+                if (!canPlay) {
+                    JOptionPane.showMessageDialog(null, "You won!");
+                    new Player(
+                            Scorer.USERNAME,
+                            (50 / CHESSGAMEBOARD.getHalfMoveCounter()) + 10
+                    ).savePlayer();
+                    new Player(
+                            Scorer.OPPONENT,
+                            (50 / CHESSGAMEBOARD.getHalfMoveCounter()) - 10
+                    ).savePlayer();
+                } else {
+                    JOptionPane.showMessageDialog(null, "You lost!");
+                    new Player(
+                            Scorer.OPPONENT,
+                            (50 / CHESSGAMEBOARD.getHalfMoveCounter()) + 10
+                    ).savePlayer();
+                    new Player(
+                            Scorer.USERNAME,
+                            (50 / CHESSGAMEBOARD.getHalfMoveCounter()) - 10
+                    ).savePlayer();
                 }
-                ChessGameController.getGameController().
-                        getChessBoard().setDisable(!canPlay);
             }
+            ChessGameController.getGameController().
+                    getChessBoard().setDisable(!canPlay);
         });
 
         Utilities.addPlayerSwitchListener(canPlay -> {
@@ -150,6 +148,10 @@ public class Main extends Application {
      * @param args The command-line arguments
      */
     public static void main(String[] args) {
+        File db = new File("db");
+        File log = new File("log");
+        db.mkdir();
+        log.mkdir();
         try {
             Class.forName("logging.LoggingSingleton");
         } catch (ClassNotFoundException e) {
@@ -159,12 +161,13 @@ public class Main extends Application {
         if (userName == null || userName.equals("")) {
             JOptionPane.showMessageDialog(null,
                     "Your username can't be empty!", "Warning",
-                    JOptionPane.CANCEL_OPTION);
+                    JOptionPane.WARNING_MESSAGE);
             System.exit(0);
         } else {
             Scorer.USERNAME = userName;
         }
         ChessSaver.getInstance().init(CHESSGAMEBOARD.getFEN());
+
         launch(args);
     }
 }

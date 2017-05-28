@@ -6,7 +6,6 @@ import com.github.bhlangonijr.chesslib.Side;
 import com.github.bhlangonijr.chesslib.Square;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
@@ -426,7 +425,10 @@ public class ChessGameController implements Initializable {
         return writeRes;
     }
 
-    public void loadGame(ActionEvent actionEvent) {
+    /**
+     * Loads a Game
+     */
+    public void loadGame() {
         ChessSaver.getInstance().loadGame();
     }
 }

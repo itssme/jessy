@@ -114,7 +114,6 @@ public class Connection implements Runnable {
                             controller.disconnect();
                         }
 
-                        this_thread.stop();
                         return;
                     } else {
                         LoggingSingleton.getInstance().log(Level.WARNING, "GOT: not a valid object " + obj.toString());

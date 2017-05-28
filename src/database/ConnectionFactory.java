@@ -57,7 +57,7 @@ public class ConnectionFactory {
                     "We couldn't initialize the Database-Driver, " +
                             "closing the application now",
                     "An error Occured",
-                    JOptionPane.OK_OPTION,
+                    JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.ERROR_MESSAGE);
             if (res == JOptionPane.OK_OPTION) {
                 System.exit(1);

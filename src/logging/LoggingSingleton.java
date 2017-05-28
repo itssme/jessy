@@ -29,7 +29,7 @@ public class LoggingSingleton {
         logger = Logger.getLogger("fileLogger");
         FileHandler fh = null;
         try {
-            fh = new FileHandler("jessy.log.xml");
+            fh = new FileHandler("log/jessy.log.xml");
         } catch (IOException e) {
             e.printStackTrace();
         }

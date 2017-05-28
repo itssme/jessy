@@ -16,6 +16,9 @@ class LoggingSingletonTest {
     @Test
     void getInstance() {
         File f = new File("jessy.log.xml");
+        if (f.exists()) {
+            f.delete();
+        }
         assert !f.exists();
 
         LoggingSingleton.getInstance().info("From Test");

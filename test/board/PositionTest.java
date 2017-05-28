@@ -1,10 +1,6 @@
 package board;
 
-import model.BoardModel;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Author:  Königsreiter Simon
@@ -16,20 +12,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class PositionTest {
     @Test
-    void isValid() {
-        BoardModel board = new BoardModel(8, 8);
+    void equals1() {
+        assert new Position(5, 5).equals(5, 5);
+        assert !new Position(5, 5).equals(4, 5);
+        assert new Position(6, 6).equals(6, 6);
+        assert !new Position(6, 6).equals(8, 4);
     }
 
     @Test
-    void equals() {
-
-        assertTrue(new Position(5, 3).
-                equals(new Position(5, 3)));
-        assertTrue(new Position(5, 5).equals(new Position(5, 5)));
-
-        assertFalse(new Position(5, 3).equals(5));
-
+    void equals2() {
+        assert !new Position(5, 5).equals(6);
+        assert new Position(5, 6).equals(new Position(5, 6));
     }
 
+    @Test
+    void testToString() {
+        assert !new Position(5, 6).toString().equals("{6|5}");
+    }
 
 }

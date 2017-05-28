@@ -1,8 +1,5 @@
 package utils;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,14 +27,14 @@ public class ModelIterator<T> implements Iterator<T> {
      * @param c The collection which should be used to initialize the Iterator
      */
     public ModelIterator(Collection<T> c) {
-        list = new ArrayList<T>(c);
+        list = new ArrayList<>(c);
     }
 
     /**
      * An empty base Iterator
      */
     public ModelIterator() {
-        list = new ArrayList<T>();
+        list = new ArrayList<>();
     }
 
     @Override
@@ -60,15 +57,6 @@ public class ModelIterator<T> implements Iterator<T> {
     @Override
     public void forEachRemaining(Consumer<? super T> action) {
         list.forEach(action);
-    }
-
-    /**
-     * Returns this Iterator as an ObservableList
-     *
-     * @return An ObservableList containing all the Elements
-     */
-    public ObservableList<T> asObservableList() {
-        return FXCollections.observableArrayList(list);
     }
 
     /**

@@ -416,6 +416,7 @@ public class ChessGameController implements Initializable {
 
     /**
      * Saves the Game and quits
+     * @return Returns the result of writeToXML of ChessSaver
      */
     public boolean saveGame() {
         boolean writeRes = ChessSaver.getInstance().

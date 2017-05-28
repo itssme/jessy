@@ -8,7 +8,6 @@ import logging.ChessSaver;
 import logging.LoggingSingleton;
 import main.ChessGameController;
 import main.Main;
-import model.BoardModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Utilities;
@@ -46,6 +45,7 @@ public class Connection implements Runnable {
      * @param connect_to_ip ip of the server
      * @param port          ports of the server
      * @param password      password for the connection
+     * @param controller    The reference to the GameController
      * @throws IOException         network severe
      * @throws InvalidKeyException invalid password
      */
@@ -104,11 +104,11 @@ public class Connection implements Runnable {
                         ChessSaver.getInstance().loadGameFromFEN(obj.getString("gameState"));
                         Scorer.OPPONENT = obj.getString("username");
 
-                        if (! Main.CHESSGAMEBOARD.getSideToMove().equals(Side.WHITE)) {
+                        if (!Main.CHESSGAMEBOARD.getSideToMove().equals(Side.WHITE)) {
                             Utilities.switchPlayer();
                         }
 
-                    }else if (obj.has("disconnect")) {
+                    } else if (obj.has("disconnect")) {
                         if (obj.getString("disconnect").equals("true")) {
                             LoggingSingleton.getInstance().info("got disconnect object");
                             controller.disconnect();

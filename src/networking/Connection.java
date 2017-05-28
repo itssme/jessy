@@ -232,6 +232,7 @@ public class Connection implements Runnable {
      * @return if this player starts <code>true</code> else <code>false</code>
      * @throws IOException network severe
      */
+    @Deprecated // TODO: who starts is going to be sent by the host at the start of a game
     public boolean start() throws IOException {
         /*
             This function determines which of the

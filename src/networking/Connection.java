@@ -227,26 +227,37 @@ public class Connection implements Runnable {
     }
 
     /**
-     * Waits for the start from the server
+     * get start message from host
      *
-     * @return if this player starts <code>true</code> else <code>false</code>
-     * @throws IOException network severe
+     * @return <code>true</code> means that the player is starting
+     *         <code>false</code> means that the host is starting
      */
-    @Deprecated // TODO: who starts is going to be sent by the host at the start of a game
-    public boolean start() throws IOException {
-        /*
-            This function determines which of the
-            two clients starts first.
-            (This will be the client which connected
-             first to the Server. In most cases this will
-             be the client starting the Server)
-         */
+    public boolean getStart() {
+        String startFist = "";
 
         try {
-            controller.printToChat("Server", "Game has started");
-        } catch (Exception e) {
-            LoggingSingleton.getInstance().severe("Failed to print chat " + e.getMessage());
+            startFist = br.readLine();
+        } catch (IOException e) {
+            LoggingSingleton.getInstance().severe("Critical error could not get the starting message from host: " + e.getMessage());
         }
-        return br.readLine().equals("start");
+
+        if (startFist.equals("true")) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * Sends who starts first over the network
+     *
+     * (this is the replacement for the old starting
+     *  method which let server determine who starts)
+     *
+     * @param startFirst <code>true</code> if the client starts first
+     */
+    public void sendStart(boolean startFirst) {
+        pw.println(startFirst + "");
     }
 }

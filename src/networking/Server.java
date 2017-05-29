@@ -84,19 +84,9 @@ public class Server extends Thread {
             player1_thread.start();
             player2_thread.start();
 
-            starter();
-
             notify();
         }
         LoggingSingleton.getInstance().log(Level.INFO, "SERVER STARTED");
-    }
-
-    /**
-     * Sends the start message to the player
-     */
-    public void starter() {
-        player1.send("start");
-        player2.send("dont start");
     }
 
     /**

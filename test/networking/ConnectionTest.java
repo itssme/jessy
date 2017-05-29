@@ -75,13 +75,8 @@ class ConnectionTest {
             assertTrue(false);
         }
 
-        try {
-            connection2.start();
-            connection1.start();
-
-        } catch (IOException e) {
-            assertTrue(false);
-        }
+        connection2.sendStart(true);
+        connection1.getStart();
 
         System.out.println("starting done");
 
@@ -110,6 +105,38 @@ class ConnectionTest {
         System.out.println(send.toString());
 
         assertTrue(get.toString().equals(send.toString()));
+
+        server.close();
     }
 
+    @Test
+    void startingTest() {
+        ChessGameController controller1 = new ChessGameController();
+        ChessGameController controller2 = new ChessGameController();
+
+        Server server = startServer();
+
+        if (server == null) {
+            assertTrue(false);
+        }
+
+        server.start();
+
+        Connection connection1 = connect(controller1);
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Connection connection2 = connect(controller2);
+
+        if (connection1 == null || connection2 == null) {
+            assertTrue(false);
+        }
+
+        connection2.sendStart(true);
+        assertTrue(connection1.getStart());
+    }
 }

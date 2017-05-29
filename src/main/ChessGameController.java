@@ -142,21 +142,15 @@ public class ChessGameController implements Initializable {
                     }
                 }
 
-                try {
-                    startFirst = connection.start(); // TODO: remove start first
-                } catch (IOException e1) {
-                    LoggingSingleton.getInstance().severe("Could not get starting signal from server " + e1.getMessage());
-                    creatingConnection = false;
-                    return;
-                }
-
-                connection.start_thread();
-
                 if (Main.CHESSGAMEBOARD.getSideToMove().equals(Side.BLACK)) {
                     startFirst = false;
                 } else {
                     startFirst = true;
                 }
+
+                connection.sendStart(! startFirst);
+                connection.start_thread();
+                Connection.sendGameState(Main.CHESSGAMEBOARD.getFEN(true));
 
                 if (startFirst) {
                     JOptionPane.showMessageDialog(
@@ -170,7 +164,7 @@ public class ChessGameController implements Initializable {
                     Utilities.switchPlayer();
                     printToChat("Server", "opponent starts first");
                 }
-                Connection.sendGameState(Main.CHESSGAMEBOARD.getFEN(true));
+
 
                 creatingConnection = false;
 
@@ -200,6 +194,11 @@ public class ChessGameController implements Initializable {
                             null,
                             "Type in the ip:",
                             "192.168.1.100");
+
+                    if (ipAddress == null) {
+                        creatingConnection = false;
+                        return;
+                    }
 
                     password = JOptionPane.showInputDialog(
                             null,
@@ -234,21 +233,9 @@ public class ChessGameController implements Initializable {
                     return;
                 }
 
-                try {
-                    startFirst = connection.start();
-                } catch (IOException e1) {
-                    LoggingSingleton.getInstance().severe("Could not get starting signal from server " + e1.getMessage());
-                    creatingConnection = false;
-                    return;
-                } catch (NullPointerException e2) {
-                    LoggingSingleton.getInstance().severe("Failed to connect " + e2.getMessage());
-                    creatingConnection = false;
-                    return;
-                }
-
+                startFirst = connection.getStart();
                 connection.start_thread();
 
-                // TODO: fix start first
                 if (startFirst) {
                     JOptionPane.showMessageDialog(
                             null,
@@ -258,10 +245,10 @@ public class ChessGameController implements Initializable {
                     JOptionPane.showMessageDialog(
                             null,
                             "Connected: opponent starts");
-                    Utilities.switchPlayer();
                     printToChat("Server", "opponent starts first");
                 }
 
+                Utilities.switchPlayer();
 
                 creatingConnection = false;
             } else {

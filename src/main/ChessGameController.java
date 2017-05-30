@@ -152,9 +152,9 @@ public class ChessGameController implements Initializable {
                 connection.sendStart(! startFirst);
 
                 if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
-                    connection.sendEncypt(true);
+                    connection.sendEncrypt(true);
                 } else {
-                    connection.sendEncypt(false);
+                    connection.sendEncrypt(false);
                 }
 
                 connection.getEncrypt();
@@ -254,9 +254,9 @@ public class ChessGameController implements Initializable {
                 connection.getEncrypt();
 
                 if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
-                    connection.sendEncypt(true);
+                    connection.sendEncrypt(true);
                 } else {
-                    connection.sendEncypt(false);
+                    connection.sendEncrypt(false);
                 }
 
                 connection.start_thread();
@@ -405,7 +405,11 @@ public class ChessGameController implements Initializable {
      * model.
      */
     public void mouseClick() {
-        model.mouseClick();
+        try {
+            model.mouseClick();
+        } catch (IllegalArgumentException e) {
+            LoggingSingleton.getInstance().info("Mouse click error " + e.getMessage());
+        }
     }
 
     /**

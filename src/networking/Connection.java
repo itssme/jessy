@@ -283,15 +283,15 @@ public class Connection implements Runnable {
      *  Sets the variable if traffic is getting encrypted.
      */
     public void getEncrypt() {
-        String encrpt = "";
+        String encrypt = "";
 
         try {
-            encrpt = br.readLine();
+            encrypt = br.readLine();
         } catch (IOException e) {
             LoggingSingleton.getInstance().severe("Critical error could not get the starting message from host: " + e.getMessage());
         }
 
-        if (encrpt.equals("false")) {
+        if (encrypt.equals("false")) {
             enableEncryprtion = false;
         }
     }
@@ -301,7 +301,7 @@ public class Connection implements Runnable {
      *
      * @param encrypt
      */
-    public void sendEncypt(boolean encrypt) {
+    public void sendEncrypt(boolean encrypt) {
         pw.println(encrypt + "");
     }
 

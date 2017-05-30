@@ -243,6 +243,12 @@ public class ChessGameController implements Initializable {
                     return;
                 }
 
+                if (connection == null) {
+                    LoggingSingleton.getInstance().severe("Could not create connection");
+                    creatingConnection = false;
+                    return;
+                }
+
                 startFirst = connection.getStart();
 
                 connection.getEncrypt();

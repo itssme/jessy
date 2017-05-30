@@ -280,8 +280,7 @@ public class Connection implements Runnable {
     }
 
     /**
-     *
-     *
+     *  Sets the variable if traffic is getting encrypted.
      */
     public void getEncrypt() {
         String encrpt = "";
@@ -298,6 +297,7 @@ public class Connection implements Runnable {
     }
 
     /**
+     * Sends if the traffic will be encrypted
      *
      * @param encrypt
      */

@@ -4,6 +4,8 @@ jessy.iml
 # Ignore Idea specific folder
 .idea/
 /out/
+/db/
+/log/
 
 # We don't need the log file in the git-Repository
 jessy.log.xml

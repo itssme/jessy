@@ -4,6 +4,7 @@ import board.Move;
 import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.Side;
 import com.github.bhlangonijr.chesslib.Square;
+import com.sun.deploy.util.SystemUtils;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
@@ -89,6 +90,7 @@ public class ChessGameController implements Initializable {
         new Thread(() -> {
             if (server == null && ! creatingConnection) {
                 creatingConnection = true;
+
                 try {
                     String password = JOptionPane.showInputDialog(
                             null,
@@ -149,6 +151,15 @@ public class ChessGameController implements Initializable {
                 }
 
                 connection.sendStart(! startFirst);
+
+                if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
+                    connection.sendEncypt(true);
+                } else {
+                    connection.sendEncypt(false);
+                }
+
+                connection.getEncrypt();
+
                 connection.start_thread();
                 Connection.sendGameState(Main.CHESSGAMEBOARD.getFEN(true));
 
@@ -234,6 +245,16 @@ public class ChessGameController implements Initializable {
                 }
 
                 startFirst = connection.getStart();
+
+                connection.getEncrypt();
+
+                if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
+                    connection.sendEncypt(true);
+                } else {
+                    connection.sendEncypt(false);
+                }
+
+
                 connection.start_thread();
 
                 if (startFirst) {

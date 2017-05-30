@@ -38,6 +38,7 @@ public class Connection implements Runnable {
     private Thread this_thread;
     private static Encrypter encrypter;
     private ChessGameController controller;
+    private static boolean enableEncryprtion = true;
 
     /**
      * Opens the connection to the server
@@ -55,6 +56,13 @@ public class Connection implements Runnable {
         pw = new PrintWriter(self.getOutputStream(), true);
         encrypter = new Encrypter(password);
         this.controller = controller;
+
+        if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
+            enableEncryprtion = true;
+        } else {
+            enableEncryprtion = false;
+        }
+
     }
 
     /**
@@ -189,7 +197,12 @@ public class Connection implements Runnable {
     public static void sendObject(JSONObject obj) {
         LoggingSingleton.getInstance().log(Level.INFO, "Sent object: " + obj.toString());
         try {
-            pw.println(encrypter.encrypt(obj.toString()));
+            if (enableEncryprtion) {
+                pw.println(encrypter.encrypt(obj.toString()));
+            } else {
+                pw.println(obj.toString());
+            }
+
         } catch (Exception e) {
             LoggingSingleton.getInstance().info("Couldn't send the object");
         }
@@ -206,7 +219,12 @@ public class Connection implements Runnable {
     public JSONObject get_object() throws IOException, JSONException {
         String got_obj = br.readLine();
         try {
-            return new JSONObject(encrypter.decrypt(got_obj));
+            if (enableEncryprtion) {
+                return new JSONObject(encrypter.decrypt(got_obj));
+            } else {
+                return new JSONObject(got_obj);
+            }
+
         } catch (Exception e) {
             LoggingSingleton.getInstance().severe("Failed to decrypt object " + e.getMessage());
         }
@@ -227,7 +245,7 @@ public class Connection implements Runnable {
     }
 
     /**
-     * get start message from host
+     * Get start message from host
      *
      * @return <code>true</code> means that the player is starting
      *         <code>false</code> means that the host is starting
@@ -260,4 +278,35 @@ public class Connection implements Runnable {
     public void sendStart(boolean startFirst) {
         pw.println(startFirst + "");
     }
+
+    /**
+     *
+     *
+     */
+    public void getEncrypt() {
+        String encrpt = "";
+
+        try {
+            encrpt = br.readLine();
+        } catch (IOException e) {
+            LoggingSingleton.getInstance().severe("Critical error could not get the starting message from host: " + e.getMessage());
+        }
+
+        if (encrpt.equals("true")) {
+            System.out.println("using enc");
+            enableEncryprtion = true;
+        } else {
+            System.out.println("not using enc");
+            enableEncryprtion = false;
+        }
+    }
+
+    /**
+     *
+     * @param encrypt
+     */
+    public void sendEncypt(boolean encrypt) {
+        pw.println(encrypt + "");
+    }
+
 }

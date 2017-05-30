@@ -1,9 +1,12 @@
 package networking;
 
-import java.security.InvalidKeyException;
-import java.security.Key;
+import logging.LoggingSingleton;
+import main.ChessGameController;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.Key;
 
 /**
  * Name:    Joel Klimont
@@ -17,6 +20,7 @@ public class Encrypter  {
     private String key;
     private Key aesKey;
     private Cipher cipher;
+    private ChessGameController controller;
 
     /**
      * Checks the password and generates the key
@@ -24,7 +28,9 @@ public class Encrypter  {
      * @param key_in the password the user typed in
      * @throws InvalidKeyException the password is not valid
      */
-    public Encrypter(String key_in) throws InvalidKeyException {
+    public Encrypter(String key_in, ChessGameController controller) throws InvalidKeyException {
+        this.controller = controller;
+
         if (key_in.length() <= 16) {
             // the password must have a lenght of 16
             // if no password is set the password will be 16*z
@@ -41,7 +47,7 @@ public class Encrypter  {
             aesKey = new SecretKeySpec(key.getBytes(), "AES");
             cipher = Cipher.getInstance("AES");
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggingSingleton.getInstance().severe("Error generating AES key " + e.getMessage());
         }
     }
 
@@ -67,7 +73,8 @@ public class Encrypter  {
             encrypted_string = StringEncoder.encode(enc);
 
         } catch(Exception e) {
-            e.printStackTrace();
+            LoggingSingleton.getInstance().severe("Error encrypting message " + e.getMessage());
+            controller.disconnect();
         }
 
         return encrypted_string;
@@ -94,7 +101,8 @@ public class Encrypter  {
             decrypted = new String(cipher.doFinal(bb));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LoggingSingleton.getInstance().severe("Error decrypting message " + e.getMessage());
+            controller.disconnect();
         }
 
         return decrypted;

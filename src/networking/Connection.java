@@ -54,7 +54,7 @@ public class Connection implements Runnable {
         self = new Socket(connect_to_ip, port);
         br = new BufferedReader(new InputStreamReader(self.getInputStream()));
         pw = new PrintWriter(self.getOutputStream(), true);
-        encrypter = new Encrypter(password);
+        encrypter = new Encrypter(password, controller);
         this.controller = controller;
 
         if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
@@ -293,10 +293,8 @@ public class Connection implements Runnable {
         }
 
         if (encrpt.equals("true")) {
-            System.out.println("using enc");
             enableEncryprtion = true;
         } else {
-            System.out.println("not using enc");
             enableEncryprtion = false;
         }
     }

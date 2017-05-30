@@ -1,5 +1,6 @@
 package networking;
 
+import main.ChessGameController;
 import org.junit.jupiter.api.Test;
 
 import static org.testng.AssertJUnit.assertTrue;
@@ -12,11 +13,12 @@ import static org.testng.AssertJUnit.assertTrue;
  * Desc.: Tests for the encryption
  */
 
+
 class EncrypterTest {
     @Test
     void test1() {
         try {
-            Encrypter encrypter = new Encrypter("passwort");
+            Encrypter encrypter = new Encrypter("passwort", new ChessGameController());
 
             String encrypted = encrypter.encrypt("hallo");
             String decrypted = encrypter.decrypt(encrypted);
@@ -34,7 +36,7 @@ class EncrypterTest {
             for (int i = 0; i < 1000; i++) {
                 String encrypt = Integer.toString(i);
 
-                Encrypter encrypter = new Encrypter(encrypt);
+                Encrypter encrypter = new Encrypter(encrypt, new ChessGameController());
 
                 encrypt = Double.toString(Math.random());
 
@@ -56,7 +58,7 @@ class EncrypterTest {
     @Test
     void test3() {
         try {
-            Encrypter encrypter = new Encrypter("password");
+            Encrypter encrypter = new Encrypter("password", new ChessGameController());
 
             String encrypted = encrypter.encrypt("wwww");
             String decrypted = encrypter.decrypt(encrypted);
@@ -70,7 +72,7 @@ class EncrypterTest {
     @Test
     void test4() {
         try {
-            Encrypter encrypter = new Encrypter("12sicher21");
+            Encrypter encrypter = new Encrypter("12sicher21", new ChessGameController());
 
             String encrypted = encrypter.encrypt("how are you?");
             String decrypted = encrypter.decrypt(encrypted);
@@ -84,7 +86,7 @@ class EncrypterTest {
     @Test
     void test5() {
         try {
-            Encrypter encrypter = new Encrypter("passwort123");
+            Encrypter encrypter = new Encrypter("passwort123", new ChessGameController());
 
             String encrypted = encrypter.encrypt("ÜÄÖüäö!§$%&/()=?³²¹³¼½¬{[]}@ł€¶ŧ←↓→øþłĸŋđðſæ»«¢„“”µ,.·…:;-_");
             String decrypted = encrypter.decrypt(encrypted);

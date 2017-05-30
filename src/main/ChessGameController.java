@@ -4,7 +4,6 @@ import board.Move;
 import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.Side;
 import com.github.bhlangonijr.chesslib.Square;
-import com.sun.deploy.util.SystemUtils;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
@@ -253,7 +252,6 @@ public class ChessGameController implements Initializable {
                 } else {
                     connection.sendEncypt(false);
                 }
-
 
                 connection.start_thread();
 

@@ -1,10 +1,16 @@
 package networking;
 
+import org.junit.jupiter.api.Test;
 
+import static org.testng.AssertJUnit.assertTrue;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
+/**
+ * Name:    Joel Klimont
+ * Class:   3CHIF
+ * Date:    2017-05-20
+ * Project: jessy
+ * Desc.: Tests for the encryption
+ */
 
 class EncrypterTest {
     @Test
@@ -67,6 +73,20 @@ class EncrypterTest {
             Encrypter encrypter = new Encrypter("12sicher21");
 
             String encrypted = encrypter.encrypt("how are you?");
+            String decrypted = encrypter.decrypt(encrypted);
+
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+
+    }
+
+    @Test
+    void test5() {
+        try {
+            Encrypter encrypter = new Encrypter("passwort123");
+
+            String encrypted = encrypter.encrypt("ÜÄÖüäö!§$%&/()=?³²¹³¼½¬{[]}@ł€¶ŧ←↓→øþłĸŋđðſæ»«¢„“”µ,.·…:;-_");
             String decrypted = encrypter.decrypt(encrypted);
 
         } catch (Exception e) {

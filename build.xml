@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jessy" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="../current/jre/lib/charsets.jar"/>
+      <include name="../current/jre/lib/deploy.jar"/>
+      <include name="../current/jre/lib/ext/cldrdata.jar"/>
+      <include name="../current/jre/lib/ext/dnsns.jar"/>
+      <include name="../current/jre/lib/ext/jaccess.jar"/>
+      <include name="../current/jre/lib/ext/jfxrt.jar"/>
+      <include name="../current/jre/lib/ext/localedata.jar"/>
+      <include name="../current/jre/lib/ext/nashorn.jar"/>
+      <include name="../current/jre/lib/ext/sunec.jar"/>
+      <include name="../current/jre/lib/ext/sunjce_provider.jar"/>
+      <include name="../current/jre/lib/ext/sunpkcs11.jar"/>
+      <include name="../current/jre/lib/ext/zipfs.jar"/>
+      <include name="../current/jre/lib/javaws.jar"/>
+      <include name="../current/jre/lib/jce.jar"/>
+      <include name="../current/jre/lib/jfr.jar"/>
+      <include name="../current/jre/lib/jfxswt.jar"/>
+      <include name="../current/jre/lib/jsse.jar"/>
+      <include name="../current/jre/lib/management-agent.jar"/>
+      <include name="../current/jre/lib/plugin.jar"/>
+      <include name="../current/jre/lib/resources.jar"/>
+      <include name="../current/jre/lib/rt.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.jessy.classpath"/>
+  
+  <path id="library.lib.classpath">
+    <pathelement location="${basedir}/lib/chesslib.jar"/>
+    <pathelement location="${basedir}/lib/java-json.jar"/>
+    <pathelement location="${basedir}/lib/sqlite-jdbc-3.16.1.jar"/>
+  </path>
+  
+  
+  <!-- Global Libraries -->
+  
+  <path id="library.groovy-2.4.10.classpath">
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/ant-1.9.4.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/ant-antlr-1.9.4.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/ant-junit-1.9.4.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/ant-launcher-1.9.4.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/bsf-2.4.0.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/commons-cli-1.2.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/commons-logging-1.2.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/gpars-1.2.1.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-ant-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-bsf-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-console-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-docgenerator-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-groovydoc-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-groovysh-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-jmx-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-json-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-jsr223-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-nio-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-servlet-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-sql-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-swing-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-templates-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-test-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-testng-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/groovy-xml-2.4.10.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/ivy-2.4.0.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/jansi-1.11.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/jcommander-1.47.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/jline-2.12.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/jsp-api-2.0.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/jsr166y-1.7.0.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/junit-4.12.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/multiverse-core-0.7.0.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/qdox-1.12.1.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/servlet-api-2.4.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/testng-6.8.13.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/xmlpull-1.1.3.1.jar"/>
+    <pathelement location="/home/simon/.sdkman/candidates/groovy/current/lib/xstream-1.4.7.jar"/>
+  </path>
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+    <property name="grooovyc.task.sdk" value="library.groovy-2.4.10.classpath"/>
+    <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="${grooovyc.task.sdk}"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module jessy -->
+  
+  <dirname property="module.jessy.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.jessy" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.jessy" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.jessy" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.jessy" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="jessy.output.dir" value="${module.jessy.basedir}/out/production/jessy"/>
+  <property name="jessy.testoutput.dir" value="${module.jessy.basedir}/out/test/jessy"/>
+  
+  <path id="jessy.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="jessy.module.production.classpath">
+    <path refid="${module.jdk.classpath.jessy}"/>
+    <path refid="library.jessy.classpath"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.groovy-2.4.10.classpath"/>
+    <pathelement location="${idea.home}/redist/annotations-java8.jar"/>
+  </path>
+  
+  <path id="jessy.runtime.production.module.classpath">
+    <pathelement location="${jessy.output.dir}"/>
+    <path refid="library.jessy.classpath"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.groovy-2.4.10.classpath"/>
+    <pathelement location="${idea.home}/redist/annotations-java8.jar"/>
+  </path>
+  
+  <path id="jessy.module.classpath">
+    <path refid="${module.jdk.classpath.jessy}"/>
+    <pathelement location="${jessy.output.dir}"/>
+    <path refid="library.jessy.classpath"/>
+    <path refid="library.lib.classpath"/>
+    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-M4.jar"/>
+    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-M2.jar"/>
+    <path refid="library.groovy-2.4.10.classpath"/>
+    <pathelement location="${idea.home}/redist/annotations-java8.jar"/>
+    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-M3.jar"/>
+    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-M1.jar"/>
+  </path>
+  
+  <path id="jessy.runtime.module.classpath">
+    <pathelement location="${jessy.testoutput.dir}"/>
+    <pathelement location="${jessy.output.dir}"/>
+    <path refid="library.jessy.classpath"/>
+    <path refid="library.lib.classpath"/>
+    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-M4.jar"/>
+    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-M2.jar"/>
+    <path refid="library.groovy-2.4.10.classpath"/>
+    <pathelement location="${idea.home}/redist/annotations-java8.jar"/>
+    <pathelement location="${idea.home}/plugins/junit/lib/junit-jupiter-api-5.0.0-M3.jar"/>
+    <pathelement location="${idea.home}/plugins/junit/lib/opentest4j-1.0.0-M1.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.jessy">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.jessy">
+    <patternset refid="excluded.from.module.jessy"/>
+  </patternset>
+  
+  <path id="jessy.module.sourcepath">
+    <dirset dir="${module.jessy.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="jessy.module.test.sourcepath">
+    <dirset dir="${module.jessy.basedir}">
+      <include name="test"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.jessy" depends="compile.module.jessy.production,compile.module.jessy.tests" description="Compile module jessy"/>
+  
+  <target name="compile.module.jessy.production" depends="register.custom.compilers" description="Compile module jessy; production classes">
+    <mkdir dir="${jessy.output.dir}"/>
+    <groovyc destdir="${jessy.output.dir}" fork="yes">
+      <src refid="jessy.module.sourcepath"/>
+      <classpath refid="jessy.module.production.classpath"/>
+      <patternset refid="excluded.from.compilation.jessy"/>
+      <javac debug="${compiler.debug}">
+        <compilerarg line="${compiler.args.jessy}"/>
+      </javac>
+    </groovyc>
+    <instrumentIdeaExtensions destdir="${jessy.output.dir}">
+      <compilerarg line="${compiler.args.jessy}"/>
+      <bootclasspath refid="jessy.module.bootclasspath"/>
+      <classpath refid="jessy.module.production.classpath"/>
+      <src refid="jessy.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.jessy"/>
+    </instrumentIdeaExtensions>
+    
+    <copy todir="${jessy.output.dir}">
+      <fileset dir="${module.jessy.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.jessy.tests" depends="register.custom.compilers,compile.module.jessy.production" description="compile module jessy; test classes" unless="skip.tests">
+    <mkdir dir="${jessy.testoutput.dir}"/>
+    <groovyc destdir="${jessy.testoutput.dir}" fork="yes">
+      <src refid="jessy.module.test.sourcepath"/>
+      <classpath refid="jessy.module.classpath"/>
+      <patternset refid="excluded.from.compilation.jessy"/>
+      <javac debug="${compiler.debug}">
+        <compilerarg line="${compiler.args.jessy}"/>
+      </javac>
+    </groovyc>
+    <instrumentIdeaExtensions destdir="${jessy.testoutput.dir}">
+      <compilerarg line="${compiler.args.jessy}"/>
+      <bootclasspath refid="jessy.module.bootclasspath"/>
+      <classpath refid="jessy.module.classpath"/>
+      <src refid="jessy.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.jessy"/>
+    </instrumentIdeaExtensions>
+    
+    <copy todir="${jessy.testoutput.dir}">
+      <fileset dir="${module.jessy.basedir}/test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.jessy" description="cleanup module">
+    <delete dir="${jessy.output.dir}"/>
+    <delete dir="${jessy.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.jessy" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.jessy" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.jessy:jar" value="${basedir}/out/artifacts/jessy_jar"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.jessy.jar" value="${artifacts.temp.dir}/jessy.jar"/>
+  </target>
+  
+  <target name="artifact.jessy:jar" depends="init.artifacts, compile.module.jessy" description="Build &#39;jessy:jar&#39; artifact">
+    <property name="artifact.temp.output.jessy:jar" value="${artifacts.temp.dir}/jessy_jar"/>
+    <mkdir dir="${artifact.temp.output.jessy:jar}"/>
+    <jar destfile="${temp.jar.path.jessy.jar}" duplicate="preserve" manifest="src/META-INF/MANIFEST.MF">
+      <zipfileset dir="${jessy.output.dir}"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-groovysh-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/testng-6.8.13.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/commons-cli-1.2.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/commons-logging-1.2.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/bsf-2.4.0.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jansi-1.11.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-servlet-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/qdox-1.12.1.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ant-antlr-1.9.4.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-jmx-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jsr166y-1.7.0.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-test-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ant-junit-1.9.4.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-docgenerator-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/gpars-1.2.1.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/multiverse-core-0.7.0.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ant-1.9.4.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-nio-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/hamcrest-core-1.3.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-swing-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/servlet-api-2.4.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-sql-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/junit-4.12.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-bsf-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ivy-2.4.0.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jsp-api-2.0.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-testng-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/xstream-1.4.7.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jline-2.12.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-ant-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ant-launcher-1.9.4.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-groovydoc-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jcommander-1.47.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-templates-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-jsr223-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-console-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-xml-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-json-2.4.10.jar"/>
+      <zipfileset src="${basedir}/../../../.sdkman/candidates/groovy/current/lib/xmlpull-1.1.3.1.jar"/>
+      <zipfileset src="${basedir}/lib/sqlite-jdbc-3.16.1.jar"/>
+      <zipfileset src="${basedir}/lib/chesslib.jar"/>
+      <zipfileset src="${basedir}/lib/java-json.jar"/>
+      <zipfileset src="${idea.home}/redist/annotations-java8.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-groovysh-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/testng-6.8.13.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/commons-cli-1.2.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/commons-logging-1.2.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/bsf-2.4.0.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jansi-1.11.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-servlet-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/qdox-1.12.1.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ant-antlr-1.9.4.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-jmx-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jsr166y-1.7.0.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-test-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ant-junit-1.9.4.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-docgenerator-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/gpars-1.2.1.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/multiverse-core-0.7.0.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ant-1.9.4.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-nio-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/hamcrest-core-1.3.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-swing-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/servlet-api-2.4.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-sql-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/junit-4.12.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-bsf-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ivy-2.4.0.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jsp-api-2.0.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-testng-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/xstream-1.4.7.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jline-2.12.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-ant-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/ant-launcher-1.9.4.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-groovydoc-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/jcommander-1.47.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-templates-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-jsr223-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-console-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-xml-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/groovy-json-2.4.10.jar"/>
+      <zipfileset file="${basedir}/../../../.sdkman/candidates/groovy/current/lib/xmlpull-1.1.3.1.jar"/>
+      <zipfileset file="${idea.home}/redist/annotations-java8.jar"/>
+      <zipfileset file="${basedir}/lib/sqlite-jdbc-3.16.1.jar"/>
+      <zipfileset file="${basedir}/lib/chesslib.jar"/>
+      <zipfileset file="${basedir}/lib/java-json.jar"/>
+    </jar>
+    <copy file="${temp.jar.path.jessy.jar}" tofile="${artifact.temp.output.jessy:jar}/jessy.jar"/>
+  </target>
+
+  
+  <target name="build.all.artifacts" depends="artifact.jessy:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.jessy:jar}"/>
+    <copy todir="${artifact.output.jessy:jar}">
+      <fileset dir="${artifact.temp.output.jessy:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+
+  <target name="doc" description="Generates JavaDoc" depends="clean, init">
+    <delete dir="${docdir}"/>
+    <mkdir dir="${docdir}"/>
+    <javadoc sourcepath="${module.jessy.basedir}" destdir="${docdir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

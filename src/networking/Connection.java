@@ -292,9 +292,7 @@ public class Connection implements Runnable {
             LoggingSingleton.getInstance().severe("Critical error could not get the starting message from host: " + e.getMessage());
         }
 
-        if (encrpt.equals("true")) {
-            enableEncryprtion = true;
-        } else {
+        if (encrpt.equals("false")) {
             enableEncryprtion = false;
         }
     }

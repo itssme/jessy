@@ -45,7 +45,7 @@ public class ChessGameController implements Initializable {
     private static Server server = null;
     private boolean canPlay = false;
     public static Connection connection = null;
-    private static boolean startFirst;
+    private static String startFirst;
     private BoardModel model = new BoardModel(8, 8);
     private static ChessGameController reference;
     private boolean creatingConnection = false;
@@ -144,12 +144,16 @@ public class ChessGameController implements Initializable {
                 }
 
                 if (Main.CHESSGAMEBOARD.getSideToMove().equals(Side.BLACK)) {
-                    startFirst = false;
+                    startFirst = "false";
                 } else {
-                    startFirst = true;
+                    startFirst = "true";
                 }
 
-                connection.sendStart(! startFirst);
+                if (startFirst.equals("true")) {
+                    connection.sendStart(false);
+                } else {
+                    connection.sendStart(true);
+                }
 
                 connection.getEncrypt();
 
@@ -162,12 +166,12 @@ public class ChessGameController implements Initializable {
                 connection.start_thread();
                 Connection.sendGameState(Main.CHESSGAMEBOARD.getFEN(true));
 
-                if (startFirst) {
+                if (startFirst.equals("true")) {
                     JOptionPane.showMessageDialog(
                             null,
                             "Connected: you start");
                     printToChat("Server", "You start first");
-                } else {
+                } else if (startFirst.equals("false")){
                     JOptionPane.showMessageDialog(
                             null,
                             "Connected: opponent starts");
@@ -187,7 +191,7 @@ public class ChessGameController implements Initializable {
 
 
     /**
-     * Starts the <code>Connection</code> if a button if pressed
+     * Starts the <code>Connection</code> if a button is pressed
      *
      */
     public synchronized void connectToGame() {
@@ -261,19 +265,30 @@ public class ChessGameController implements Initializable {
 
                 connection.start_thread();
 
-                if (startFirst) {
+                if (startFirst.equals("true")) {
                     JOptionPane.showMessageDialog(
                             null,
                             "Connected: you start");
                     printToChat("Server", "You start first");
-                } else {
+                    Utilities.switchPlayer();
+                } else if (startFirst.equals("false")){
                     JOptionPane.showMessageDialog(
                             null,
                             "Connected: opponent starts");
                     printToChat("Server", "opponent starts first");
+                    Utilities.switchPlayer();
+                } else if (startFirst.equals("true_")) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Connected: you start");
+                    printToChat("Server", "You start first");
+                } else if (startFirst.equals("false_")) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Connected: you start");
+                    printToChat("Server", "You start first");
+                    Utilities.switchPlayer();
                 }
-
-                Utilities.switchPlayer();
 
                 creatingConnection = false;
             } else {

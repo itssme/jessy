@@ -250,7 +250,7 @@ public class Connection implements Runnable {
      * @return <code>true</code> means that the player is starting
      *         <code>false</code> means that the host is starting
      */
-    public boolean getStart() {
+    public String getStart() {
         String startFist = "";
 
         try {
@@ -259,12 +259,7 @@ public class Connection implements Runnable {
             LoggingSingleton.getInstance().severe("Critical error could not get the starting message from host: " + e.getMessage());
         }
 
-        if (startFist.equals("true")) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return startFist;
     }
 
     /**

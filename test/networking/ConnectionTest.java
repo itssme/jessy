@@ -137,6 +137,6 @@ class ConnectionTest {
         }
 
         connection2.sendStart(true);
-        assertTrue(connection1.getStart());
+        assertTrue(connection1.getStart().equals("true"));
     }
 }

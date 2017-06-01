@@ -180,18 +180,11 @@ public class Main extends Application {
             }
 
             System.out.println("[!] waiting for connections");
-            server.start();
-            synchronized (server) {
-                try {
-                    server.wait();
-                } catch (InterruptedException e) {
-                    LoggingSingleton.getInstance().info("Server Interrupted " + e.getLocalizedMessage());
-                }
-            }
+            server.startSilent();
             System.out.println("[!] all players connected game is starting");
 
-            server.player1.sendStart(true);
-            server.player2.sendStart(false);
+            server.player1.sendStart("true_");
+            server.player2.sendStart("false_");
 
             System.out.println("send start");
 
@@ -211,6 +204,8 @@ public class Main extends Application {
             }
 
             System.out.println("send encryption");
+
+            server.startPlayerThreads();
 
             while (server.all_connected()) {
                 try {

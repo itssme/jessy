@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.TreeMap;
 import java.util.logging.Level;
 
 /**
@@ -28,6 +29,8 @@ public class Server extends Thread {
     public player player1;
     public player player2;
     private Thread  thread;
+    private Thread player1_thread = null;
+    private Thread player2_thread = null;
 
     /**
      * Binds the server ip
@@ -78,8 +81,8 @@ public class Server extends Thread {
         player2 = new player(2);
 
         synchronized (this) {
-            Thread player1_thread = new Thread(player1);
-            Thread player2_thread = new Thread(player2);
+            player1_thread = new Thread(player1);
+            player2_thread = new Thread(player2);
 
             player1_thread.start();
             player2_thread.start();
@@ -89,6 +92,30 @@ public class Server extends Thread {
         LoggingSingleton.getInstance().log(Level.INFO, "SERVER STARTED");
     }
 
+    /**
+     *
+     *
+     *
+     */
+    public void startSilent() {
+        LoggingSingleton.getInstance().log(Level.INFO, "SERVER: waiting for connection");
+
+        player1 = new player(1);
+        player2 = new player(2);
+
+        player1_thread = new Thread(player1);
+        player2_thread = new Thread(player2);
+
+        LoggingSingleton.getInstance().log(Level.INFO, "SERVER STARTED");
+    }
+
+    /**
+     * starts the player dummy threads
+     */
+    public void startPlayerThreads() {
+        player1_thread.start();
+        player2_thread.start();
+    }
 
     /**
      * Checks if both players are connected
@@ -173,8 +200,8 @@ public class Server extends Thread {
          *  method which let server determine who starts)
          *
          */
-        public void sendStart(boolean startFirst) {
-            pw_player.println(startFirst + "");
+        public void sendStart(String startFirst) {
+            pw_player.println(startFirst);
         }
 
         /**

@@ -294,7 +294,8 @@ public class Connection implements Runnable {
     /**
      * Sends if the traffic will be encrypted
      *
-     * @param encrypt
+     * @param encrypt <code>true</code> chat will be encrypted
+     *                <code>false</code> chat won't be encrypted
      */
     public void sendEncrypt(boolean encrypt) {
         pw.println(encrypt + "");

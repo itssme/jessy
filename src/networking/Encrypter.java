@@ -26,6 +26,7 @@ public class Encrypter  {
      * Checks the password and generates the key
      *
      * @param key_in the password the user typed in
+     * @param controller if the connection is corrupt the controller disconnects
      * @throws InvalidKeyException the password is not valid
      */
     public Encrypter(String key_in, ChessGameController controller) throws InvalidKeyException {

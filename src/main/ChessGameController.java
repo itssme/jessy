@@ -348,7 +348,12 @@ public class ChessGameController implements Initializable {
             }
 
             Connection.sendObject(disconnectObj);
-            closeServer();
+
+            try {
+                closeServer();
+            } catch (Exception e) {
+                LoggingSingleton.getInstance().info("Could not close server (probably not connected) " + e.getMessage());
+            }
 
             connection.reset();
             connection = null;

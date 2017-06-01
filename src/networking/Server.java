@@ -93,9 +93,7 @@ public class Server extends Thread {
     }
 
     /**
-     *
-     *
-     *
+     *  Initializes the dummy players without starting them
      */
     public void startSilent() {
         LoggingSingleton.getInstance().log(Level.INFO, "SERVER: waiting for connection");
@@ -176,7 +174,7 @@ public class Server extends Thread {
          */
         @Override
         public void run() {
-            while (true) { // TODO: stop by a static variable if the game is over
+            while (true) {
                 if (number == 1) {
                     if (player2 != null) {
                         player2.send(this.get());
@@ -196,16 +194,21 @@ public class Server extends Thread {
         /**
          * Sends who starts first over the network
          *
-         * (this is the replacement for the old starting
-         *  method which let server determine who starts)
-         *
+         * @param startFirst if this string is <code>true</code> the other player will start normally
+         *                   if this string is <code>false</code> the other player will not start
+         *                   if this string is <code>true_</code> the other player will take the white side and start
+         *                   if this string is <code>false_</code> the other player will not start and take
+         *                                                                                    the black side
          */
         public void sendStart(String startFirst) {
             pw_player.println(startFirst);
         }
 
         /**
-         *  Sets the variable if traffic is getting encrypted.
+         * Sets the variable if traffic is getting encrypted.
+         *
+         * @return <code>true</code> if the chat is encrypted
+         *         <code>false</code> if the chat is not encrypted
          */
         public boolean getEncrypt() {
             String encrypt = "";
@@ -213,7 +216,8 @@ public class Server extends Thread {
             try {
                 encrypt = br_player.readLine();
             } catch (IOException e) {
-                LoggingSingleton.getInstance().severe("Critical error could not get the starting message from host: " + e.getMessage());
+                LoggingSingleton.getInstance().severe("Critical error could not " +
+                        "get the starting message from host: " + e.getMessage());
             }
 
             if (encrypt.equals("false")) {
@@ -226,7 +230,8 @@ public class Server extends Thread {
         /**
          * Sends if the traffic will be encrypted
          *
-         * @param encrypt
+         * @param encrypt <code>true</code> chat will be encrypted
+         *                <code>false</code> chat won't be encrypted
          */
         public void sendEncrypt(boolean encrypt) {
             pw_player.println(encrypt + "");

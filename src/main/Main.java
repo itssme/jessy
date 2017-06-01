@@ -165,58 +165,7 @@ public class Main extends Application {
         }
 
         if (args.length != 0 && (args[0].equals("--server-only") || args[0].equals("-so"))) {
-            System.out.println("[!] starting in server only mode!");
-            LoggingSingleton.getInstance().info("server only mode (only server will be started)");
-
-            Server server = null;
-
-            try {
-                server = new Server(5060);
-            } catch (IOException e) {
-                LoggingSingleton.getInstance().severe("Failed to start server " + e.getMessage());
-                System.err.print("[!] Error starting server. Make sure port 5060 is not blocked or used");
-                System.out.println("\n[!] exit with error");
-                return;
-            }
-
-            System.out.println("[!] waiting for connections");
-            server.startSilent();
-            System.out.println("[!] all players connected game is starting");
-
-            server.player1.sendStart("true_");
-            server.player2.sendStart("false_");
-
-            System.out.println("send start");
-
-            boolean encryptionPl1 = server.player1.getEncrypt();
-            boolean encryptionPl2 = server.player2.getEncrypt();
-
-            System.out.println("got encryption");
-            System.out.println(encryptionPl1);
-            System.out.println(encryptionPl2);
-
-            if (encryptionPl1 && encryptionPl2) {
-                server.player1.sendEncrypt(true);
-                server.player2.sendEncrypt(true);
-            } else {
-                server.player1.sendEncrypt(false);
-                server.player2.sendEncrypt(false);
-            }
-
-            System.out.println("send encryption");
-
-            server.startPlayerThreads();
-
-            while (server.all_connected()) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            System.out.println("[!] one player disconnected or game is over -> stopping server");
-            server.close();
-            System.out.println("[!] done");
+            serverOnlyMode();
 
         } else {
 
@@ -233,5 +182,57 @@ public class Main extends Application {
 
             launch(args);
         }
+    }
+
+    private static void serverOnlyMode() {
+        System.out.println("[!] starting in server only mode!");
+        LoggingSingleton.getInstance().info("server only mode (only server will be started)");
+
+        Server server = null;
+
+        try {
+            server = new Server(5060);
+        } catch (IOException e) {
+            LoggingSingleton.getInstance().severe("Failed to start server " + e.getMessage());
+            System.err.print("[!] Error starting server. Make sure port 5060 is not blocked or used");
+            System.out.println("\n[!] exit with error");
+            return;
+        }
+
+        System.out.println("[!] waiting for connections");
+        server.startSilent();
+        System.out.println("[!] all players connected game is starting");
+
+        server.player1.sendStart("true_");
+        server.player2.sendStart("false_");
+
+        boolean encryptionPl1 = server.player1.getEncrypt();
+        boolean encryptionPl2 = server.player2.getEncrypt();
+
+        System.out.println(encryptionPl1);
+        System.out.println(encryptionPl2);
+
+        if (encryptionPl1 && encryptionPl2) {
+            server.player1.sendEncrypt(true);
+            server.player2.sendEncrypt(true);
+        } else {
+            server.player1.sendEncrypt(false);
+            server.player2.sendEncrypt(false);
+        }
+
+        server.startPlayerThreads();
+
+        while (server.all_connected()) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("[!] one player disconnected or game is over -> stopping server");
+        server.close();
+        System.out.println("[!] done");
+
+
     }
 }

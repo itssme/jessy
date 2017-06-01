@@ -3,7 +3,8 @@ package networking;
 import main.ChessGameController;
 import org.junit.jupiter.api.Test;
 
-import static org.testng.AssertJUnit.assertTrue;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * Name:    Joel Klimont

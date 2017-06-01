@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import logging.ChessSaver;
+import logging.LoggingSingleton;
 import model.Player;
 import utils.Utilities;
 
@@ -62,7 +63,11 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        ChessGameController.getGameController().disconnect();
+        try {
+            ChessGameController.getGameController().disconnect();
+        } catch (Exception e) {
+            LoggingSingleton.getInstance().warning("Failed to disconnect (probably not connected " + e.getMessage());
+        }
         System.exit(0);
     }
 

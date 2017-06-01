@@ -6,6 +6,8 @@ import logging.LoggingSingleton;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 
 /**
  * Author:  Joel Klimont
@@ -26,13 +28,16 @@ public class Sound {
     public synchronized boolean playSound(final String url) {
         Thread t = new Thread(() -> {
             try {
+
+                InputStream audioSrc = this.getClass().getResourceAsStream("sounds/" + url);
+                InputStream bufferedIn = new BufferedInputStream(audioSrc);
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(bufferedIn);
+
                 Clip clip = AudioSystem.getClip();
-                AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-                        this.getClass().getResourceAsStream("sounds/" + url));
                 clip.open(inputStream);
                 clip.start();
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
                 LoggingSingleton.getInstance().warning("Could not play sound " + e.getMessage());
             }
         });

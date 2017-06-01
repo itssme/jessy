@@ -175,7 +175,6 @@ public class ChessGameController implements Initializable {
                     printToChat("Server", "opponent starts first");
                 }
 
-
                 creatingConnection = false;
 
             } else {
@@ -185,6 +184,7 @@ public class ChessGameController implements Initializable {
             }
         }).start();
     }
+
 
     /**
      * Starts the <code>Connection</code> if a button if pressed

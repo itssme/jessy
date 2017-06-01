@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import logging.ChessSaver;
 import logging.LoggingSingleton;
 import model.Player;
+import networking.Server;
 import utils.Utilities;
 
 import javax.swing.*;
@@ -162,17 +163,80 @@ public class Main extends Application {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        String userName = JOptionPane.showInputDialog("What's your username?");
-        if (userName == null || userName.equals("")) {
-            JOptionPane.showMessageDialog(null,
-                    "Your username can't be empty!", "Warning",
-                    JOptionPane.WARNING_MESSAGE);
-            System.exit(0);
-        } else {
-            Scorer.USERNAME = userName;
-        }
-        ChessSaver.getInstance().init(CHESSGAMEBOARD.getFEN());
 
-        launch(args);
+        if (args.length != 0 && (args[0].equals("--server-only") || args[0].equals("-so"))) {
+            System.out.println("[!] starting in server only mode!");
+            LoggingSingleton.getInstance().info("server only mode (only server will be started)");
+
+            Server server = null;
+
+            try {
+                server = new Server(5060);
+            } catch (IOException e) {
+                LoggingSingleton.getInstance().severe("Failed to start server " + e.getMessage());
+                System.err.print("[!] Error starting server. Make sure port 5060 is not blocked or used");
+                System.out.println("\n[!] exit with error");
+                return;
+            }
+
+            System.out.println("[!] waiting for connections");
+            server.start();
+            synchronized (server) {
+                try {
+                    server.wait();
+                } catch (InterruptedException e) {
+                    LoggingSingleton.getInstance().info("Server Interrupted " + e.getLocalizedMessage());
+                }
+            }
+            System.out.println("[!] all players connected game is starting");
+
+            server.player1.sendStart(true);
+            server.player2.sendStart(false);
+
+            System.out.println("send start");
+
+            boolean encryptionPl1 = server.player1.getEncrypt();
+            boolean encryptionPl2 = server.player2.getEncrypt();
+
+            System.out.println("got encryption");
+            System.out.println(encryptionPl1);
+            System.out.println(encryptionPl2);
+
+            if (encryptionPl1 && encryptionPl2) {
+                server.player1.sendEncrypt(true);
+                server.player2.sendEncrypt(true);
+            } else {
+                server.player1.sendEncrypt(false);
+                server.player2.sendEncrypt(false);
+            }
+
+            System.out.println("send encryption");
+
+            while (server.all_connected()) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("[!] one player disconnected or game is over -> stopping server");
+            server.close();
+            System.out.println("[!] done");
+
+        } else {
+
+            String userName = JOptionPane.showInputDialog("What's your username?");
+            if (userName == null || userName.equals("")) {
+                JOptionPane.showMessageDialog(null,
+                        "Your username can't be empty!", "Warning",
+                        JOptionPane.WARNING_MESSAGE);
+                System.exit(0);
+            } else {
+                Scorer.USERNAME = userName;
+            }
+            ChessSaver.getInstance().init(CHESSGAMEBOARD.getFEN());
+
+            launch(args);
+        }
     }
 }

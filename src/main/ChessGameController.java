@@ -151,13 +151,13 @@ public class ChessGameController implements Initializable {
 
                 connection.sendStart(! startFirst);
 
+                connection.getEncrypt();
+
                 if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
                     connection.sendEncrypt(true);
                 } else {
                     connection.sendEncrypt(false);
                 }
-
-                connection.getEncrypt();
 
                 connection.start_thread();
                 Connection.sendGameState(Main.CHESSGAMEBOARD.getFEN(true));
@@ -251,13 +251,13 @@ public class ChessGameController implements Initializable {
 
                 startFirst = connection.getStart();
 
-                connection.getEncrypt();
-
                 if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
                     connection.sendEncrypt(true);
                 } else {
                     connection.sendEncrypt(false);
                 }
+
+                connection.getEncrypt();
 
                 connection.start_thread();
 

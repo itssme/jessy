@@ -25,8 +25,8 @@ public class Server extends Thread {
 
     private static ServerSocket self;
     private static int player_connected = 0;
-    private player player1;
-    private player player2;
+    public player player1;
+    public player player2;
     private Thread  thread;
 
     /**
@@ -89,6 +89,7 @@ public class Server extends Thread {
         LoggingSingleton.getInstance().log(Level.INFO, "SERVER STARTED");
     }
 
+
     /**
      * Checks if both players are connected
      *
@@ -100,7 +101,7 @@ public class Server extends Thread {
         return (player_connected == 2);
     }
 
-    private class player implements Runnable {
+    public class player implements Runnable {
 
         private Socket player;
         private PrintWriter pw_player;
@@ -163,6 +164,45 @@ public class Server extends Thread {
                     }
                 }
             }
+        }
+
+        /**
+         * Sends who starts first over the network
+         *
+         * (this is the replacement for the old starting
+         *  method which let server determine who starts)
+         *
+         */
+        public void sendStart(boolean startFirst) {
+            pw_player.println(startFirst + "");
+        }
+
+        /**
+         *  Sets the variable if traffic is getting encrypted.
+         */
+        public boolean getEncrypt() {
+            String encrypt = "";
+
+            try {
+                encrypt = br_player.readLine();
+            } catch (IOException e) {
+                LoggingSingleton.getInstance().severe("Critical error could not get the starting message from host: " + e.getMessage());
+            }
+
+            if (encrypt.equals("false")) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Sends if the traffic will be encrypted
+         *
+         * @param encrypt
+         */
+        public void sendEncrypt(boolean encrypt) {
+            pw_player.println(encrypt + "");
         }
 
         /**

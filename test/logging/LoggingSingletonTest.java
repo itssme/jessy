@@ -15,7 +15,7 @@ import java.io.File;
 class LoggingSingletonTest {
     @Test
     void getInstance() {
-        File f = new File("jessy.log.xml");
+        File f = new File("log/jessy.log.xml");
         if (f.exists()) {
             f.delete();
         }
@@ -23,7 +23,7 @@ class LoggingSingletonTest {
 
         LoggingSingleton.getInstance().info("From Test");
 
-        f = new File("jessy.log.xml");
+        f = new File("log/jessy.log.xml");
         assert f.exists();
     }
 
